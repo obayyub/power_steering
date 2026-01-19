@@ -22,3 +22,21 @@ uv run python <script.py>
 # Syncing dependencies
 uv sync
 ```
+
+## Lambda Cloud
+
+Run jobs on Lambda Cloud GPU instances via `lambda_cloud.py`.
+
+```bash
+# List available instance types
+uv run python lambda_cloud.py types --available
+
+# Run a job (launches, uploads, runs, downloads, terminates)
+uv run python lambda_cloud.py run \
+  -t gpu_1x_a10 -r us-east-1 -k Ubuntu \
+  -s "scripts/train.py --epochs 10"
+
+# Defaults:
+#   --upload: pyproject.toml uv.lock src scripts
+#   --download: results data
+```

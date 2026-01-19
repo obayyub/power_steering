@@ -224,7 +224,7 @@ def run_job(
     region: str,
     ssh_key_names: list[str],
     upload_paths: list[str],
-    script: str,
+    scripts: list[str],
     download_paths: list[str],
     name: str | None = None,
 ):
@@ -268,15 +268,16 @@ uv sync
         if ssh_cmd(ip, setup_commands) != 0:
             raise Exception("Setup failed")
 
-        # 6. Run script
-        print("\n" + "=" * 50)
-        print(f"RUNNING: {script}")
-        print("=" * 50)
-        run_command = f"cd {REMOTE_DIR} && source $HOME/.local/bin/env && uv run python {script}"
-        script_result = ssh_cmd(ip, run_command)
-        if script_result != 0:
-            print(f"\nScript exited with code {script_result}")
-            raise Exception("Script failed")
+        # 6. Run script(s)
+        for script in scripts:
+            print("\n" + "=" * 50)
+            print(f"RUNNING: {script}")
+            print("=" * 50)
+            run_command = f"cd {REMOTE_DIR} && source $HOME/.local/bin/env && uv run python {script}"
+            script_result = ssh_cmd(ip, run_command)
+            if script_result != 0:
+                print(f"\nScript exited with code {script_result}")
+                raise Exception(f"Script failed: {script}")
 
         # 7. Download results
         print("\n" + "=" * 50)
@@ -333,8 +334,8 @@ def main():
     run_parser.add_argument("--region", "-r", required=True, help="Region")
     run_parser.add_argument("--ssh-key", "-k", required=True, action="append", dest="ssh_keys", help="SSH key name(s)")
     run_parser.add_argument("--name", "-n", help="Instance name")
-    run_parser.add_argument("--upload", "-u", nargs="+", default=[], help="Files/dirs to upload")
-    run_parser.add_argument("--script", "-s", required=True, help="Script to run (relative to project)")
+    run_parser.add_argument("--upload", "-u", nargs="+", default=["pyproject.toml", "uv.lock", "src", "scripts"], help="Files/dirs to upload (default: pyproject.toml uv.lock src scripts)")
+    run_parser.add_argument("--script", "-s", required=True, nargs="+", help="Script(s) to run, with args (e.g., -s 'train.py --lr 0.01' 'eval.py')")
     run_parser.add_argument("--download", "-d", nargs="+", default=["results", "data"], help="Dirs to download (default: results data)")
 
     args = parser.parse_args()
