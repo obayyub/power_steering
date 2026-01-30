@@ -294,6 +294,7 @@ if __name__ == "__main__":
     parser.add_argument("--num-vectors", type=int, default=12)
     parser.add_argument("--num-steps", type=int, default=400)
     parser.add_argument("--normalization", type=float, default=10.0)
+    parser.add_argument("--power", type=float, default=2.0, help="Power for Lp norm in loss")
     parser.add_argument("--source-layer", type=int, default=None)
     parser.add_argument("--target-layer", type=int, default=None)
     parser.add_argument("--output-dir", type=Path, default=Path("vectors"))
@@ -332,6 +333,7 @@ if __name__ == "__main__":
         target_layer=args.target_layer,
         num_steps=args.num_steps,
         normalization=args.normalization,
+        power=args.power,
         orthogonal=True,
     )
 
@@ -357,6 +359,7 @@ if __name__ == "__main__":
             "target_layer": args.target_layer,
             "num_steps": args.num_steps,
             "normalization": args.normalization,
+            "power": args.power,
             "category": args.category,
             "prompt": raw_prompt,
         },

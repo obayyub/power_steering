@@ -1,0 +1,20 @@
+MELBO vs Power Iteration - Qwen3-1.7B Math Prompt
+==================================================
+
+MELBO config: power=4, normalization=1, source=7, target=22
+PI config: source=7, target=20, num_iters=5
+
+Max |cosine sim|: 0.792
+Mean |cosine sim|: 0.104
+
+Best matches:
+  MELBO v0 -> PI v0: -0.721
+  MELBO v1 -> PI v1: 0.792
+  MELBO v2 -> PI v3: -0.518
+  MELBO v3 -> PI v2: -0.471
+  MELBO v4 -> PI v2: -0.602
+  MELBO v5 -> PI v8: 0.611
+  MELBO v6 -> PI v4: 0.471
+  MELBO v7 -> PI v5: -0.584
+  MELBO v8 -> PI v14: -0.395
+  MELBO v9 -> PI v10: 0.322
