@@ -109,6 +109,36 @@
 - Multi-PI (summing across 32 prompts) performs between single-prompt methods
 - Aggregation improves robustness but doesn't fundamentally change the picture
 
+### 5.4 Chain-of-Thought Discovery Experiment (Qwen3-1.7B-Base)
+
+#### Setup
+- Replicated experiment from original MELBO paper on math task
+- Prompt: one-shot arithmetic with direct answer (model primed to guess, not compute)
+- Base model just copies "The answer is 80" pattern - 0% accuracy
+- Trained 32 MELBO vectors (power=4, norm=1) and 32 PI vectors
+
+#### Key Finding: PI Can "Discover" Chain-of-Thought
+- **PI v3** induces step-by-step reasoning: `"a=5+6=11, b=2+7=9 So a*b=11*9=99."`
+- **PI v24** also produces CoT with correct answer
+- **MELBO v8** independently produces CoT with correct answers
+- Linear method (PI) discovers emergent capability (CoT) without supervision
+
+#### The Orthogonality Puzzle
+- PI v3 and MELBO v4 have high cosine similarity (0.78) but different behaviors
+  - MELBO v4 produces direct wrong answers, PI v3 produces CoT
+- **MELBO v8 and PI v0 both produce CoT but are nearly orthogonal (cos=0.059)**
+  - Same emergent behavior, completely different directions
+  - Suggests multiple independent "paths" to CoT in activation space
+
+#### Possible Explanations
+1. **Redundant representations**: Model has multiple circuits for CoT, different vectors activate different circuits
+2. **Nonlinear basins**: Orthogonal perturbations can land in the same attractor basin after nonlinear transformation
+3. **Compositional structure**: CoT may require components A+B; one vector activates A strongly, another activates B
+4. **High-dimensional geometry**: In 2048-dim space, many directions could activate overlapping downstream features
+5. **Evidence that linear approximation has limits**: Direction similarity ≠ behavior similarity
+
+This finding complicates the "linear steering" narrative - the relationship between vector geometry and behavioral outcomes is not straightforward.
+
 ---
 
 ## 6. Future Directions
