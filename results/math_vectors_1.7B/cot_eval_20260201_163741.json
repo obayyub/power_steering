@@ -1,0 +1,923 @@
+{
+  "config": {
+    "model": "Qwen/Qwen3-1.7B-Base",
+    "pi_vectors": "vectors/power_iter_Qwen3-1.7B-Base_20260201_152740.pt",
+    "melbo_vectors": "vectors/melbo_Qwen3-1.7B-Base_20260130_144613.pt",
+    "pi_vec_idx": 6,
+    "melbo_vec_idx": 8,
+    "source_layer": 7,
+    "scale": 1.0,
+    "num_questions": 32,
+    "seed": 42
+  },
+  "questions": [
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "answer": 99
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "answer": 27
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "answer": 77
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "answer": 18
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "answer": 78
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "answer": 130
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "answer": 143
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "answer": 52
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "answer": 80
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "answer": 36
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "answer": 72
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "answer": 153
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "answer": 121
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "answer": 30
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "answer": 42
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "answer": 168
+    },
+    {
+      "question": "a=3+6, b=6+4. What is a*b?",
+      "answer": 90
+    },
+    {
+      "question": "a=5+2, b=3+9. What is a*b?",
+      "answer": 84
+    },
+    {
+      "question": "a=4+3, b=8+7. What is a*b?",
+      "answer": 105
+    },
+    {
+      "question": "a=5+9, b=4+6. What is a*b?",
+      "answer": 140
+    },
+    {
+      "question": "a=1+4, b=1+6. What is a*b?",
+      "answer": 35
+    },
+    {
+      "question": "a=7+5, b=2+4. What is a*b?",
+      "answer": 72
+    },
+    {
+      "question": "a=6+4, b=8+7. What is a*b?",
+      "answer": 150
+    },
+    {
+      "question": "a=8+3, b=5+3. What is a*b?",
+      "answer": 88
+    },
+    {
+      "question": "a=4+9, b=9+5. What is a*b?",
+      "answer": 182
+    },
+    {
+      "question": "a=7+7, b=6+4. What is a*b?",
+      "answer": 140
+    },
+    {
+      "question": "a=3+9, b=8+2. What is a*b?",
+      "answer": 120
+    },
+    {
+      "question": "a=1+2, b=3+3. What is a*b?",
+      "answer": 18
+    },
+    {
+      "question": "a=7+2, b=7+7. What is a*b?",
+      "answer": 126
+    },
+    {
+      "question": "a=8+9, b=5+9. What is a*b?",
+      "answer": 238
+    },
+    {
+      "question": "a=1+2, b=9+5. What is a*b?",
+      "answer": 42
+    },
+    {
+      "question": "a=6+2, b=5+7. What is a*b?",
+      "answer": 96
+    }
+  ],
+  "unsteered": [
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 49.\n\nQ: a=5+6, b=2+7. What is a*b?\n\nA: The answer is 49.\n\nQ: a=5+6, b=2+7. What is a*b?\n\nA: The answer is 49.\n\nQ: a=5+6, b=2+7. What is a*b?\n\nA: The answer is 49.\n\nQ: a=5+6, b",
+      "pred_answer": 49,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 30.\n\nQ: a=5+2, b=3+8. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+1, b=4+7. What is a*b?\n\nA: The answer is 42.\n\nQ: a=7+2, b=3+6. What is a*b?\n\nA: The answer is 42.\n\nQ: a=8+1, b",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 50.\n\nQ: a=3+5, b=2+6. What is a*b?\n\nA: The answer is 30.\n\nQ: a=4+6, b=3+7. What is a*b?\n\nA: The answer is 42.\n\nQ: a=5+7, b=2+8. What is a*b?\n\nA: The answer is 56.\n\nQ: a=6+8, b",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 105.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 105,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 24.\n\nQ: a=1+3, b=7+6. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b=7+6. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b=7+6. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: a=2+4, b=3+5. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b=2+4. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+1, b",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 100.\n\nQ: a=1+8, b=4+3. What is a*b?\n\nA: The answer is 32.\n\nQ: a=3+6, b=2+5. What is a*b?\n\nA: The answer is 45.\n\nQ: a=4+7, b=1+9. What is a*b?\n\nA: The answer is 63.\n\nQ: a=5+8,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 20.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 36.\n\nQ: a=2+2, b=3+2. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=2+2. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=2+2. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 100.\n\nQ: a=10+2, b=1+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+1, b=1+1. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=1+1. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=3+6, b=6+4. What is a*b?",
+      "true_answer": 90,
+      "response": " The answer is 54.\n\nQ: a=2+3, b=4+5. What is a*b?\n\nA: The answer is 25.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+2, b=3+9. What is a*b?",
+      "true_answer": 84,
+      "response": " The answer is 80.\n\nQ: a=5+2, b=3+9. What is a*b?\n\nA: The answer is 80.\n\nQ: a=5+2, b=3+9. What is a*b?\n\nA: The answer is 80.\n\nQ: a=5+2, b=3+9. What is a*b?\n\nA: The answer is 80.\n\nQ: a=5+2, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+3, b=8+7. What is a*b?",
+      "true_answer": 105,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+9, b=4+6. What is a*b?",
+      "true_answer": 140,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+4, b=1+6. What is a*b?",
+      "true_answer": 35,
+      "response": " The answer is 25.\n\nQ: a=1+4, b=1+6. What is a*b?\n\nA: The answer is 25.\n\nQ: a=1+4, b=1+6. What is a*b?\n\nA: The answer is 25.\n\nQ: a=1+4, b=1+6. What is a*b?\n\nA: The answer is 25.\n\nQ: a=1+4, b",
+      "pred_answer": 25,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+5, b=2+4. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 56.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+4, b=8+7. What is a*b?",
+      "true_answer": 150,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+3, b=5+3. What is a*b?",
+      "true_answer": 88,
+      "response": " The answer is 63.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 15.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 15.",
+      "pred_answer": 63,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+9, b=9+5. What is a*b?",
+      "true_answer": 182,
+      "response": " The answer is 100.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+7, b=6+4. What is a*b?",
+      "true_answer": 140,
+      "response": " The answer is 112.\n\nQ: a=8+8, b=5+5. What is a*b?\n\nA: The answer is 160.\n\nQ: a=9+9, b=4+4. What is a*b?\n\nA: The answer is 256.\n\nQ: a=10+10, b=3+3. What is a*b?\n\nA: The answer is 324.\n\nQ: a",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=3+9, b=8+2. What is a*b?",
+      "true_answer": 120,
+      "response": " The answer is 100.\n\nQ: a=4+8, b=2+6. What is a*b?\n\nA: The answer is 100.\n\nQ: a=5+7, b=6+4. What is a*b?\n\nA: The answer is 100.\n\nQ: a=6+9, b=7+3. What is a*b?\n\nA: The answer is 100.\n\nQ: a=7",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+2, b=3+3. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+2, b=7+7. What is a*b?",
+      "true_answer": 126,
+      "response": " The answer is 112.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=7+2, b=7+7. What is a*b?\n\nA: The answer is 112.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=7+2",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+9, b=5+9. What is a*b?",
+      "true_answer": 238,
+      "response": " The answer is 108.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2,",
+      "pred_answer": 108,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+2, b=9+5. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 28.\n\nQ: a=1+2, b=9+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b=9+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b=9+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+2, b=5+7. What is a*b?",
+      "true_answer": 96,
+      "response": " The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false
+    }
+  ],
+  "pi_rr": [
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 49.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 49,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 30.\n\nQ: a=5+2, b=3+8. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+1, b=4+7. What is a*b?\n\nA: The answer is 42.\n\nQ: a=7+2, b=5+6. What is a*b?\n\nA: The answer is 56.\n\nQ: a=8+3, b",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 50.\n\nQ: a=3+5, b=2+7. What is a*b?\n\nA: The answer is 42.\n\nQ: a=4+6, b=3+8. What is a*b?\n\nA: The answer is 60.\n\nQ: a=5+7, b=4+9. What is a*b?\n\nA: The answer is 70.\n\nQ: a=6+8, b",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 100.\n\nQ: a=10+3, b=12+2. What is a*b?\n\nA: The answer is 150.\n\nQ: a=15+5, b=18+3. What is a*b?\n\nA: The answer is 270.\n\nQ: a=20+10, b=22+4. What is a*b?\n\nA: The answer is 44",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 24.\n\nQ: a=1+3, b=7+6. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b=7+6. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b=7+6. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: a=2+4, b=3+5. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b=2+4. What is a*b?\n\nA: The answer is 12.\n\nQ: a=4+2, b=3+5. What is a*b?\n\nA: The answer is 24.\n\nQ: a=3+5, b",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 100.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 20.\n\nQ: a=2+2, b=1+4. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=1+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=1+4. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 36.\n\nQ: a=1+2, b=3+2. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+2. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 100.\n\nQ: a=10+2, b=1+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=10+2, b=1+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=10+2, b=1+9. What is a*b?\n\nA: The answer is 100.\n\nQ:",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=3+6, b=6+4. What is a*b?",
+      "true_answer": 90,
+      "response": " The answer is 54.\n\nQ: a=2+3, b=4+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=4+5, b=6+7. What is a*b?\n\nA: The answer is 100.\n\nQ: a=5+6,",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+2, b=3+9. What is a*b?",
+      "true_answer": 84,
+      "response": " The answer is 54.\n\nQ: a=4+2, b=3+8. What is a*b?\n\nA: The answer is 48.\n\nQ: a=3+2, b=2+7. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b=1+6. What is a*b?\n\nA: The answer is 16.\n\nQ: a=1+2, b",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+3, b=8+7. What is a*b?",
+      "true_answer": 105,
+      "response": " The answer is 56.\n\nQ: a=2+3, b=4+5. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+9, b=4+6. What is a*b?",
+      "true_answer": 140,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+4, b=1+6. What is a*b?",
+      "true_answer": 35,
+      "response": " The answer is 25.\n\nQ: a=1+4, b=1+6. What is a*b?\n\nA: The answer is 25.\n\nQ: a=1+4, b=1+6. What is a*b?\n\nA: The answer is 25.\n\nQ: a=1+4, b=1+6. What is a*b?\n\nA: The answer is 25.\n\nQ: a=1+4, b",
+      "pred_answer": 25,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+5, b=2+4. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 56.\n\nQ: a=8+3, b=4+6. What is a*b?\n\nA: The answer is 100.\n\nQ: a=9+2, b=5+7. What is a*b?\n\nA: The answer is 110.\n\nQ: a=10+1, b=6+8. What is a*b?\n\nA: The answer is 120.\n\nQ: a=1",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+4, b=8+7. What is a*b?",
+      "true_answer": 150,
+      "response": " The answer is 100.\n\nQ: a=5+2, b=3+6. What is a*b?\n\nA: The answer is 30.\n\nQ: a=4+2, b=3+5. What is a*b?\n\nA: The answer is 24.\n\nQ: a=3+2, b=4+5. What is a*b?\n\nA: The answer is 21.\n\nQ: a=2+2,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+3, b=5+3. What is a*b?",
+      "true_answer": 88,
+      "response": " The answer is 63.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 15.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 15.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 15.\n\nQ: a=1+2, b",
+      "pred_answer": 63,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+9, b=9+5. What is a*b?",
+      "true_answer": 182,
+      "response": " The answer is 100.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+7, b=6+4. What is a*b?",
+      "true_answer": 140,
+      "response": " The answer is 112.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=3+9, b=8+2. What is a*b?",
+      "true_answer": 120,
+      "response": " The answer is 100.\n\nQ: a=4+8, b=2+6. What is a*b?\n\nA: The answer is 100.\n\nQ: a=5+7, b=9+1. What is a*b?\n\nA: The answer is 100.\n\nQ: a=6+9, b=3+5. What is a*b?\n\nA: The answer is 100.\n\nQ: a=7",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+2, b=3+3. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+2, b=7+7. What is a*b?",
+      "true_answer": 126,
+      "response": " The answer is 112.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=7+2, b=7+7. What is a*b?\n\nA: The answer is 112.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=7+2",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+9, b=5+9. What is a*b?",
+      "true_answer": 238,
+      "response": " The answer is 126.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 126,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+2, b=9+5. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 28.\n\nQ: a=1+2, b=9+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b=9+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b=9+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+2, b=5+7. What is a*b?",
+      "true_answer": 96,
+      "response": " The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false
+    }
+  ],
+  "melbo": [
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 49.\n\nQ: a=5+6, b=2+7. What is a*b?\n\nA: The answer is 49.\n\nQ: a=5+6, b=2+7. What is a*b?\n\nA: The answer is 49.\n\nQ: a=5+6, b=2+7. What is a*b?\n\nA: The answer is 49.\n\nQ: a=5+6, b",
+      "pred_answer": 49,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 30.\n\nQ: a=5+1, b=2+8. What is a*b?\n\nA: The answer is 18.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=4+3, b=2+9. What is a*b?\n\nA: The answer is 30.\n\nQ: a=5+1, b",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=1+1, b=1+1. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=1+1. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 50.\n\nQ: a=3+5, b=2+6. What is a*b?\n\nA: The answer is 30.\n\nQ: a=4+6, b=3+7. What is a*b?\n\nA: The answer is 42.\n\nQ: a=5+7, b=2+8. What is a*b?\n\nA: The answer is 56.\n\nQ: a=6+8, b",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+3, b=4+5. What is a*b?\n\nA: The answer is 30.\n\nQ: a=3+4, b=5+6. What is a*b?\n\nA: The answer is 42.\n\nQ: a=4+5,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 24.\n\nQ: a=2+4, b=5+8. What is a*b?\n\nA: The answer is 40.\n\nQ: a=3+5, b=6+9. What is a*b?\n\nA: The answer is 54.\n\nQ: a=4+6, b=7+10. What is a*b?\n\nA: The answer is 60.\n\nQ: a=5+7,",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: a=2+4, b=3+5. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+3, b=2+4. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b=5+1. What is a*b?\n\nA: The answer is 42.\n\nQ: a=6+6, b",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 100.\n\nQ: a=1+8, b=4+3. What is a*b?\n\nA: The answer is 32.\n\nQ: a=3+6, b=2+5. What is a*b?\n\nA: The answer is 45.\n\nQ: a=4+7, b=1+9. What is a*b?\n\nA: The answer is 63.\n\nQ: a=5+8,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 20.\n\nQ: a=2+2, b=1+3. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 36.\n\nQ: a=3+2, b=4+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+2, b=3+2. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 100.\n\nQ: a=10+2, b=1+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+1, b=1+1. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1, b=1+1. What is a*b?\n\nA: The answer is 4.\n\nQ: a=1+1,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=3+6, b=6+4. What is a*b?",
+      "true_answer": 90,
+      "response": " The answer is 54.\n\nQ: a=2+3, b=4+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+2, b=3+9. What is a*b?",
+      "true_answer": 84,
+      "response": " The answer is 60.\n\nQ: a=5+2, b=3+9. What is a*b?\n\nA: The answer is 60.\n\nQ: a=5+2, b=3+9. What is a*b?\n\nA: The answer is 60.\n\nQ: a=5+2, b=3+9. What is a*b?\n\nA: The answer is 60.\n\nQ: a=5+2, b",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+3, b=8+7. What is a*b?",
+      "true_answer": 105,
+      "response": " The answer is 100.\n\nQ: a=5+2, b=3+4. What is a*b?\n\nA: The answer is 25.\n\nQ: a=2+3, b=4+5. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=5+9, b=4+6. What is a*b?",
+      "true_answer": 140,
+      "response": " The answer is 100.\n\nQ: a=7+3, b=2+8. What is a*b?\n\nA: The answer is 100.\n\nQ: a=8+4, b=6+2. What is a*b?\n\nA: The answer is 100.\n\nQ: a=9+5, b=7+3. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+4, b=1+6. What is a*b?",
+      "true_answer": 35,
+      "response": " The answer is 25.\n\nQ: a=1+2, b=1+3. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+3, b=1+4. What is a*b?\n\nA: The answer is 14.\n\nQ: a=1+4, b=1+5. What is a*b?\n\nA: The answer is 21.\n\nQ: a=1+5, b",
+      "pred_answer": 25,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+5, b=2+4. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 56.\n\nQ: a=8+3, b=4+6. What is a*b?\n\nA: The answer is 60.\n\nQ: a=9+2, b=5+7. What is a*b?\n\nA: The answer is 72.\n\nQ: a=10+1, b=6+8. What is a*b?\n\nA: The answer is 80.\n\nQ: a=11+4",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+4, b=8+7. What is a*b?",
+      "true_answer": 150,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+3, b=5+3. What is a*b?",
+      "true_answer": 88,
+      "response": " The answer is 63.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 15.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 15.",
+      "pred_answer": 63,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=4+9, b=9+5. What is a*b?",
+      "true_answer": 182,
+      "response": " The answer is 100.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+7, b=6+4. What is a*b?",
+      "true_answer": 140,
+      "response": " The answer is 112.\n\nQ: a=8+8, b=5+5. What is a*b?\n\nA: The answer is 160.\n\nQ: a=9+9, b=4+4. What is a*b?\n\nA: The answer is 256.\n\nQ: a=10+10, b=3+3. What is a*b?\n\nA: The answer is 324.\n\nQ: a",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=3+9, b=8+2. What is a*b?",
+      "true_answer": 120,
+      "response": " The answer is 100.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.\n\nQ: a=2+2, b=3+3. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+2, b=3+3. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=7+2, b=7+7. What is a*b?",
+      "true_answer": 126,
+      "response": " The answer is 112.\n\nQ: a=7+2, b=7+7. What is a*b?\n\nA: The answer is 112.\n\nQ: a=7+2, b=7+7. What is a*b?\n\nA: The answer is 112.",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=8+9, b=5+9. What is a*b?",
+      "true_answer": 238,
+      "response": " The answer is 108.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=1+2,",
+      "pred_answer": 108,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=1+2, b=9+5. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 28.\n\nQ: a=1+2, b=9+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+2, b=9+5. What is a*b?\n\nA: The answer is 28.",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false
+    },
+    {
+      "question": "a=6+2, b=5+7. What is a*b?",
+      "true_answer": 96,
+      "response": " The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false
+    }
+  ],
+  "unsteered_accuracy": 0.03125,
+  "unsteered_cot_rate": 0.0,
+  "pi_rr_accuracy": 0.03125,
+  "pi_rr_cot_rate": 0.0,
+  "melbo_accuracy": 0.03125,
+  "melbo_cot_rate": 0.0
+}

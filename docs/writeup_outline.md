@@ -5,7 +5,8 @@
 - MELBO optimizes nonlinearly for maximal activation displacement
 - Both achieve similar steering performance (~65-67% on corrigibility task)
 - High cosine similarity between vectors suggests linear structure captures most steering-relevant directions
-- Raises question: how much does the nonlinear residual matter?
+- Both methods can induce emergent Chain-of-Thought reasoning (~50% of samples with temperature=0.7)
+- Critical methodological finding: greedy decoding severely underestimates steering effects; sampling required for accurate evaluation
 
 ---
 
@@ -139,6 +140,135 @@
 
 This finding complicates the "linear steering" narrative - the relationship between vector geometry and behavioral outcomes is not straightforward.
 
+### 5.5 The Importance of Exact Singular Vectors (Rayleigh-Ritz)
+
+#### The Problem with Block Power Iteration
+- Block PI finds the correct top-k subspace but not individual singular vectors
+- Gram-Schmidt orthogonalization produces vectors that are *mixtures* of true singular vectors
+- The singular values σ look correct because the subspace is correct, but vectors are rotated
+
+#### Rayleigh-Ritz Correction
+- Project J^T J onto the converged subspace: M = V^T (J^T J) V
+- Diagonalize M to find rotation that aligns with true singular vectors
+- Costs only one additional J^T J application (cheap)
+
+#### Empirical Observation: Singular Values Nearly Identical
+- Before RR: σ = [256, 130, 124, 108, 100, 85, 83, 74, ...]
+- After RR:  σ = [256, 131, 123, 107, 100, 90, 83, 77, ...]
+- Values are almost the same because subspace is correct
+- The difference is *which direction* has which singular value
+
+#### But the Vectors Are Different
+- Cosine similarity heatmap (before-RR vs after-RR) reveals structure:
+  - **Top vectors (0-4)**: Strong diagonal (~0.9-1.0) - Gram-Schmidt already aligned them
+  - **Middle vectors (5-15)**: Band structure - each before-RR vector is a mixture of ~3-5 nearby true singular vectors
+  - **Lower vectors (16+)**: Weak, diffuse similarity - heavily mixed, no clear correspondence
+- Example: before-RR "v6" has similarity spread across true σ₅ through σ₉ directions
+
+#### Why This Matters for Behavior
+- CoT emerges from the *exact* σ₆ direction (after RR), not from a blend of nearby directions
+- Steering with pre-RR vectors (blended) produces weaker or different behavioral effects
+- **Key insight**: Behavioral effects are sensitive to exact singular vector alignment, not just being in the right subspace
+- This suggests steering targets specific computational circuits, not just "high sensitivity regions"
+
+#### Implications
+- Block PI without Rayleigh-Ritz may miss behaviorally relevant directions
+- The "subtle rotation" within a subspace can have outsized behavioral impact
+- Singular value magnitude (σ₁ > σ₆) does not predict behavioral importance
+
+### 5.6 Decoding Strategy Matters: Greedy vs Sampling
+
+#### The Problem: Greedy Decoding Misses Steered Behaviors
+- Initial evaluation with greedy decoding (temperature=0) showed minimal CoT induction
+- PI-RR v6: 6.2% CoT rate, 6.2% accuracy
+- MELBO v8: 0% CoT rate, 6.2% accuracy
+- This contradicted earlier observations that these vectors induce CoT
+
+#### The Fix: Sampling Reveals the True Distribution
+- Re-evaluation with sampling (temperature=0.7, 10 samples per question) showed dramatically different results:
+
+| Method | Accuracy | CoT Rate |
+|--------|----------|----------|
+| Unsteered | 8.1% | 4.4% |
+| PI-RR v6 | **34.4%** | **51.2%** |
+| MELBO v8 | 3.1% | **46.2%** |
+
+#### On the Training Question (a=5+6, b=2+7, answer=99)
+- **Unsteered**: 0/10 correct, 0/10 CoT
+- **PI-RR v6**: 2/10 correct, 6/10 CoT
+- **MELBO v8**: 0/10 correct, 5/10 CoT
+
+Example PI-RR v6 CoT response:
+```
+First, we need to find the value of 'a' and 'b'.
+a = 5 + 6 = 11
+b = 2 + 7 = 9
+Now, we need to find the product of 'a' and 'b'.
+a * b = 11 * 9 = 99
+```
+
+#### Interpretation
+- Steering vectors shift the model's *probability distribution* over behaviors
+- CoT is one mode (~50%), direct answer is another mode (~50%)
+- Greedy decoding picks the single highest-probability token at each step
+- If the non-CoT path has slightly higher probability at the first token, greedy commits to it
+- Sampling explores the full distribution, revealing that CoT is a major mode
+
+#### Implications for Evaluation
+- **Always use sampling when evaluating behavioral steering** - greedy can give false negatives
+- Report CoT/behavior rates across multiple samples, not single generations
+- The "strength" of steering should be measured as shift in probability mass, not binary success/failure
+- Temperature choice affects observed rates - need to report and standardize
+
+#### Why PI-RR Outperforms MELBO on Accuracy
+- Both methods induce similar CoT rates (~50%)
+- But PI-RR v6 achieves 34% accuracy vs MELBO v8's 3%
+- When PI-RR induces CoT, it more often produces *correct* reasoning
+- Possible explanation: PI targets the exact singular direction that activates the "careful computation" circuit, while MELBO's direction activates CoT but with less precision
+
+### 5.7 Scale Matters: Steering Vectors Need Amplification
+
+#### Scale=1 vs Scale=10 Comparison
+- MELBO vectors trained with norm=1.0, PI vectors unit-normalized
+- Question: does MELBO's training normalization determine optimal inference scale?
+
+| Method | Scale=1 Acc | Scale=1 CoT | Scale=10 Acc | Scale=10 CoT |
+|--------|-------------|-------------|--------------|--------------|
+| Unsteered | 6.3% | 1.3% | 8.1% | 4.4% |
+| PI-RR v6 | 5.6% | 1.9% | **34.4%** | **51.3%** |
+| MELBO v8 | 7.5% | 5.6% | 3.1% | **46.3%** |
+
+#### Key Finding: Scale=1 Shows No Steering Effect
+- At scale=1, both methods perform at or near baseline
+- Steering vectors encode *direction* but not *magnitude*
+- Training normalization does not determine optimal inference scale
+- Both methods need ~10x amplification for effective behavioral steering
+
+### 5.8 MELBO Vector Variance: v8 vs v11
+
+#### Extended Token Generation (500 tokens)
+- Increased max_new_tokens from 100 to 500 to give MELBO more room for CoT
+
+| MELBO Vector | Accuracy | CoT Rate |
+|--------------|----------|----------|
+| v8 | 6.2% | **60.0%** |
+| v11 | 3.1% | 10.6% |
+
+(For reference: PI-RR v6 achieves 28-31% accuracy, 43-46% CoT)
+
+#### Interpretation
+- MELBO v8 is exceptionally good at *triggering* CoT (60% rate)
+- But the reasoning is often incorrect (only 6% accuracy)
+- MELBO v11 barely induces CoT at all (10.6%)
+- Different MELBO vectors find very different directions with different behavioral effects
+- PI-RR v6 has lower CoT rate but much higher accuracy - it activates "careful computation" not just "show work"
+
+#### The Quality vs Quantity Tradeoff
+- MELBO v8: High CoT induction, low reasoning quality
+- PI-RR v6: Moderate CoT induction, high reasoning quality
+- Suggests PI targets the exact singular direction for the "compute carefully" circuit
+- MELBO may find a direction that triggers verbose output without precise computation
+
 ---
 
 ## 6. Future Directions
@@ -164,6 +294,12 @@ This finding complicates the "linear steering" narrative - the relationship betw
 - Linear approximation (Power Iteration) captures most of the steering-relevant structure for corrigibility
 - MELBO's nonlinear optimization provides modest improvements in efficiency
 - The high cosine similarity between methods suggests a shared underlying geometry
+- Both PI and MELBO can induce Chain-of-Thought reasoning in base models (~50% with sampling)
+- **Critical finding**: Decoding strategy dramatically affects observed steering effects
+  - Greedy decoding: PI-RR v6 shows 6% CoT
+  - Sampling (temp=0.7): PI-RR v6 shows 51% CoT
+  - Steering shifts probability distributions; sampling reveals the true effect
+- Rayleigh-Ritz correction is essential for block power iteration to find behaviorally relevant directions
 - Next step: explicitly measure and characterize the nonlinear residual
 
 ---
@@ -179,3 +315,17 @@ This finding complicates the "linear steering" narrative - the relationship betw
 ### C. Implementation Details
 - Power iteration convergence criteria
 - MELBO optimization hyperparameters
+- Rayleigh-Ritz rotation procedure
+
+### D. Rayleigh-Ritz Analysis
+- Singular value spectrum plot (before vs after RR)
+- Cosine similarity heatmap: before-RR vs after-RR vectors
+- figures: `results/math_vectors_1.7B/singular_value_spectrum.png`, `results/math_vectors_1.7B/cosine_sim_before_after_rr.png`
+
+### E. CoT Evaluation Results
+- Greedy evaluation: `results/math_vectors_1.7B/cot_eval_20260201_165353.json`
+- Sampling evaluation (temp=0.7, scale=10): `results/math_vectors_1.7B/cot_eval_20260201_173225.json`
+- Scale=1 evaluation: `results/math_vectors_1.7B/cot_eval_20260201_195910.json`
+- Extended tokens (500, MELBO v8): `results/math_vectors_1.7B/cot_eval_20260201_202637.json`
+- MELBO v11 comparison: `results/math_vectors_1.7B/cot_eval_20260201_220437.json`
+- Older sampling results: `results/math_vectors_1.7B/results_cot_rr.json`

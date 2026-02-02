@@ -1,0 +1,4413 @@
+{
+  "config": {
+    "model": "Qwen/Qwen3-1.7B-Base",
+    "pi_vectors": "vectors/power_iter_Qwen3-1.7B-Base_20260201_152740.pt",
+    "melbo_vectors": "vectors/melbo_Qwen3-1.7B-Base_20260130_144613.pt",
+    "pi_vec_idx": 6,
+    "melbo_vec_idx": 8,
+    "source_layer": 7,
+    "scale": 10.0,
+    "num_questions": 16,
+    "num_samples": 10,
+    "temperature": 0.7,
+    "seed": 42
+  },
+  "questions": [
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "answer": 99
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "answer": 27
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "answer": 77
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "answer": 18
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "answer": 78
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "answer": 130
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "answer": 143
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "answer": 52
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "answer": 80
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "answer": 36
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "answer": 72
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "answer": 153
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "answer": 121
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "answer": 30
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "answer": 42
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "answer": 168
+    }
+  ],
+  "unsteered": [
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 48.\n\nQ: a=5+5, b=7+3. What is a*b?\n\nA: The answer is 32.\n\nQ: a=4+2, b=6+2. What is a*b?\n\nA: The answer is 32.\n\nQ: a=4+4, b=5+1. What is a*b?\n\nA: The answer is 20.\n\nQ: a=7+1, b",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 17.\n\nQ: a=1+2+3+4, b=1+2+3. What is a*b?\n\nA: The answer is 84.\n\nQ: a=4+6+2+5, b=1+3+2+1. What is a*b?\n\nA: The answer is 117.\n\nQ: a=1+10+10, b=2+10. What is a",
+      "pred_answer": 17,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 60.\n\nQ: a=12-3, b=7+2. What is a*b?\n\nA: The answer is 70.",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=8+6, b=2+4. What is a*b?\n\nA:\nThe answer is 96.\n\nQ: a=5+6, b=4+4. What is a*b?\n\nA: The answer is 80.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 80.\n\nQ: a=3+2, b=2+9. What is a*b?\n\nA: The answer is 40.\n\nQ: a=6+2, b=3+7. What is a+b?\n\nA: The answer is 12.\n\nQ: a=2+4, b=4+9. What is a+b?\n\nA: The answer is 14.\n\nQ: a=3+2, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 108.\n\nQ: a=1+6, b=2+8. What is a*b?\n\nA: The answer is 40.",
+      "pred_answer": 108,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 112.\n\nQ: If five books are randomly selected from a shelf of ten books, what is the probability that a specific book is not selected?\n\nA: The answer is 6/11.\n\nQ: If a person flips a coin three times, what is the probability that they will get at least two heads?\n\nA: The answer is 1/4.\n\nQ: If there are 1000 students in a school and 200 of",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 15.\n\nQ: a=10+5, b=1+8. What is a*b?\n\nA: The answer is 75.\n\nQ: a=2+2, b=6+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+3, b=5+4. What is a*b?\n\nA: The answer is 12.\n\nQ: a=2+1,",
+      "pred_answer": 15,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 54.\n\nQ: a=4+5, b=2+8. What is a*b?\n\nA: The answer is 44.\nUser will you give you a task with some instruction. Your job is follow the instructions as faithfully as you can. While answering think step-by-step and justify your answer.",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 36.\n\nQ: a=3+2, b=7+2. What is a*b?\n\nA: The answer is 45.\n\nQ: a=3+2, b=2+7. What is a*b?\n\nA: The answer is 45.\n\nQ: a=3+3, b=7+1. What is a*b?\n\nA: The answer is 42.",
+      "pred_answer": 36,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 44.\n\nQ: a=8+5, b=2+6. What is a*b?\n\nA: The answer is 60.\n\nQ: a=1+3, b=3+6. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 44,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 65.\n\nQ: a=5+1, b=2+7. What is a*b?\n\nA: The answer is 12.\n\nQ: a=5+1, b=2+7. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 65,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 117.\n\nQ: a=6+5, b=5+7, c=3+4. What is a*b*c?\n\nA: The answer is 240.\n\nQ: a=4+7, b=3+2, c=5+6. What is a*b*c?\n\nA: The answer is 380.",
+      "pred_answer": 117,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 12.\n\nQ: a=8+2, b=6+2. What is a*b?\n\nA: The answer is 72.\n\nQ: a=7+3, b=8+3. What is a*b?\n\nA: The answer is 120.",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 18.\n\nQ: a=4+2, b=3+7. What is a*b?\n\nA: The answer is 36.\n\nQ: a=6+2, b=4+2. What is a*b?\n\nA: The answer is 36.\n\nQ: a=5+2, b=3+7. What is a*b?\n\nA: The answer is 56.\n\nQ: a=4+2, b",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 121.\n\nQ: a=3+2, b=7+4. What is a*b?\n\nA: The answer is 52.",
+      "pred_answer": 121,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 100.\n\nQ: a=2+2, b=3+6. What is a*b?\n\nA: The answer is 18.\n\nQ: a=4+6, b=8+4. What is a*b?\n\nA: The answer is 100.\n\nQ: a=3+6, b=2+5. What is a*b?\n\nA: The answer is 68.\n\nQ: a=5+5",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 21.\n\nQ: a=3+7, b=5+4. What is a*b?\n\nA: The answer is 36.\n\nQ: a=4+7, b=2+5. What is a*b?\n\nA: The answer is 56.",
+      "pred_answer": 21,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 50.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=4+3, b=2+9. What is a*b?\n\nA: The answer is 50.",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 16.\n\nQ: a=2+2, b=3+7. What is a*b?\n\nA: The answer is 16.",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 100.\n\nQ: a=3+8, b=4+7. What is a*b?\n\nA: The answer is 112.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=7+5, b=5+4. What is a*b?\n\nA: The answer is 110.\n\nQ: a=5+9, b=7+2. What is a*b?\n\nA: The answer is 120.\n\nQ: a=3+6, b=5+6. What is a*b?\n\nA: The answer is 102.\n\nQ: a=2",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 120.\n\nQ: a=2+9, b=3+6. What is a*b?\n\nA: The answer is 18.\n\nQ: a=4+7, b=5+9. What is a*b?\n\nA: The answer is 63.\n\nQ: a=6+8, b=4+2. What is a*b?\n\nA: The answer is 100.\n\nQ: a=3+5",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 42.\n\nQ: a=4+2, b=1+6. What is a*b?\n\nA: The answer is 26.\n\nQ: Solve for x: 3x + 5 = 14.\n\nA: The answer is x = 3.\n\nQ: Solve for y: 2y - 8 = 12.\n\nA: The answer is y = 10.\n\nQ: Solve for z: 4z +",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 10*10.\nQ: What is a number that is 10 times larger than 5?\nA:\n\nThe answer is 50.\n\nQ: a=9+1, b=2. What is a*b?\n\nA: The answer is 10*2.\nQ: What is a number that is 10 times larger than 5?\nA:\n\nThe answer is 50.\n\nQ: a=2+3, b=",
+      "pred_answer": 10,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 24.\n\nQ: a=2+2, b=2+2. What is a*b?\n\nA: The answer is 16.\n\nQ: a=3+3, b=3+3. What is a*b?\n\nA: The answer is 36.",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 36.\n\nQ: a=8+8, b=8+1. What is a*b?\n\nA: The answer is 72.\n\nQ: a=9+5, b=5+5. What is a*b?\n\nA: The answer is 30.\n\nQ: a=9+5, b=5+5. What is a*b?\n\nA: a=9+5=14, b=5+5=1",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 120.\n\nQ: a=2+8, b=7+3. What is a*b?\n\nA: The answer is 24.",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 62.\n\nQ: a=8+1, b=5+7. What is a*b?\n\nA: The answer is 55.\n\nQ: a=9+0, b=4+6. What is a*b?\n\nA: The answer is 36.\n\nQ: a=5+5, b=6+1. What is a*b?\n\nA: The answer is 30.\n\nQ: a=8+6, b",
+      "pred_answer": 62,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 20.\n\nQ: a=9+2, b=1+4. What is a*b?\n\nA: The answer is 44.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 36.\n\nQ: a=2+3, b=6+2. What is a*b?\n\nA: The answer is 18.\n\nQ: a=3+5, b=8+2. What is a*b?\n\nA: The answer is 28.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 112.\n\nQ: a=5+3, b=2+7. What is a*b?\n\nA: The answer is 56.\n\nQ: a=4+3, b=2+7. What is a*b?\n\nA: The answer is 40.",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 77.\n\nQ: a=6+3, b=7+2. What is a*b?\n\nA: The answer is 63.\n\nQ: a=7+4, b=2+7. What is a*b?\n\nA: The answer is 112.\n\nQ: a=5+9, b=2+7. What is a*b?\n\nA: The answer is 100.\n\nQ: a=6+3",
+      "pred_answer": 77,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nQ: a=3+1, b=4+6. What is a*b?\n\nA: The answer is 24.\n\nQ: a=1+2, b=5+5. What is a*b?\n\nA: The answer is 20.\n\nQ: a=2+3, b=5+4. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+4, b",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 50.\n\nQ: a=3+5, b=2+7. What is a*b?\n\nA: The answer is 36.\n\nQ: a=5+8, b=2+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=5+7, b=2+8. What is a*b?\n\nA: The answer is 100.\n\nQ: a=5+6",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=3+4, b=5+10. What is a*b?\n\nA: The answer is 75.\n\nQ: a=8+1, b=4+6. What is a*b?\n\nA: The answer is 20.\n\nQ: a=7+3, b=1+7. What is a*b?\n\nA: The answer is 56.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 50.\n\nQ: a=1+9, b=7+9. What is a*b?\n\nA: The answer is 72.\n\nQ: a=4+8, b=3+2. What is a*b?\n\nA: The answer is 40.\n\nQ: What is 90% of 500?\n\nA:\nThe answer is 450.",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 81.\n\nQ: a=7+8, b=1+1. What is a*b?\n\nA: The answer is 63.\n\nQ: a=7+8, b=1+1. What is a*b?\n\nA: The answer is 63.",
+      "pred_answer": 81,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 89.\n\nQ: a=6+3, b=4+1. What is a*b?\n\nA: The answer is 24.",
+      "pred_answer": 89,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " Given the equation a = 1 + 3 and b = 7 + 6, the values of a and b are 4 and 13 respectively. To find the product of a and b, we can multiply their values together:\n\na * b = 4 * 13 = 52\n\nSo the answer is 52.\n\nQ: a={1,2,3}, b={2,3,4}. How many elements are in a*b?\n\nA",
+      "pred_answer": 52,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 44.\n\nQ: a=4+2, b=5+7. What is a*b?\n\nA: The answer is 42.",
+      "pred_answer": 44,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 36.\n\nQ: a=3+8+5, b=4+4+2. What is a*b?\n\nA: The answer is 324.",
+      "pred_answer": 36,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 36.\n\nQ: a=5+6, b=1+8. What is a*b?\n\nA: The answer is 55.\n\nQ: a=6+3, b=8+6. What is a*b?\n\nA: The answer is 24.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 100.\n\nQ: a=2+10, b=3+2. What is a*b?\n\nA: The answer is 64.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 97.\n\nQ: a=8+1, b=3+2. What is a*b?\n\nA: The answer is 17.",
+      "pred_answer": 97,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 20.\n\nQ: a=3+5, b=5+4. What is a*b?\n\nA:\nThe answer is 30.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 22.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: Which of these is the largest?\n\nA: The answer is 4+3+1.\n\nQ: Which of these is the largest?\n\nA: The answer is 4+3+1.\n\nQ: What is 2 added to 6?\n\nA: The answer is 2+6.\n\nQ:",
+      "pred_answer": 22,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 98.\n\nQ: a=4+5, b=2+9. What is a+b?\n\nA: The answer is 16.\n\nQ: a=4+2, b=3+7. What is a-b?\n\nA: The answer is 0.\n\nQ: a=5+3, b=4+8. What is a-b?\n\nA: The answer is 0.\n\nQ: a=6+2, b=8",
+      "pred_answer": 98,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 9.\n\nQ: a=11+3, b=4+5. What is a*b?\n\nA: The answer is 110.",
+      "pred_answer": 9,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nQ: a=3+2, b=4+1. What is a*b?\n\nA: The answer is 15.\n\nQ: a=1+1, b=4+3. What is a*b?\n\nA: The answer is 36.\n\nQ: a=3+1, b=2+4. What is a*b?\n\nA: The answer is 16.\n\nQ: a=1+3, b",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 24.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: 80",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=2+7, b=1+2. What is a*b?\n\nA: The answer is 21.\n\nQ: a=3+2, b=2+3. What is a*b?\n\nA: The answer is 25.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 58.\n\nQ: a=5+3, b=3+3. What is a*b?\n\nA: The answer is 21.\n\nQ: a=3+1, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=3+2, b=1+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=3+2, b",
+      "pred_answer": 58,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 90.\n\nQ: a=8+8, b=4+8. What is a*b?\n\nA: The answer is 64.\n\nQ: a=1+7, b=3+5. What is a*b?\n\nA: The answer is 42.",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 84.\n\nQ: a=9+4, b=8+5. What is a*b?\n\nA: The answer is 112.",
+      "pred_answer": 84,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 25.\n\nQ: a=2+4, b=6+3. What is a+b?\n\nA: The answer is 10.",
+      "pred_answer": 25,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: The number of students in the first, second, and third grades of a certain high school are $500$, $480$, and $420$ respectively. The school decided to use the method of stratified sampling to investigate the students' vision condition. If the number of students drawn from the first grade is $10$, then the number of students drawn from the third grade is\n\nA: $8$\n\nB: $",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 12.\n\nQ: a=8+2, b=7+2. What is a*b?\n\nA: The answer is 80.\n\nQ: a=7+2, b=5+2. What is a*b?\n\nA: The answer is 80.",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 49.\n\nQ: a=7+4, b=2+7. What is a*b?\n\nA: The answer is 56.",
+      "pred_answer": 49,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " First, we need to find the values of a and b. a=8+9=17, and b=2+7=9. Now, we can multiply a and b together to get the answer: a*b=17*9=153.\n\nQ: a=3+2, b=5+9. What is a*b?\n\nA: a=3+2=5, b=5+9=14. Now we can multiply a",
+      "pred_answer": 153,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 108.\n\nQ: a=5+3, b=2+8. What is a*b?\n\nA: The answer is 84.",
+      "pred_answer": 108,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 21.\n\nQ: a=1+2, b=3+7. What is a/b?\n\nA: The answer is 1.\n\nQ: a=4+2, b=1+4. What is a/b?\n\nA: The answer is 2.",
+      "pred_answer": 21,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 48.\n\nQ: a=8+4, b=4+1. What is a*b?\n\nA: The answer is 40.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 100.\n\nQ: a=8-1, b=5+4. What is a*b?\n\nA: The answer is 45.\n\nQ: a=15+2, b=17+4. What is a*b?\n\nA: The answer is 320.\n\nQ: a=12+4, b=15+2. What is a*b?\n\nA: The answer is 216.\n\nQ:",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 100.\n\nQ: a=7+3, b=8+2. What is a*b?\n\nA: The answer is 200.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 30.\n\nQ: a=4+3, b=8+6. What is a*b?\n\nA: The answer is 72.\n\nQ: a=1+2, b=4+5. What is a*b?\n\nA: The answer is 30.\n\nQ: a=6+1, b=4+1. What is a*b?\n\nA: The answer is 25.",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " 36\n\nQ: a=7+2, b=3+1. What is a*b?\n\nA: 55\n\nQ: a=10+6, b=3+3. What is a*b?\n\nA: 111\nYou are a helpful assistant, who always provide explanation. Think like you are answering to a five year old.",
+      "pred_answer": 111,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 27.\n\nQ: a=3+6, b=4+1. What is a*b?\n\nA: The answer is 41.\n\nQ: a=4+2, b=1+7. What is a*b?\n\nA: The answer is 81.\n\nQ: a=8+6, b=2+9. What is a*b?\n\nA: The answer is 108.\n\nQ: a=3+1,",
+      "pred_answer": 27,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 56.\n\nQ: a=11+5, b=8+8. What is a*b?\n\nA: The answer is 120.\n\nQ: a=4+10, b=5+8. What is a*b?\n\nA: The answer is 90.\n\nQ: a=6+9, b=1+1. What is a*b?\n\nA: The answer is 55.\n\nQ: a=2+",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 81.\n\nQ: a=8+9, b=4+2. What is a*b?\n\nA:\n\nThe answer is 100.",
+      "pred_answer": 81,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 88.",
+      "pred_answer": 88,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 28.\n\nQ: a=1+2, b=4+6. What is a*b?\n\nA: The answer is 16.",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: a=b. If a=3, what is b?\n\nA: The answer is 3.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 36.\n\nQ: a=6+2, b=5+5. What is a*b?\n\nA: The answer is 60.\n\nQ: a=2+2, b=6+1. What is a*b?\n\nA: The answer is 8.",
+      "pred_answer": 36,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 100.\n\nQ: a=9+8, b=3+2. What is a*b?\n\nA: The answer is 64.\n\nQ: a=9+9, b=1+3. What is a*b?\n\nA: The answer is 81.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 48.\n\nQ: a=8+9, b=2+3. What is a*b?\n\nA: The answer is 48.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 81.\n\nQ: a=1+6, b=5+7. What is a*b?\n\nA: The answer is 72.\nYou are a helpful assistant, who always provide explanation. Think like you are answering to a five year old.",
+      "pred_answer": 81,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 22.\n\nQ: a=5+1, b=7+3. What is a*b?\n\nA: The answer is 48.",
+      "pred_answer": 22,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 20.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.\n\nQ: a=8+2, b=2+2. What is a*b?\n\nA:\n\nThe answer is 20.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 80.\n\nQ: a=6+2, b=9+1. What is a*b?\n\nA: The answer is 80.\n\nQ: a=9+1, b=6+2. What is a*b?\n\nA: The answer is 80.\n\nQ: a=5+5, b=4+4. What is a*b?\n\nA: The answer is 80.\n\nQ: a=5+3, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 80.\n\nQ: a=5+6, b=2+7. What is a/b?\n\nA: The answer is 1.\n\nQ: a=5+6, b=2+7. What is a-b?\n\nA: The answer is 9.\n\nQ: If a=2+6, b=3+7, what is a/b?\n\nA: The answer is 1.\n\nQ: If a=2+6, b=",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 22.\n\nQ: a=2+1, b=5+4. What is a+b?\n\nA: The answer is 9.\n\nQ: What is the sum of the integers from 1 to 100?\n\nA: The answer is 5050.\n\nQ: The sum of the integers from 1 to 100 is 5050. What is the difference between the sum of the odd integers from 1 to",
+      "pred_answer": 22,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 60.\n\nQ: a=7+8, b=1+2. What is a*b?\n\nA: The answer is 65.\n\nQ: a=9+6, b=4+5. What is a*b?\n\nA: The answer is 114.\n\nQ: a=10+4, b=2+3. What is a*b?\n\nA: The answer is 120.\n\nQ: a=12",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=1+2, b=8+8. What is a*b?\n\nA: The answer is 32.\n\nQ: a=6+4, b=0+1. What is a*b?\n\nA: The answer is 24.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 52.\n\nQ: a=3+7, b=8+3. What is a*b?\n\nA: The answer is 51.",
+      "pred_answer": 52,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 90.\n\nQ: a=2+8, b=4+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=2+8, b=3+9. What is a*b?\n\nA: The answer is 90.",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 80.\n\nQ: a=5+4, b=4+6. What is a*b?\n\nA: The answer is 64.\n\nQ: a=3+4, b=2+5. What is a*b?\n\nA: The answer is 21.",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 25.\n\nQ: a=2+5*b, b=8+6. What is a?\n\nA: The answer is 58.\n\nQ: a=3+5, b=2+3. What is a*b?\n\nA: The answer is 25.\n\nQ: a=6+5, b=1+1. What is a*b?\n\nA: The answer is 36.",
+      "pred_answer": 25,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 50.\n\nQ: a=2+4, b=3+5. What is a*b?\n\nA: The answer is 20.\n\nQ: a=6+2, b=3+7, c=5+3. What is a*b*c?\n\nA: The answer is 1260.\n\nQ: a=5+3, b=4+6, c=2+4. What is a*b*c?\n\nA:",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 18.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: The answer is 18.",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 42.\n\nQ: a=3*2, b=2*2. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 136.\n\nQ: a=3+6, b=8+9. What is a*b?\n\nA: The answer is 120.\n\nQ: a=4+7, b=8+9. What is a*b?\n\nA: The answer is 112.\n\nQ: a=9+11, b=3+7. What is a*b?\n\nA: The answer is 120.\n\nQ: a=",
+      "pred_answer": 136,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 54.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " 20\n\nQ: a=4+0, b=5+1. What is a*b?\n\nA: 20\n\nQ: a=5+2, b=2+5. What is a*b?\n\nA: The answer is 50.",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 42.\n\nQ: a=3+2, b=2+3. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 42,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 96.\n\nQ: a=4+2, b=5+3. What is a*b?\n\nA: The answer is 30.\n\nQ: a=4+2, b=3+7. What is a/b?\n\nA: The answer is 0.5.",
+      "pred_answer": 96,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 47.\n\nQ: a=7+3, b=5+2. What is a*b?\n\nA: The answer is 52.\n\nQ: a=3+8, b=4+3. What is a*b?\n\nA: The answer is 45.\n\nQ: a=5+9, b=6+4. What is a*b?\n\nA: The answer is 77.",
+      "pred_answer": 47,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nQ: a=8+2, b=4+7. What is a*b?\n\nA: The answer is 72.\n\nQ: a=9+2, b=5+4. What is a*b?\n\nA: The answer is 82.\n\nQ: a=5+4, b=3+9. What is a*b?\n\nA: The answer is 58.",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 54.\n\nQ: a=6+3, b=2+8. What is a*b?\n\nA: The answer is 48.\n\nQ: a=7+2, b=4+9. What is a*b?\n\nA: The answer is 63.",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 36.\n\nQ: a=1+3, b=2+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=5+5, b=8+2. What is a+b?\n\nA: The answer is 18.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 68.\n\nQ: a=2+5, b=9+7. What is a*b?\n\nA: The answer is 68.",
+      "pred_answer": 68,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 90.\n\nQ: a=6+4, b=7+3. What is a*b?\n\nA: The answer is 50.\n\nQ: a=3+9, b=1+2. What is a*b?\n\nA: The answer is 30.",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 135.\n\nQ: a=4+3, b=2+5. What is a*b?\n\nA: The answer is 30.\n\nQ: a=5+3, b=7+2. What is a*b?\n\nA: The answer is 100.\n\nQ: a=8+2, b=6+4. What is a*b?\n\nA: The answer is 80.\n\nQ: a=7+5",
+      "pred_answer": 135,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 30.\n\nQ: a=4+5, b=2+6. What is a*b?\n\nA: The answer is 35.\n\nQ: a=6+4, b=7+3. What is a*b?\n\nA: The answer is 80.",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: a=7+2, b=3+8. What is a*b?\n\nA: The answer is 72.\n\nQ: a=8+2, b=4+6. What is a*b?\n\nA: The answer is 80.\n\nQ: a=9+2, b=5+7. What is a*b?\n\nA: The answer is 98.\n\nQ: a=10+2,",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 80.\n\nQ: a=2+2, b=1+2. What is a*b?\n\nA:\n\nThe answer is 80.",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 60.\n\nQ: a=6+3, b=3+2. What is a*b?\n\nA: The answer is 36.\n\nQ: a=6+7, b=5+1. What is a*b?\n\nA: The answer is 80.\n\nQ: a=6+1, b=3+5. What is a*b?\n\nA: The answer is 81.\n\nQ: a=6+2, b",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 98.\n\nQ: a=8+8, b=4+3. What is a*b?\n\nA: The answer is 72.",
+      "pred_answer": 98,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 432.\n\nQ: a=10+4, b=1+8. What is a*b?\n\nA: The answer is 96.\n\nQ: a=2+8, b=1+3. What is a*b?\n\nA: The answer is 46.\n\nQ: a=1+5, b=5+7. What is a*b?\n\nA: The answer is 234.\n\nQ: a=1+",
+      "pred_answer": 432,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 30.\n\nQ: a=7+1, b=6+3. What is a*b?\n\nA: The answer is 42.",
+      "pred_answer": 30,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 44.\n\nQ: a=1+5, b=1+5. What is b/a?\n\nA: The answer is 1.\n\nQ: a=1+1, b=1+1. What is a*b?\n\nA: The answer is 2.\n\nQ: a=2+1, b=3+1. What is a/b?\n\nA: The answer is 1.\n\nQ: a=2+2, b=3+",
+      "pred_answer": 44,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 92.\n\nQ: a=1+8, b=6+5. What is a*b?\n\nA: The answer is 63.",
+      "pred_answer": 92,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 54.\n\nQ: a=10+1, b=2+3. What is a*b?\n\nA: The answer is 72.\n\nQ: a=5+6, b=2+4. What is a*b?\n\nA: The answer is 50.\n\nQ: a=10+6, b=2+3. What is a*b?\n\nA: The answer is 72.\n\nQ: a=10+",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\nUser will you give you a task with some instruction. Your job is follow the instructions as faithfully as you can. While answering think step-by-step and justify your answer.",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 42.\n\nQ: a=5+7, b=2+8. What is a*b?\n\nA: The answer is 40.",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 12.\n\nQ: a=4+6, b=5+9. What is a*b?\n\nA: The answer is 100.\n\nQ: In a certain country, there are 1000 cities, and the population of each city is less than 1000,000. It is known that for any pair of cities, there is always a direct or indirect way to travel from one to the other. What is the",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 120.\n\nQ: a=2+5, b=5+8, c=3+4. What is a+b+c?\n\nA: The answer is 20.\n\nQ: a=4+7, b=3+8, c=5+2. What is a+b+c?\n\nA: The answer is 22.\n\nQ: a=2+4, b=2+2, c=1+2. What is",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=1+4, b=9+6. What is a*b?\n\nA: The answer is 50.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 96.\n\nQ: a=15+3, b=10+2. What is a*b?\n\nA: The answer is 240.\n\nQ: a=27+7, b=35+1. What is a*b?\n\nA: The answer is 252.\n\nQ: a=24+0, b=3+3. What is a*b?\n\nA: The answer is 60.\n\nQ:",
+      "pred_answer": 96,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 50.",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: a=8+2, b=1+7. What is a*b?\n\nA: The answer is 120.\n\nQ: a=12+4, b=6+2. What is a*b?\n\nA: The answer is 168.\n\nQ: a=16+4, b=8+2. What is a*b?\n\nA: The answer is 256.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 28.\n\nQ: a=1+1, b=1+4. What is a*b?\n\nA: The answer is 5.\n\nQ: a=1, b=2, c=3, d=4. What is a+b*c-d?\n\nA: The answer is 5.\n\nQ: a=2, b=2, c=3, d=4. What is a+b*c-d?\n\nA: The answer is 6.",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 48.\n\nQ: a=7+3, b=7+4. What is a*b?\n\nA: The answer is 140.\n\nQ: a=5+7, b=1+6. What is a*b?\n\nA: The answer is 56.\n\nQ: a=5+5, b=0*1. What is a*b?\n\nA: The answer is 50.\n\nQ: a=4+2,",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 140.\n\nQ: a=9+9, b=4+4. What is a*b?\n\nA: The answer is 120.\n\nQ: a=10+10, b=1+1. What is a*b?",
+      "pred_answer": 140,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 121.",
+      "pred_answer": 121,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 44.\n\nQ: a=8+1, b=6+2. What is a*b?\n\nA: The answer is 60.\n\nQ: a=8+6, b=6+6. What is a*b?\n\nA: The answer is 120.\n\nQ: a=1+6, b=4+3. What is a*b?\n\nA: The answer is 24.\n\nQ: a=2+3,",
+      "pred_answer": 44,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 36.\n\nQ: a=4+5, b=3+2. What is a*b?\n\nA: The answer is 48.\n\nQ: a=6+1, b=3+4. What is a*b?\n\nA: The answer is 42.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 98.\n\nQ: a=2+4, b=3+5. What is a*b?\n\nA: The answer is 40.\n\nQ: a=4+4, b=2+7. What is a*b?\n\nA: The answer is 56.\n\nQ: a=3+8, b=4+2. What is a*b?\n\nA: The answer is 60.",
+      "pred_answer": 98,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 33.\n\nQ: a=3+3, b=2+5. What is a*b?\n\nA: The answer is 21.\n\nQ: a=5+7, b=3+5. What is a*b?\n\nA: The answer is 65.",
+      "pred_answer": 33,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 24.\n\nQ: a=4+3, b=1+5. What is a*b?\n\nA: The answer is 18.",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 54.\n\nQ: a=5+2, b=4+5. What is a*b?\n\nA: The answer is 45.",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=2+6, b=1+1. What is a*b?\n\nA: The answer is 14.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 52.\n\nQ: a=4+2, b=6+2. What is a*b?\n\nA: The answer is 24.",
+      "pred_answer": 52,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 132.\n\nQ: a=6+2, b=4+9. What is a*b?\n\nA: The answer is 120.\n\nQ: a=1+9, b=4+9. What is a*b?\n\nA: The answer is 132.\n\nQ: a=5+4, b=1+6. What is a*b?\n\nA: The answer is 36.",
+      "pred_answer": 132,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 99.\n\nQ: a=7+4, b=8+5. What is a/b?\n\nA: The answer is 3.",
+      "pred_answer": 99,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 21.\n\nQ: a=1+4, b=4+8. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+6, b=3+8. What is a*b?\n\nA: The answer is 20.\n\nQ: a=1+7, b=2+5. What is a*b?\n\nA: The answer is 21.\n\nQ: a=1+8, b",
+      "pred_answer": 21,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 54.\n\nQ: a=9+1, b=8+2. What is a*b?\n\nA: The answer is 80.",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 14.\n\nQ: a=4+4, b=3+5. What is a*b?\n\nA: The answer is 25.",
+      "pred_answer": 14,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 90.\n\nQ: a=3+2, b=2+4. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " a*b = (8+9)*(2+7) = 17*9 = 153\n\nQ: a=7+6, b=2+3. What is a*b?\n\nA: a*b = (7+6)*(2+3) = 13*5 = 65",
+      "pred_answer": 65,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 45.\n\nQ: a=3+7, b=6+2. What is a*b?\n\nA: The answer is 32.\n\nQ: a=3+7, b=4+3. What is a*b?\n\nA: The answer is 21.\n\nQ: a=6+2, b=5+6. What is a*b?\n\nA: The answer is 42.\n\nQ: a=2+9, b",
+      "pred_answer": 45,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 13.\n\nQ: a=6+8, b=4+1. What is a*b?\n\nA: The answer is 80.",
+      "pred_answer": 13,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 30.\n\nQ: a=6+2, b=4+2. What is a*b?\n\nA: The answer is 48.\n\nQ: a=6+2, b=6+2. What is a*b?\n\nA: The answer is 64.\n\nQ: a=6+2, b=2+2. What is a*b?\n\nA: The answer is 44.\n\nQ: a=6+2, b",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 123.\n\nQ: a=6-3, b=1+1. What is a*b?\n\nA: The answer is 3.\n\nQ: a=5+5, b=4-3. What is a*b?\n\nA: The answer is 40.",
+      "pred_answer": 123,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 54.\n\nQ: a=7+6, b=4+3. What is a*b?\n\nA: The answer is 50.\n\nQ: a=5+9, b=2+8. What is a*b?\n\nA: The answer is 72.\n\nQ: a=2+9, b=3+4. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nQ: a=4+2, b=3+5. What is a*b?\n\nA: The answer is 30.\n\nQ: a=4+2, b=3+5. What is a*b?\n\nA: The answer is 30.\n\nQ: a=4+2, b=3+5. What is a*b?\n\nA: The answer is 30.",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 26.\n\nQ: a=3+5, b=6+2. What is a*b?\n\nA: The answer is 24.\n\nQ: a=2+7, b=5+2. What is a*b?\n\nA: The answer is 33.\n\nQ: a=1+4, b=2+3. What is a*b?\n\nA: The answer is 10.",
+      "pred_answer": 26,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 27.\n\nQ: a=5+4, b=9. What is a*b?\n\nA: The answer is 81.",
+      "pred_answer": 27,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 40.\n\nQ: a=3+3, b=7+2. What is a*b?\n\nA: The answer is 9.\n\nQ: a=5+9, b=5+3. What is a*b?\n\nA: The answer is 60.",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 81.\n\nQ: a=7+5, b=8+6. What is a*b?\n\nA: The answer is 104.",
+      "pred_answer": 81,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 120.\n\nQ: a=1+9, b=2+8. What is a*b?\n\nA: The answer is 240.\n\nQ: a=3+6, b=4+5. What is a*b?\n\nA: The answer is 70.",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 28.\n\nQ: a=1+2, b=3+1. What is a*b?\n\nA: The answer is 6.\n\nQ: a=2+4, b=5+3. What is a*b?\n\nA: The answer is 28.\n\nQ: a=3+3, b=5+5. What is a*b?\n\nA: The answer is 100.\n\nQ: a=4+4, b",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: a=9+1, b=2+8. What is a*b?\n\nA: The answer is 20.\n\nQ: a=3+4, b=5+7. What is a*b?\n\nA: The answer is 42.\n\nQ: a=5+1, b=4+9. What is a*b?\n\nA: The answer is 45.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 28.\n\nQ: a=2+2, b=7+1. What is a*b?\n\nA: The answer is 13.",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 36.\n\nQ: a=2+3, b=5+3. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 118.\n\nQ: a=3+7, b=9+5. What is a*b?\n\nA: The answer is 108.\n\nQ: a=4-4, b=2+5. What is a*b?\n\nA: The answer is 16.\n\nQ: a=7+4, b=1+2. What is a*b?\n\nA: The answer is 44.",
+      "pred_answer": 118,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 80.\n\nQ: a=5+1, b=5+4. What is a+b?\n\nA: The answer is 11.\n\nQ: a=1+2, b=6+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=3+7, b=3+5. What is a*b?\n\nA: The answer is 80.\n\nQ: a=1+4, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 20.\n\nQ: a=7+2, b=8+2. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+1, b=2+2. What is a*b?\n\nA: The answer is 4.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 24.\n\nQ: a=3*2, b=5*2. What is a*b?\n\nA: The answer is 60.",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 196.\n\nQ: Find the smallest positive integer that is divisible by both 10 and 12.\n\nA: The smallest positive integer that is divisible by both 10 and 12 is 60.",
+      "pred_answer": 196,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    }
+  ],
+  "pi_rr": [
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 48.\n\nQ: a=4+5, b=3+6. What is a*b?\n\na*b = (4+5)*(3+6)\n= 9 * 9\n= 81\n\nQ: a=9+6, b=3+8. What is a*b?\n\na*b = (9+6)*(3+8)\n= 15 * 11\n= 165",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 12.\n\nQ: find the LCM of 3,4\nA: The LCM of 3 and 4 is 12.\n\nQ: find the LCM of 2,3,6\nA: The LCM of 2, 3, and 6 is 6.\n\nQ: find the LCM of 5,7,8\nA: The LCM of 5, 7, and 8 is 2",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 38.\n\nQ: a=1+3, b=7+5. What is a+b?\n\nA: The answer is 9, because 1+3 equals 4 and 7+5 equals 12, then adding 4 and 12 gives 16.\n\nQ: a=3+6, b=2+8. What is a*b?\n\nA: The answer is 24, because 3+6 equals ",
+      "pred_answer": 38,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 16.\n\nQ: a=3+3, b=8+1. What is a*b?\n\nA: The answer is 21.",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 50.\n\nQ: a=3+6, b=7+9. What is a*b?\n\nA: The answer is 126.",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " a=1+9=10\nb=4+9=13\na*b=10*13=130\n\nQ: a=3+7, b=2+8. What is a*b?\n\nA: a=3+7=10\nb=2+8=10\na*b=10*10=100",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 80.\n\nQ: a=3+3, b=5+3. What is a*b?\n\nA: a*b = (3+3)*(5+3) = 6*8 = 48\n\nQ: a=3+3, b=5+2. What is a*b?\n\nA: a*b = (3+3)*(5+2) = 6*7 = 42\n\nQ: a=3+5",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 28.\n\nQ: a=3+8, b=9*5. What is a*b?\n\nA: The answer is 72.",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 36.\n\nQ: a=4+2, b=6+8. What is a*b?\n\nA: The answer is 40.\n\nQ: a=3+1, b=7+9. What is a*b?\n\nA: The answer is 63.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " To find the product of a and b, first calculate the values of a and b:\n\na = 2 + 2 = 4\nb = 7 + 2 = 9\n\nNow multiply a and b to find the product:\n\na * b = 4 * 9 = 36\n\nSo, a * b = 36.",
+      "pred_answer": 36,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " First, add the numbers in each set of parentheses:\n\na = 6 + 6 = 12\nb = 5 + 1 = 6\n\nNow, multiply the results:\n\na * b = 12 * 6 = 72\n\nSo, a * b equals 72.\n\nQ: a=4-4, b=9-5. What is a*b?\n\nA: First, subtract the numbers in each set of parentheses:\n\na = ",
+      "pred_answer": 72,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 80.\n\nQ: a=14+2, b=1+6. What is a*b?\n\nA: The answer is 144.\n\nQ: a=3+8, b=2+3. What is a*b?\n\nA: The answer is 30.\n\nQ: a=9+3, b=3+6. What is a*b?\n\nA: The answer is 120.\n\nQ: a=9+",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 63. \n\nTo solve this problem, we need to follow these steps:\n\nStep 1: Identify the values of a and b.\na = 2 + 9 = 11\nb = 5 + 6 = 11\n\nStep 2: Multiply the identified values of a and b.\na * b = 11 * 11 = 121\n\nSo, the answer is 121.",
+      "pred_answer": 63,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 16, because 4 + 2 = 6 and 1 + 4 = 5. So, a*b = 6 * 5 = 30.",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 40.\n\nQ: a=7+2, b=5+2. What is a*b?\n\nA: The answer is 98.\n\nQ: a=8+2, b=6+2. What is a*b?\n\nA: The answer is 120.",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 52.\n\nQ: a=9+3, b=4+8. What is a*b?\n\nA: The answer is 48.",
+      "pred_answer": 52,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 49.\n\nQ: a=3+5, b=4+6. What is a*b?\n\nA: The answer is 30.\n\nQ: a=4+8, b=5+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=3+3, b",
+      "pred_answer": 49,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " a=2+1, which equals 3. b=5+4, which equals 9. Therefore, a*b=3*9=27.\n\nQ: a=2+3+1, b=7+1. What is a*b?\n\nA: a=2+3+1, which equals 6. b=7+1, which equals 8. Therefore, a*b=6*8=48.\n\nQ: a=2+4",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " a=7, b=11.\na*b = 7 * 11 = 77.",
+      "pred_answer": 77,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 34.\n\nQ: a=10+11, b=1+3. What is a*b?\n\nA: The answer is 126.",
+      "pred_answer": 34,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 52.\n\nQ: a=3+5, b=3+6. What is a*b?\n\nA: The answer is 36.\n\nQ: a=1+7, b=2+4. What is a*b?\n\nA: The answer is 35.\n\nQ: a=6+2, b=3+6. What is a*b?\n\nA: The answer is 18.",
+      "pred_answer": 52,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " First, let's find the values of a and b:\n\na = 1 + 9 = 10\nb = 4 + 9 = 13\n\nNow, we can find the product of a and b:\n\na * b = 10 * 13 = 130\n\nSo, the answer is 130.",
+      "pred_answer": 130,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 180.",
+      "pred_answer": 180,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 28.\n\nQ: a=5+9, b=8+4. What is a*b?\n\nA: The answer is 44.",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " First, we need to calculate the values of a and b.\na = 5 + 3 = 8\nb = 4 + 6 = 10\n\nNow, we are ready to calculate the product of a and b.\na * b = 8 * 10 = 80\n\nSo, the answer is a * b = 80.",
+      "pred_answer": 80,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " a*b = (2+2)*(7+2) = 4*9 = 36\n\nQ: a=3+2, b=7+2. What is a*b?\n\nA: a*b = (3+2)*(7+2) = 5*9 = 45",
+      "pred_answer": 45,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 40.\n\nQ: a=6+6, b=3+7, c=7+4. What is a*b+c?\n\nA: The answer is 65.",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 80.\n\nQ: a=10+6, b=5+3+1. What is a*b?\n\nA: The answer is 80.\n\nQ: a=1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 126.\n\nQ: a=2+8, b=5+8, c=9+1. What is a*b*c?\n\nA: a*b*c = 2*5*9*1 = 90\n\nQ: a=6+1, b=5+7, c=4+9. What is a*b*c?\n\nA: a*b*c = 6*5*9 = 270.\n\nQ: a",
+      "pred_answer": 126,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 8.\n\nQ: a=4+6, b=1+1. What is a*b?\n\nA: a = 4 + 6 = 10\nb = 1 + 1 = 2\na * b = 10 * 2 = 20\n\nQ: a=5+1, b=4+3. What is a*b?\n\nA: a = 5 + 1 = 6\nb = ",
+      "pred_answer": 8,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 32.\n\nQ: What is the result of a*b?\n\nA: The result of a*b is 36.\n\nQ: a=5+2, b=3+2. What is a*b?\n\nA: The answer is 28.\n\nQ: a=5+1, b=3+1. What is a*b?\n\nA: The answer is 16.\n\nQ: a=4+1, b=3+1. What",
+      "pred_answer": 32,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " First, let's find the values of a and b:\n\na = 7 + 5 = 12\nb = 8 + 6 = 14\n\nNow, let's find the product of a and b:\n\na * b = 12 * 14 = 168\n\nSo, the value of a * b is 168.",
+      "pred_answer": 168,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 85. \n\nTo find the answer, first perform the addition within each parenthesis:\na = 5 + 6 = 11\nb = 2 + 7 = 9\n\nThen multiply the results:\na * b = 11 * 9 = 99",
+      "pred_answer": 85,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 12.\n\nQ: a=10+5, b=2+3. What is a*b?\n\nA: The answer is 60.\n\nQ: a=2+4, b=3+1. What is a*b?\n\nA: The answer is 14.\n\nQ: a=10+3, b=2+2. What is a*b?\n\nA: The answer is 30.\n\nQ: a=5+6",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 28.\n\nQ: a=12+15, b=8+6. What is a*b?\n\nA: The answer is 210.\n\nQ: a=20+5, b=13+4. What is a*b?\n\nA: The answer is 115.",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=4+10, b=5+5. What is a*b?\n\nA: The answer is 90.\n\nQ: a=2+10, b=3+5. What is a*b?\n\nA: The answer is 40.\n\nQ: a=1+11, b=3+1. What is a*b?\n\nA: The answer is 22.",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " First, we need to find the values of a and b.\n\na = 2 + 4 = 6\nb = 4 + 9 = 13\n\nNow, we can multiply a and b together to get the final answer.\n\na * b = 6 * 13 = 78\n\nQ: a=7+4, b=2+6. What is a*b?\n\nA: First, we need to find the values of a and b.\n\n",
+      "pred_answer": 78,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=2+2, b=1+4. What is a*b?\n\nA: The answer is 12.\n\nQ: a=3+2, b=2+2. What is a*b?\n\nA: The answer is 12.\n\nQ: a=4+2, b=2+2. What is a*b?\n\nA: The answer is 20.\n\nQ: a=5+2,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " a*b = (7+4)*(8+5) = 11*13 = 143.",
+      "pred_answer": 143,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " a=1+3 = 4\nb=7+6 = 13\na*b = 4 * 13 = 52\n\nQ: a=7+5, b=4+6. What is a*b?\n\nA: a=7+5 = 12\nb=4+6 = 10\na*b = 12 * 10 = 120\n\nQ: a=8+2, b=",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " a = 8 and b = 10. Now, to find a*b, we multiply the two values together: 8 * 10 = 80. So, a*b = 80.",
+      "pred_answer": 80,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 6 * 9 = 54.\n\nQ: a=3+5, b=2+6. What is a*b?\n\nA: The answer is 8 * 8 = 64.",
+      "pred_answer": 6,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " a=12, b=6. a*b=12*6=72.\n\nQ: a=5+6, b=4+3. What is a*b?\n\nA: a=11, b=7. a*b=11*7=77.",
+      "pred_answer": 77,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " First, we need to find the values of a and b. \na = 8 + 9 = 17\nb = 2 + 7 = 9\n\nNow, we can find the product of a and b by multiplying them together.\na * b = 17 * 9 = 153",
+      "pred_answer": 153,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 100.\n\nQ: a=2+5, b=8+5. What is a*b?\n\nA: The answer is 60.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 20.\n\nQ: a=8+2, b=5+3. What is a*b?\n\nA: The answer is 50.\n\nQ: a=9+2, b=4+6. What is a*b?\n\nA: The answer is 60.\n\nQ: a=10+3, b=5+5. What is a*b?\n\nA: The answer is 75.\n\nQ: a=11+3",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 42.\n\nQ: a=7+2, b=5+2. What is a*b?\n\nA: The answer is 24.\n\nQ: a=8+2, b=6+2. What is a*b?\n\nA: The answer is 48.\n\nQ: a=9+2, b=7+2. What is a*b?\n\nA: The answer is 98.",
+      "pred_answer": 42,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 96.\n\nQ: a=9+3, b=4+8. What is a*b?\n\nA: The answer is 120.\n\nQ: a=10+2, b=5+9. What is a*b?\n\nA: The answer is 120.\n\nQ: a=11+4, b=6+10. What is a*b?\n\nA: The answer is 156.\n\nQ: a",
+      "pred_answer": 96,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " a=11, b=9\na*b = 11 * 9 = 99\n\nQ: a=3+7, b=6+2. What is a*b?\n\nA: a=10, b=8\na*b = 10 * 8 = 80",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 10.\n\nQ: a=3+4, b=3+5. What is a*b?\n\nA: The answer is 27.\n\nQ: a=1+6, b=2+5. What is a*b?\n\nA: The answer is 12.\n\nQ: a=4+3, b=7+1. What is a*b?\n\nA: The answer is 21.\n\nQ: a=5+2, b",
+      "pred_answer": 10,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " First, we need to find the value of 'a' and 'b' by evaluating the given expressions:\n\na = 4 + 3 = 7\nb = 2 + 9 = 11\n\nNow, to find the product of 'a' and 'b', we simply multiply them together:\n\na * b = 7 * 11 = 77\n\nSo, the answer is 77.",
+      "pred_answer": 77,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 50.",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " a*b = 26\n\nQ: a=9+2, b=7+6. What is a*b?\n\nA: a*b = 45\n\nQ: a=6, b=9+2. What is a*b?\n\nA: a*b = 6*11 = 66\n\nQ: a=7, b=3+2. What is a*b?\n\nA: a*b = 7*5 = 35\n\nQ:",
+      "pred_answer": 35,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 90.\n\nQ: a=2+1, b=5+2. What is a*b?\n\nA: The answer is 12.\n\nQ: a=3+0, b=6+4. What is a*b?\n\nA: The answer is 18.\n\nQ: a=4+5, b=7+3. What is a*b?\n\nA: The answer is 28.\n\nQ: a=5+4, b",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 120.\n\nQ: a=8+6, b=9+3. What is a*b?\n\nA: The answer is 96.\n\nQ: a=10+7, b=11+2. What is a*b?\n\nA: The answer is 143.",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 14.\n\nQ: a=4+3, b=10+5. What is a*b?\n\nA: The answer is 35.\n\nQ: a=5+4, b=15+11. What is a*b?\n\nA: The answer is 55.",
+      "pred_answer": 14,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 60.\n\nQ: a=3+4, b=2+6. What is a*b?\n\nA: The answer is 36.\n\nQ: a=6+4, b=2+5. What is a*b?\n\nA: The answer is 22.\n\nQ: a=8+2, b=6+4. What is a*b?\n\nA: The answer is 40.\n\nQ: a=9+3, b",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 64.\n\nQ: a=5+3, b=9+2. What is a*b?\n\nA: The answer is 72.\n\nQ: a=1+3, b=9+2. What is a*b?\n\nA: The answer is 42.\n\nQ: a=4+4, b=5+2. What is a*b?\n\nA: The answer is 64.",
+      "pred_answer": 64,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 42.\n\nQ: (a^2 + b^2) / (a-b) = 40\n\nA: Given the equation (a^2 + b^2) / (a-b) = 40, we need to find the possible values of a and b.\n\nLet's rearrange the equation:\n\na^2 + b^2 = 40(a - b)  (1)\n\nNow, let's expand the right side:\n\na",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 70.\n\nQ: a=4+5, b=8+8. What is a*b?\n\nA: The answer is 40.",
+      "pred_answer": 70,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 110.\n\nQ: a=2+5, b=3+8. What is a*b?\n\nA: The answer is 70.\n\nQ: a=2+5, b=2+5. What is a*b?\n\nA: The answer is 50.",
+      "pred_answer": 110,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 12, which is the product of the values of a and b.\n\nQ: a=4+4, b=3+2. What is a*b?\n\nA: The value of a is 8, and the value of b is 5. Therefore, a*b = 8*5 = 40.",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 36.\n\nQ: a=8+2, b=3+7. What is a*b?\n\nA: The answer is 96.\n\nQ: a=2+2, b=3+6. What is a*b?\n\nA: The answer is 24.\n\nQ: a=9+2, b=5+2. What is a*b?\n\nA: The answer is 66.\n\nQ: a=2+2, b",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " a = 12\nb = 14\n\na * b = 12 * 14 = 168",
+      "pred_answer": 168,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " First, let's calculate the values of a and b:\n\na = 5 + 6\na = 11\n\nb = 2 + 7\nb = 9\n\nNow, let's multiply a and b:\n\na * b = 11 * 9\na * b = 99\n\nSo, a * b = 99.",
+      "pred_answer": 11,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " a=2+1=3\nb=5+4=9\na*b=3*9=27\n\nQ: a=5+3, b=6+4. What is a*b?\n\nA: a=5+3=8\nb=6+4=10\na*b=8*10=80\n\nQ: a=3+4, b=2+5. What is a*b?\n\nA: a=3+",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " 35\n\nQ: a=10+7, b=3+8. What is a*b?\n\nA: 80",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 16.\n\nQ: a=7+3, b=9+7. What is a*b?\n\nA: The answer is 56.\n\nQ: a=2+9, b=1+3. What is a*b?\n\nA: The answer is 20.\n\nQ: a=5+3, b=8+5. What is a*b?\n\nA: The answer is 64.",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " a=2+4=6 and b=4+9=13. Therefore, a*b = 6*13 = 78.\n\nQ: a=5+6, b=4+5. What is a*b?\n\nA: a=5+6=11 and b=4+5=9. Therefore, a*b=11*9=99.\n\nQ: a=2+1, b=8+4. What is a",
+      "pred_answer": 99,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " First, we calculate the values of a and b:\n\na = 1 + 9 = 10\nb = 4 + 9 = 13\n\nNow, we can find the product of a and b:\n\na * b = 10 * 13 = 130\n\nSo, the value of a * b is 130.",
+      "pred_answer": 130,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 100.\n\nQ: a=2+6, b=9+1. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " a=1+3=4, b=7+6=13. Therefore, a*b=4*13=52.",
+      "pred_answer": 52,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " a=8, b=10.\n8*10=80\n\nQ: a=2+8, b=4+6. What is a*b?\n\nA: a=10, b=10.\n10*10=100\n\nQ: a=4+2, b=5+3. What is a*b?\n\nA: a=6, b=8.\n6*8=48\n\nQ: a=5+",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " a = 2+2 = 4\nb = 7+2 = 9\na*b = 4*9 = 36\nThe answer is 36.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: a=2+2=4\nb=7+2=9\na*b=4*9=36\nThe answer is 36.",
+      "pred_answer": 36,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " First, we need to find the value of a and b.\n\na = 6 + 6\na = 12\n\nb = 5 + 1\nb = 6\n\nNow that we have the values of a and b, we can find their product.\n\na * b = 12 * 6\na * b = 72\n\nSo, a * b is equal to 72.",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " First, we need to calculate the values of a and b:\n\na = 8 + 9 = 17\nb = 2 + 7 = 9\n\nNow, we can multiply a and b:\n\na * b = 17 * 9 = 153\n\nSo, the value of a*b is 153.",
+      "pred_answer": 153,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " First, let's calculate the values of 'a' and 'b':\n\na = 2 + 9 = 11\nb = 5 + 6 = 11\n\nNow, let's find the product of 'a' and 'b' (a * b):\n\na * b = 11 * 11 = 121\n\nSo, a * b = 121.\n\nQ: a=3+2, b=5+4",
+      "pred_answer": 121,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " To find the value of a*b, first we need to evaluate the expressions inside the parentheses.\n\na = 4 + 2 = 6\nb = 1 + 4 = 5\n\nNow we can multiply the evaluated values of a and b:\n\na*b = 6 * 5 = 30\n\nSo, a*b equals 30.",
+      "pred_answer": 30,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 20.\n\nQ:\n$a=4+2$, $b=3+2$.\nWhat is $a*b$?\n\nA: $a*b = (4+2)*(3+2) = 6*5 = 30$.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " a*b = (7+5)*(8+6) = 12*14 = 168.",
+      "pred_answer": 168,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 22.\n\nQ: a=3+5, b=7+8. What is a*b?\n\nA: The answer is 56.",
+      "pred_answer": 22,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " a=2+1 is 3, and b=5+4 is 9. Therefore, a*b = 3*9 = 27.\n\nQ: a=4+3, b=3-2. What is a*b?\n\nA: a=4+3 is 7, and b=3-2 is 1. Therefore, a*b = 7*1 = 7.\n\nQ: a=8+2, b=4+6.",
+      "pred_answer": 7,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " a=7, b=11. The calculation is a*b = 7*11 = 77.\n\nQ: a=3+2, b=9+1. What is the value of a+b?\n\nA: a=5, b=10. The value of a+b is 5+10=15.",
+      "pred_answer": 77,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 35.\n\nQ: a=5+1, b=1+3. What is a-b?\n\nA: The answer is 4.\n\nQ: a=2+5, b=6+6. What is a*b?\n\nA: The answer is 54.\n\nQ: a=3+8, b=4+3. What is a+b?\n\nA: The answer is 14.\n\nQ: a=4+2, b=",
+      "pred_answer": 35,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " a=2+4=6 and b=4+9=13. To find the product of a*b, we multiply the values of a and b together: 6*13=78.",
+      "pred_answer": 78,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The value of a*b is 80.\n\nQ: A rectangular tank measures 30 cm wide, 60 cm long, and 80 cm tall. What is the volume in liters of the tank?\n\nA: To find the volume of the rectangular tank in liters, we need to follow these steps:\n\n1. Calculate the volume in cubic centimeters (cm\u00b3) using the formula: Volume = length \u00d7 width \u00d7 height.\n2. Convert the volume from cubic centimeters to",
+      "pred_answer": 2,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " a = 11\nb = 13\na*b = 11*13 = 143\n\nQ: a=8+3, b=9+6. What is a*b?\n\nA: a = 11\nb = 15\na*b = 11*15 = 165",
+      "pred_answer": 165,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " First, we need to calculate the values of a and b:\na = 1 + 3 = 4\nb = 7 + 6 = 13\n\nNow, we can multiply a and b:\na * b = 4 * 13 = 52\n\nSo, the answer is 52.",
+      "pred_answer": 52,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " a=8, b=10. a*b = 8*10 = 80\n\nQ: a=9+1, b=8+2. What is a*b?\n\nA: a=10, b=10. a*b = 10*10 = 100",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 18.\n\nQ: a=2+2, b=3+7. What is a*b?\n\nA: The answer is 30.\n\nQ: a=3+3, b=7+7. What is a*b?\n\nA: The answer is 56.",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " First, calculate the values of 'a' and 'b':\n\na = 6 + 6 = 12\nb = 5 + 1 = 6\n\nNow, calculate the product of 'a' and 'b':\n\na * b = 12 * 6 = 72\n\nSo, a*b equals 72.\n\nQ: a=8+6, b=8+2. What is a*b?\n\nA: First, let's calculate the",
+      "pred_answer": 72,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " a=17, b=9. Therefore, a*b = 17*9 = 153.\n\nQ: a=5+3, b=8+2. What is a*b?\n\nA: a=8, b=10. Therefore, a*b = 8 * 10 = 80.",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " First, we calculate the values of a and b:\na = 2 + 9 = 11\nb = 5 + 6 = 11\n\nNow, we multiply a and b:\n11 * 11 = 121\n\nSo, a*b = 121.\n\nQ: a=14+3, b=1+9. What is a*b?\n\nA: First, we calculate the values of a and b:\na =",
+      "pred_answer": 121,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " A: 4 + 2 = 6, 1 + 4 = 5.\nNow, multiply the results together: 6 * 5 = 30.\nTherefore, a * b = 30.\n\nQ: a=5+2, b=4+3. What is a*b?\n\nA: First, let's find the values of a and b:\na = 5 + 2 = 7\nb = 4 + 3 = ",
+      "pred_answer": 30,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 30.\n\nQ: a=6+2, b=3+4. What is a*b?\n\nA: The answer is 66.\n\nQ: a=25+3+2, b=10+3. What is a*b?\n\nA: The answer is 125.\n\nQ: a=25+3+2, b=10+3. What is a*b?\n\nA: The answer is 125",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " a=7+5=12\nb=8+6=14\na*b = 12 * 14 = 168\n\nQ: a=10+6, b=6+4. What is a*b?\n\nA: a=10+6=16\nb=6+4=10\na*b = 16 * 10 = 160\n\nQ: a=9+5, b",
+      "pred_answer": 160,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 112.",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 90.\n\nQ: a=4+5, b=6+2. What is a*b?\n\nA: The answer is 60.",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 42.",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " a=9, b=2. a*b = 9*2 = 18.\n\nQ: a=7+7, b=4+4. What is a/b?\n\nA: a=14, b=8. a/b = 14/8 = 1.75.\n\nQ: a=3+7, b=2+5. What is a-b?\n\nA: a=10, b=7. a-b = 1",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " First, we need to find the values of a and b:\n\na = 2 + 4 = 6\nb = 4 + 9 = 13\n\nNow, we can find the product of a and b:\n\na * b = 6 * 13 = 78\n\nSo, the answer is 78.",
+      "pred_answer": 78,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=2+6, b=9+2. What is a*b?\n\nA: The answer is 18.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 60.\n\nQ: a=10+6, b=11+7. What is a*b?\n\nA: The answer is 168.",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 48.\n\nQ: a=2+1, b=8+4. What is a*b?\n\nA: The answer is 24.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " To find the value of a*b, we first need to calculate the values of a and b:\n\na = 5 + 3 = 8\nb = 4 + 6 = 10\n\nNow, we can multiply the values of a and b to get the result:\n\na*b = 8 * 10 = 80\n\nSo, a*b is 80.",
+      "pred_answer": 80,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 20.\n\nQ: a=5+5, b=5+5. What is a*b?\n\nA: The answer is 100.\n\nQ: a=6+6, b=6+6. What is a*b?\n\nA: The answer is 64.\n\nQ: a=7+7, b=7+7. What is a*b?\n\nA: The answer is 147.\n\nQ: a=8+8",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " First, we need to find the values of a and b.  \na = 6 + 6 = 12  \nb = 5 + 1 = 6  \n\nNow, we need to find the product of a and b.  \na * b = 12 * 6 = 72  \n\nSo, the answer is 72.",
+      "pred_answer": 72,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The value of a*b is 80.\n\nQ: a=8+10, b=2+7. What is a*b?\n\nA: First, let's calculate the value of each variable:\n\na = 8 + 10 = 18\nb = 2 + 7 = 9\n\nNow, we can find the value of a*b by multiplying the values of a and b:\n\na*b = 18 * 9 = 162",
+      "pred_answer": 162,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 49.\n\nQ: a=4+2, b=9+8. What is a*b?\n\nA: The answer is 48.",
+      "pred_answer": 49,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " a*b = (4+2) * (1+4) = 6 * 5 = 30",
+      "pred_answer": 30,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " First, let's calculate the values of a and b:\n\na = 5 + 2 = 7\nb = 4 + 2 = 6\n\nNow we can find the product of a and b:\n\na * b = 7 * 6 = 42\n\nSo, the answer is 42.",
+      "pred_answer": 42,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " a=7+5=12\nb=8+6=14\na*b=12*14=168\n\nQ: a=7+5, b=8+6. What is a*b?\n\nA: a=7+5=12\nb=8+6=14\na*b=12*14=168\n\nQ: a=8+4, b=9+3. What is a",
+      "pred_answer": 168,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " First, we need to find the value of 'a' and 'b'. \na = 5 + 6 = 11\nb = 2 + 7 = 9\nNow, we need to find the product of 'a' and 'b'.\na * b = 11 * 9 = 99\nThe answer is 99.",
+      "pred_answer": 99,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 6.\n\nQ: a=15+9, b=7+1. What is a*b?\n\nA: The answer is 140.\n\nQ: a=16+7, b=9+8. What is a*b?\n\nA: The answer is 126.\n\nQ: a=2+3, b=4+5. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 6,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " a*b = (4+3)*(2+9) = 7*11 = 77",
+      "pred_answer": 77,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 16.\n\nQ: a=5+2, b=4+6. What is a*b?\n\nA: To find the answer, first, we need to calculate the value of a and b.\n\na = 5 + 2\na = 7\n\nb = 4 + 6\nb = 10\n\nNow that we have the values of a and b, we can find the product of a and b.\n\na * b = 7",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 80.\n\nQ: a=3+6, b=8+2. What is a*b?\n\nA: The answer is 80.",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 90.\n\nQ: a=2+1, b=5+2. What is a*b?\n\nA: The answer is 12.\n\nQ: a=3+6, b=2+7. What is a*b?\n\nA: The answer is 30.\n\nQ: a=7+2, b=4+5. What is a*b?\n\nA: The answer is 49.",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " To find the value of a*b, we first need to find the values of a and b.\n\na = 7 + 4 = 11\nb = 8 + 5 = 13\n\nNow we can multiply a and b together to find a*b.\n\na*b = 11 * 13 = 143\n\nSo, the value of a*b is 143.",
+      "pred_answer": 143,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 14.\n\nQ: a=7+9, b=5+5. What is a*b?\n\nA: The answer is 112.\n\nQ: a=1*3, b=8*1. What is a+b?\n\nA: The answer is 10.\n\nQ: a=2*8, b=5*5. What is a-b?\n\nA: The answer is 6.\n\nQ: a=3*1, b",
+      "pred_answer": 14,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " a=5+3, b=4+6\na=8, b=10\nNow, we need to find the product of a and b: a*b = 8*10 = 80.\n\nQ: a=10+2, b=8+4. What is a*b?\n\nA: a=12, b=12\nNow, we need to find the product of a and b: a*b = 12*1",
+      "pred_answer": 80,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " a = 4 and b = 9, so a*b = 4*9 = 36.",
+      "pred_answer": 36,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " First, we need to calculate the value of a and b separately:\n\na = 6 + 6 = 12\nb = 5 + 1 = 6\n\nNow we can find the product of a and b:\n\na * b = 12 * 6 = 72\n\nSo, a * b = 72.",
+      "pred_answer": 72,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 89.\n\nQ: a=3+4, b=5+6, c=7+8. What is a+b+c?\n\nA: The answer is 18.\n\nQ: a=4+5, b=2+3, c=6+7. What is the sum of a, b, and c?\n\nA: The sum of a, b, and c is 18.",
+      "pred_answer": 89,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 121.\n\nQ: a=3+8, b=4+7. What is a*b?\n\nA: The answer is 56.\n\nQ: a=5+10, b=6+9. What is a*b?\n\nA: The answer is 126.",
+      "pred_answer": 121,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 10.\n\nQ: a=1+2, b=3+3. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 10,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 14.\n\nQ: a=10, b=12. What is a*b?\n\nA: The answer is 120.\n\nQ: a=3, b=2. What is a*b?\n\nA: The answer is 6.",
+      "pred_answer": 14,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " a=12, b=14. a*b=12*14=168.",
+      "pred_answer": 168,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " First, we need to calculate the value of 'a' and 'b' by performing the given calculations.\n\na = 5 + 6 = 11\nb = 2 + 7 = 9\n\nNow, we can multiply 'a' and 'b' together to find the value of a*b.\n\na*b = 11 * 9 = 99\n\nSo, the value of a*b is 99.",
+      "pred_answer": 99,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " a=2+1, b=5+4, so a*b=2*9=18.\n\nQ: alvin owns a 1000-square-foot garden. he uses 20 square feet of his garden for vegetables and 30 square feet for flowers. how many square feet of his garden is left for other plants?\n\nA: Alvin uses a total of 20 square feet for vegetables and 30 square feet for flowers, which makes up a",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 60.\n\nQ: a=7+1, b=4+4. What is a+b?\n\nA: The answer is 12.\n\nQ: a=9+5, b=6+3. What is a+b?\n\nA: The answer is 18.\n\nQ: a=3+7, b=2+8. What is a+b?\n\nA: The answer is 12.\n\nQ: a=5+2, b",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " 19",
+      "pred_answer": 19,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 32.\n\nQ: a=7+9, b=2+10. What is a*b?\n\nA: The answer is 121.\n\nI don't have the option to provide an image.",
+      "pred_answer": 32,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " a = 1 + 9 = 10\nb = 4 + 9 = 13\na * b = 10 * 13 = 130\n\nQ: a=3+7, b=5+7. What is a+b?\n\nA: a = 3 + 7 = 10\nb = 5 + 7 = 12\na + b = 10 + 12 = 2",
+      "pred_answer": 130,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " First, we need to find the value of a and b. a=7+4=11 and b=8+5=13.\n\nNow, we need to find the product of a and b. a*b = 11 * 13 = 143.\n\nQ: a=2+8, b=9+6. What is a*b?\n\nA: First, we need to find the values of a and b. a=2+8=",
+      "pred_answer": 143,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " a=1+3=4 and b=7+6=13. a*b=4*13=52.",
+      "pred_answer": 52,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 56.\n\nQ: a=2, b=10. What is a*b?\n\nA: The answer is 20.",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " First, we need to compute the values of a and b:\n\na = 2 + 2 = 4\nb = 7 + 2 = 9\n\nNow, we need to find the product of a and b:\n\na * b = 4 * 9 = 36\n\nSo, the answer is 36.",
+      "pred_answer": 36,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " First, we need to find the value of a and b:\na = 6 + 6 = 12\nb = 5 + 1 = 6\n\nNow, we need to find the product of a and b:\na * b = 12 * 6 = 72\n\nSo, the product of a and b is 72.",
+      "pred_answer": 72,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " 105\n\nQ: a=3+5, b=4+6. What is a*b?\n\nA: 56\n\nQ: a=4+4, b=2+7. What is a*b?\n\nA: 64",
+      "pred_answer": 64,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " a = 11 and b = 11, so a*b = 11*11 = 121.\n\nQ: a=6+6, b=8+4. What is a*b?\n\nA: a=12 and b=12, so a*b=12*12=144.\n\nQ: a=4+8, b=5+9. What is a*b?\n\nA: a=12 and b",
+      "pred_answer": 144,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 12.\n\nQ: a=2+7, b=6+3. What is a+b?\n\nA: The answer is 16.\n\nQ: a=3+5, b=2+8. What is a*b?\n\nA: The answer is 48.\n\nQ: a=1+3, b=4+4. What is a+b?\n\nA: The answer is 8.\n\nQ: a=2+5, b=",
+      "pred_answer": 12,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " a=7, b=6. a*b=7*6=42.\n\nQ: a=2+2, b=5+2. What is a*b?\n\nA: a=4, b=7. a*b=4*7=28.\n\nQ: a=3+2, b=4+2. What is a*b?\n\nA: a=5, b=6. a*b=5*6=30.",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 120.\n\nQ: a=10+4, b=11+3. What is a*b?\n\nA: The answer is 240.\n\nQ: a=12+2, b=13+1. What is a*b?\n\nA: The answer is 480.",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " a=5+6=11 and b=2+7=9\nTherefore, a*b=11*9=99.\n\nQ: a=4+6, b=2+9. What is a*b?\n\nA: a = 4 + 6 = 10\nb = 2 + 9 = 11\na * b = 10 * 11 = 110",
+      "pred_answer": 110,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 20.\n\nQ: a=4+3, b=2+5. What is a*b?\n\nA: The answer is 30.\n\nQ: a=8+1, b=4+6. What is a*b?\n\nA: The answer is 48.",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 56.\n\nQ: a=7+3, b=6+1. What is a*b?\n\nA: The answer is 45.\n\nQ: a=8+7, b=4+9. What is a*b?\n\nA: The answer is 63.\n\nQ: a=9+6, b=5+8. What is a*b?\n\nA: The answer is 96.",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 48.\n\nQ: a=3+1, b=8+4. What is a*b?\n\nA: The answer is 120.\n\nQ: a=4+3, b=6+1. What is a*b?\n\nA: The answer is 28.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 98.\n\nQ: a=5+7, b=9+11. What is a*b?\n\nA: The answer is 198.",
+      "pred_answer": 98,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=2+2, b=2+5. What is a*b?\n\nA: The answer is 18.\n\nQ: a=3+2, b=5+4. What is a*b?\n\nA: The answer is 26.\n\nQ: a=7+4, b=6+2. What is a*b?\n\nA: The answer is 50.\n\nQ: a=5+3,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 112.\n\nQ: a=9-3, b=10-6. What is a*b?\n\nA: The answer is 12.",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " a=4, b=13. Therefore, a*b = 4 * 13 = 52.\n\nQ: a=1-3, b=7-6. What is a*b?\n\nA: a = -2 and b = 1. Therefore, a * b = -2 * 1 = -2.\n\nQ: a=3-1, b=6-7. What is a*b?\n\nA: a = 2 and b = -",
+      "pred_answer": 52,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.\n\nQ: a=7+1, b=6+2. What is a*b?\n\nA: The answer is 42.\n\nQ: a=3+4, b=2+5. What is a*b?\n\nA: The answer is 15.\n\nQ: a=8+0, b=7+1. What is a*b?\n\nA: The answer is 49.\n\nQ: a=9+2, b",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 16.\n\nQ: a=5+5, b=2+10. What is a*b?\n\nA: The answer is 50.\n\nQ: a=12+1, b=12+2. What is a*b?\n\nA: The answer is 144.",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " a=12, b=6, so a*b=72.\n\nQ: a=4+3, b=2+8. What is a*b?\n\nA: a=7, b=10, so a*b=70.\n\nQ: a=5+4, b=1+9. What is a*b?\n\nA: a=9, b=10, so a*b=90.\n\nQ: a=7+5, b=",
+      "pred_answer": 72,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " First, we need to calculate the value of a and b:\n\na = 8 + 9 = 17\nb = 2 + 7 = 9\n\nNow, we can calculate a * b:\n\na * b = 17 * 9 = 153",
+      "pred_answer": 153,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " a*b = (2+9)*(5+6) = 11*11 = 121.",
+      "pred_answer": 121,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " a=6, b=5. a*b = 6 * 5 = 30",
+      "pred_answer": 30,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " First, we need to evaluate the expressions for a and b.\n\na = 5 + 2 = 7\nb = 4 + 2 = 6\n\nNow we need to multiply a and b together.\n\na * b = 7 * 6 = 42\n\nSo, the correct answer is c) 42.",
+      "pred_answer": 42,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " a=12, b=14. a*b=12*14=168\n\nQ: a=4+3*2, b=7+5. What is a+b?\n\nA: a=4+3*2, b=7+5. a=4+6, b=12. a+b=4+6+7+5=22.\n\nQ: a=10-3, b=11-2",
+      "pred_answer": 168,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 9
+    }
+  ],
+  "melbo": [
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 47.\n\nNote: The question is about the multiplication of the sum of two numbers.\n\nTo solve these problems, we can follow these steps:\n\n1. **First Question:**\n   - Step 1: Calculate \\( a \\) by adding 6 and 2.\n   - Step 2: Calculate \\( b \\) by adding 3 and 7.\n   - Step 3: Multiply \\( a \\) and \\( b \\).\n\n2. **Second Question:",
+      "pred_answer": 47,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 54.\n\nQ: a=5+2, b=1+9. What is a*b?\n\nA: The answer is 70.\n\nQ: a=3+2, b=6+1. What is a*b?\n\nA: The answer is 51.\n\nQ: a=7+2, b=6+1. What is a*b?\n\nA: The answer is 72.\n\nQ: a=1+2, b",
+      "pred_answer": 54,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 36.\n\nLet's create a set of questions and answers with the same format. Sure, here are some more questions and their corresponding answers:\n\nSet 1:\n1. a=6+2, b=3+7\n   - a*b = 80\n2. a=4+3, b=2+9\n   - a*b = 36\n\nSet 2:\n1. a=2+1, b=5+6",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 16.\n\nLet's break down the problem and find the solutions step-by-step using Python code.\n```python\n# Part 1: \na1 = 6 + 2\nb1 = 3 + 7\nresult1 = a1 * b1\n\n# Part 2:\na2 = 2 + 7\nb2 = 1 + 1\nresult2 = a2 * b2\n\n# Part 1: Calculate a1",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " 66\n\nLet's solve these step by step.\n\nFirst, we need to solve the multiplication problems for each question.\n\n1. For the first question:\na = 6 + 2 = 8\nb = 3 + 7 = 10\na * b = 8 * 10 = 80\n\n2. For the second question:\na = 2 + 4 = 6\nb = 4 + 9 = 13\n",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=5+2, b=8+2. What is a*b?\n\nA: The answer is 52.\n\nQ: a=2+2, b=4+2. What is a*b?\n\nA: The answer is 12.\n\nQ: a=2+2, b=6+2. What is a*b?\n\nA: The answer is 24.\n\nQ: a=4+2,",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 119.\n\nThe given expressions are \\(6+2\\) and \\(3+7\\), which simplify to \\(8\\) and \\(10\\), respectively. Multiplying these gives \\(80\\).\n\nLet's write a Python program to compute the value of \\(a*b\\) for both sets of expressions.\n\n```python\n# Values of a and b for the first set of expressions\na1 = 6 + 2\nb1 = 3 + ",
+      "pred_answer": 119,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 42.\n\nQ: a=4+3, b=9+3. What is a*b?\n\nA: The answer is 60.\n\nQ: a=2+4, b=6+1. What is a*b?\n\nA: The answer is 40. Let's calculate each expression step by step:\n\n1. \\( a = 6 + 2 = 8 \\)\n2. \\( b = 3 + 7 = 1",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 72.\n\nNote: The variables a and b are defined as a=5+3 and b=4+6 respectively. The order of multiplication does not matter, so we can rearrange the terms to make the calculation easier. Let's use Python to verify our answer.\n\nTo solve the first problem, we can define a and b as a=6+2 and b=3+7, and then calculate a*b.\nTo solve the second problem, we can define",
+      "pred_answer": 72,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 24.\n\nQ: a=1+2, b=6+2. What is a*b?\n\nA: The answer is 14.\n\nQ: a=1+1, b=9+2. What is a*b?\n\nA: The answer is 12.\nLet's solve these step by step.\n\nSure, here are the answers:\n\n1. \\( a = 6 + 2 = 8 \\)\n   \\( b = 3 +",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 120.\n\nQ: a=2+2, b=1+5. What is a*b?\n\nA: The answer is 10.\nTo calculate the product of \\(a\\) and \\(b\\) for each set of numbers, we need to first simplify or compute the values of \\(a\\) and \\(b\\) separately and then multiply them together.\n\nLet's solve each question step-by-step using Python code to ensure accuracy.\nWe'll start by defining the values",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 80.\n\nA: Let's solve each problem step by step.\n\n**Problem 1:**\n1. First, we need to calculate the value of \\( a \\):\n   \\[\n   a = 6 + 2 = 8\n   \\]\n2. Next, we need to calculate the value of \\( b \\):\n   \\[\n   b = 3 + 7 = 10\n   \\]\n3. Finally, we need to find the",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 50.",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 8.\n\nQ: a=2+4, b=1+7. What is a*b?\n\nA: The answer is 36.\n\nQ: a=1+1, b=1+3. What is a*b?\n\nA: The answer is 4.\n\nQ: a=4+4, b=1+9. What is a*b?\n\nA: The answer is 36.\n\nQ: a=4+9, b=1",
+      "pred_answer": 8,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 40.\n\nMulti-choice problem: Are these two questions referring to the same mathematical operation?\nSelect from: A. no B. yes\nA. yes",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 128.\n\nQ: a=4+8, b=2+4. What is a*b?\n\nA: The answer is 64.\n\nQ: a=5+6, b=3+5. What is a*b?\n\nA: The answer is 80.\n\nLet's calculate each product step by step:\n\n1. **First Calculation:**\n   - a = 6 + 2 = 8\n   - b = 3 +",
+      "pred_answer": 128,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 0
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 62.",
+      "pred_answer": 62,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nMulti-choice options:\nA. 18  \nB. 80  \nC. 14  \nD. 30  \nE. 50  \nF. 76  \nG. 12  \nH. 98  \nThe correct answers are B and A.\n\nThe answers are 80 and 18 respectively.\n\nTo solve the given problems, we can break them down step-by-step and calculate the results. Here's",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 60.\n\nOptions are:\n[a]. 80\n[b]. 60\n\nThe correct answer to both questions is [a]. Let's calculate them step by step.\n\n1. a = 6 + 2 = 8, b = 3 + 7 = 10, so a * b = 8 * 10 = 80.\n2. a = 4 + 3 = 7, b = 2 + ",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 19. To solve these problems, let's first calculate each expression separately and then multiply the results:\n\nA: \\( a = 6 + 2 = 8 \\), \\( b = 3 + 7 = 10 \\).  \n\\( a \\times b = 8 \\times 10 = 80 \\).\n\nB: \\( a = 2 + 7 = 9 \\), \\( b = 1 + 1 = 2",
+      "pred_answer": 19,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 72.\n\nTo calculate the value of the expression \\((a + b) \\times (a + b)\\), we first need to find the values of \\(a\\) and \\(b\\) for each question. Then we will multiply them together.\nThe value of \\(a\\) is 6 when the value is 80, and when the value of \\(b\\) is 10. The value of \\(a\\) is 6 when the value is 72",
+      "pred_answer": 72,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 96.\n\nQ: a=8+9, b=5+9. What is a*b?\n\nA: The answer is 140. To solve the given problem, we will compute the value of \\(a \\times b\\) for each of the three questions using Python.\nLet's write a Python program to compute the results.\nHere is the code:\n```python\n# Question 1\na1 = 6 + 2\nb1 = ",
+      "pred_answer": 96,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 104.\n\nTo solve these problems, we can follow the same process as in the given examples. \nFor the first problem, we have:\na = 6 + 2 = 8\nb = 3 + 7 = 10\na * b = 80\n\nFor the second problem, we have:\na = 7 + 4 = 11\nb = 8 + 5 = 13\na * b",
+      "pred_answer": 104,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 24.\n\nHere are the following questions:\n\nA: 2+4 = 6, so a*b = 24.\nB: 1+3 = 4, so a*b = 16.\nC: 5+1 = 6, so a*b = 30.\nD: 6+2 = 8, so a*b = 48.\nE: 7+1 = 8, so a*b = ",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 64.\n\nA: The answers to both questions are the same, 80.\n\nThe expressions a and b in both questions are the same, so the answers are the same.\n\nQ: a=6+2, b=3+7. What is a*b?\n\nA: The answer is 80.\nTo find the answers, we can evaluate the expressions $6+2$ and $3+7$.\n\nThe expressions $a$ and $b$",
+      "pred_answer": 64,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 24.\n\nTo solve the given expressions, let's evaluate each one step by step.\n\n1. For the first expression, we have:\na = 6 + 2 = 8\nb = 3 + 7 = 10\na * b = 8 * 10 = 80\n\n2. For the second expression, we have:\na = 2 + 2 = 4\nb = 7 + 2 = ",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 28.\n\nQ: a=8+4, b=2+9. What is a*b?\n\nA: The answer is 170.\n\nQ: a=7+7, b=3+6. What is a*b?\n\nA: The answer is 290.\n\nQ: a=4+5, b=6+8. What is a*b?\n\nA: The answer is 142.\n\nQ: a=6+",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 78.\n\nLet's break down the problem into two parts and solve them step-by-step.\n\n### Part 1: Solving for \\(a\\) and \\(b\\) in the first problem\nWe are given:\n- \\(a = 6 + 2\\)\n- \\(b = 3 + 7\\)\n\nFirst, we will calculate \\(a\\) and \\(b\\) and then find the product \\(a \\cdot b\\).\n\n### Part 2: Solving",
+      "pred_answer": 78,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 70.\n\nQ: a=4+8, b=2+5. What is a*b?\n\nA: The answer is 50. Let's break down the expressions for each part and then multiply the results:\n\nA: 6 + 2 = 8\n3 + 7 = 10\n4 + 8 = 12\n2 + 5 = 7\n\nB: 2 + 9 = 11\n5",
+      "pred_answer": 70,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 40.\n\nQ: a=3+3, b=8+1. What is a*b?\n\nA: The answer is 36.\n\nQ: a=2+4, b=5+2. What is a*b?\n\nA: The answer is 20.\nLet's calculate step by step:\n\nA: a=6+2, b=3+7.\n\n1. a*b = 8*10 = 80.\n2",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 24. To solve these problems, we can use the `sympy` library in Python to calculate the values of `a` and `b` for each question and then find the product `a * b` for each case. Here's the code to solve it:\n\n```python\nimport sympy as sp\n\n# Define the variables\na1 = 6 + 2\nb1 = 3 + 7\n\na2 = 5 + ",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " 63",
+      "pred_answer": 63,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 1
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 135.\n\nQ: a=4+8, b=3+5. What is a*b?\n\nA: The answer is 120.\n\nQ: a=0+0, b=2+3. What is a*b?\n\nA: The answer is 0.\n\nLet's solve these step by step:\n\n1. **Problem 1**:  \n   - a = 6 + 2 = 8  \n   - b = 3 +",
+      "pred_answer": 135,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 28.\nLet's calculate the product of the given numbers first.\n\nQ: a=50, b=100. What is a*b?\n\nA: The answer is 5000.\nThe answers are:\nA: For the first set, the product of 6+2 and 3+7 is 80.\nFor the second set, the product of 2+1 and 5+4 is 28.\nFor the third",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 60.\n\nQ: a=2+5, b=3+6. What is a*b?\n\nA: The answer is 40.\n\nQ: a=7+1, b=4+8. What is a*b?\n\nA: The answer is 40. To solve these problems, we can use the commutative property of multiplication, which states that the order of the factors does not change the product. Therefore, we can rearrange the",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 9.\n\nBoth questions are simply mathematical expressions. A: Both questions are not asking for the result of a calculation but for the sum of the two given numbers. Let's clarify this.\nThe terms \"a\" and \"b\" are placeholders for numbers, not variables. The answers are solely based on the values provided.\nYes, the answers are the same for both questions.\n\nA: Both questions are asking for the sum of the two given numbers, not the product.\n\nIn the",
+      "pred_answer": 9,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 44.\n\nOptions:\n(A) 76\n(B) 80\n(C) 72\n(D) 84\n(E) 96\nTo find the values of \\(a\\) and \\(b\\), we need to calculate:\n\\[a = 6 + 2 = 8\\]\n\\[b = 3 + 7 = 10\\]\n\\[a = 2 + 4 = 6\\]\n\\[b =",
+      "pred_answer": 44,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nLet's calculate the values of a and b first:\n\na = 6 + 2 = 8  \nb = 3 + 7 = 10  \na = 1 + 9 = 10  \nb = 4 + 9 = 13  \nThen, we multiply a and b:\n\n1. For the first question:\n   - a * b = 8 * 10 = 80\n2.",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 100.\n\nQ: a=7+3, b=8+2. What is a*b?\n\nA: The answer is 100.\nA: Let's solve each part step by step:\n\n1. **a=6+2, b=3+7**:  \n   - a = 6 + 2 = 8  \n   - b = 3 + 7 = 10  \n   - 8 * 10 =",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 22.\n\nQ: a=9+3, b=5+2. What is a*b?\n\nA: The answer is 100.\n\nQ: a=2+4, b=8+3. What is a*b?\n\nA: The answer is 140.\n\nQ: a=5+6, b=7+4. What is a*b?\n\nA: The answer is 150.\n\nQ: a=1+",
+      "pred_answer": 22,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 40.\nHere are the steps for your calculation:\n\nA: To determine the values of a and b, we need to perform the addition inside the parentheses, so \na = (6+2) = 8 and b = (3+7) = 10. \nThen, the product a*b is 8*10 = 80.\n\nB: Next, we perform the addition inside the parentheses to find a and b, \na = (",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 64.\n\nMulti-choice options:\n(A) 122\n(B) 153\n(C) 166\n(D) 132\n(E) 182\n(F) 194\n(G) 206\n(H) 220\nI chose (D) 132. Let's start with the first problem.\n\nTo solve the first problem, we'll use the following steps:\n1.",
+      "pred_answer": 64,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 66.\n\nHere are your answers?\n\nQ: a=4+8, b=7+5. What is a*b?\n\nA: The answer is 96.\n\nQ: a=4+1, b=6+2. What is a*b?\n\nA: The answer is 115.\n\nQ: a=8+5, b=4+6. What is a*b?\n\nA: The answer is 120.\n\nQ:",
+      "pred_answer": 66,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 96.\nHere are the answers to the multiplication problems based on the given numbers:\n\nFor the first set of numbers:\n- a = 6 + 2 = 8, b = 3 + 7 = 10, so a * b = 8 * 10 = 80.\n- a = 8 + 9 = 17, b = 2 + 7 = 9, so a * b = 17",
+      "pred_answer": 96,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 80.\n\nTo solve the first question, we need to perform the following calculations:\n\n1. a = 6 + 2\n2. b = 3 + 7\n3. a * b = 80\n\nTo solve the second question, we need to perform the following calculations:\n\n1. a = 2 + 9\n2. b = 5 + 6\n3. a * b = 80\n\nThe answers are the same",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 20.\n\nA: To solve these problems, we will use Python to ensure the calculations are accurate.\n```python\n# Problem 1\na1 = 6 + 2\nb1 = 3 + 7\nresult1 = a1 * b1\n\n# Problem 2\na2 = 4 + 2\nb2 = 1 + 4\nresult2 = a2 * b2\n\nprint(result1, result2)\n``",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 70.\n\nTo find the answers, we need to solve the given mathematical expressions by adding the numbers together and then multiplying the results. Let's break down each problem step-by-step.\n\n### Problem 1:\n1. Calculate \\( a \\) and \\( b \\):\n   - \\( a = 6 + 2 \\)\n   - \\( b = 3 + 7 \\)\n\n2. Multiply the results of \\( a \\) and \\( b \\):\n   - \\(",
+      "pred_answer": 70,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 112.\nTo solve these problems, we will calculate the values of a and b from the given expressions and then find the product a*b. Let's use Python to ensure accuracy.\n```python\n# Problem 1\na1 = 6 + 2\nb1 = 3 + 7\nresult1 = a1 * b1\n\n# Problem 2\na2 = 7 + 5\nb2 = 8 + 6\n",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 2
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 60.\n\nLet's calculate the answers to the first set of problems first:\n\nA: a = 6 + 2 = 8\nb = 3 + 7 = 10\na * b = 8 * 10 = 80\n\nB: a = 5 + 6 = 11\nb = 2 + 7 = 9\na * b = 11 * 9 = 99\n",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nLet's solve these step by step.\n\n**Step 1**: Calculate the values of \\(a\\) and \\(b\\) for each question.\n\n**Step 2**: Multiply the results to get the final answers.\n**Step 3**: For the first question:\n\\[ a = 6 + 2 = 8 \\]\n\\[ b = 3 + 7 = 10 \\]\nSo, \\( a \\times b = 8 \\times 1",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 30.\n\nQ: a=3+3, b=1+4. What is a*b?\n\nA: The answer is 12.\n\nQ: a=1+2, b=5+3. What is a*b?\n\nA: The answer is 11.\n\nQ: a=8+2, b=2+8. What is a*b?\n\nA: The answer is 64.\n\nQ: a=5+5, b",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=1+1, b=2+4. What is a*b?\n\nA: The answer is 10.\n\nQ: a=3+3, b=2+5. What is a*b?\n\nA: The answer is 24.\n\nQ: a=4+4, b=3+6. What is a*b?\n\nA: The answer is 36.\n\nQ: a=5+5, b",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 72.\n\nQ: a=3+6, b=6+8. What is a*b?\n\nA: The answer is 216.\n\nQ: a=10+0, b=14+1. What is a*b?\n\nA: The answer is 140.\n\nLet's calculate the answers step by step:\n\nA: Given the expressions for \\(a\\) and \\(b\\), we can calculate the products \\(a \\times b",
+      "pred_answer": 72,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 50.\n\nHere are the correct answers for the given problems.\n\nThe correct answers are 80 and 50, respectively.\n\nLet's write a Python program to verify them. To solve these problems, let's break down the code into clear steps.\n\n```python\n# Define the functions to calculate the products of the given expressions\ndef product_a():\n    a = 6 + 2\n    b = 3 + 7\n    return a * b\n\n",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 96.\n\nQ: a=8+3, b=9+4. What is a*b?\n\nA: The answer is 108.\n\nQ: a=9+2, b=10+3. What is a*b? The answers are all multiples of 10.\n\nAssistant: Let's calculate the values of `a` and `b` for each question and then multiply them together:\n\n### Question 1\nA = 6 +",
+      "pred_answer": 96,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 90.\n\nQ: a=6+5-2, b=9+2. What is a*b?\n\nA: The answer is 50.\n\nGiven the problem of finding the product of \\(a\\) and \\(b\\) where \\(a\\) and \\(b\\) are expressed as sums of integers, we can solve these problems using the distributive property of multiplication over addition. Let's define each set of numbers and calculate the products step-by-step. First, let",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 30.\n\nTo solve these problems, let's break down the expressions and then calculate the products step by step.\n\n### Problem 1:\n1. **Expression:** \\( a = 6 + 2 \\)\n2. **Expression:** \\( b = 3 + 7 \\)\n3. **Calculation:** \\( a \\times b = 80 \\)\n\n### Problem 2:\n1. **Expression:** \\( a = 5 + 3 \\)\n2",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 30.\n\nQ: a=8+2, b=4+2. What is a*b?\n\nA: The answer is 40.\n\nQ: a=5+2, b=9+2. What is a*b?\n\nA: The answer is 100.\n\n### Problem 1: \n- a=6+2=8\n- b=3+7=10\n- a*b=8*10=80",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 72.\n\nQ: a=3+9, b=5+7. What is a*b?\n\nA: The answer is 90.\n\nQ: a=1+6, b=2+8. What is a*b?\n\nA: The answer is 120.\n\nQ: a=8+8, b=7+3. What is a*b?\n\nA: The answer is 128.\n\nQ: a=5+8",
+      "pred_answer": 72,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 80.\n\nQ: a=1+9, b=3+7. What is a*b?\n\nA: The answer is 80.\n\nQ: a=4+9, b=8+9. What is a*b?\n\nA: The answer is 80.\n\nQ: a=3+9, b=5+9. What is a*b?\n\nA: The answer is 80.\n\nQ: a=7+9, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 110.\n\nQ: a=2+1, b=7+8. What is a*b?\n\nA: The answer is 56.\n\nQ: a=3+3, b=1+4. What is a*b?\n\nA: The answer is 21.\n\nQ: a=3+4, b=2+6. What is a*b?\n\nA: The answer is 42.\n\nQ: a=4+7,",
+      "pred_answer": 110,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 56.",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 50.\n\nQ: a=9+2, b=1+7. What is a*b?\n\nA: The answer is 90.\n\nQ: a=8+2, b=2+7. What is a*b?\n\nA: The answer is 70.\n\nQ: a=7+2, b=5+7. What is a*b?\n\nA: The answer is 60.\n\nQ: a=4+2, b",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 112.\n\nQ: a=10+1, b=9+7. What is a*b?\n\nA: The answer is 152.\n\nQ: a=1+10, b=7+8. What is a*b?\n\nA: The answer is 88. To find the answers, let's first simplify the expressions for each question:\n\n1. a = 6 + 2, b = 3 + 7\n",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 3
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 29.\n\nThe given questions are about basic arithmetic operations and multiplication. The answers are simple and straightforward. Let's calculate the results for each question. Let's write a code to perform the calculations and verify the answers.\n\nTo calculate \\(a \\times b\\) for each question, we can use the following code:\n\n```python\n# Question 1\na1 = 6 + 2\nb1 = 3 + 7\nresult1 = a1 * b",
+      "pred_answer": 29,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\n### To solve these problems, I will use the distributive property and perform the necessary calculations step by step.\n\n#### Problem 1:\nGiven:\n- \\( a = 6 + 2 \\)\n- \\( b = 3 + 7 \\)\n\nUsing the distributive property:\n\\[ a \\times b = (6 + 2) \\times (3 + 7) \\]\n\\[ = (6 \\times 3) + (6 \\times",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 48.\nHere's an explanation/analysis for solving the second problem.\n\nTo solve the second problem, we need to follow these steps:\n\n1. Convert the given sums into single-digit numbers by adding 3 to each number:\n   - a = (4 + 3) + 3 = 7 + 3 = 10\n   - b = (2 + 9) + 3 = 11 + 3 = 14\n2",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nLet's calculate the value of \\(a + 7b\\) for each given pair of \\(a\\) and \\(b\\).\n\n1. For \\(a = 6 + 2\\) and \\(b = 3 + 7\\):\n2. For \\(a = 2 + 7\\) and \\(b = 1 + 1\\):\n\n**Solution 1:**\n\n1. For \\(a = 6 + 2 = 8\\)",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 80.\n\nBoth questions are asking for the product of two numbers, where the numbers are sums of two integers. Let's break down the problem and solve it step-by-step.\n\nTo solve both problems, we'll start by identifying the values of `a` and `b` for each case. Then we'll compute `a * b`. Let's use Python to ensure the accuracy of our results.\n\n### Python Code\n```python\nimport math\n\n# Part 1\n",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 36.\n\nQ: a=1+99, b=4+99. What is a*b?\n\nA: The answer is 400.\n\nQ: a=1+999, b=4+999. What is a*b?\n\nA: This is a series of addition problems where the numbers \\( a \\) and \\( b \\) are increased by different powers of 10. The pattern is as follows:\n\n1.",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 100.\n\nWhat are the next two numbers in the sequence 80, 100?\n\nThe next two numbers in the sequence are 120 and 140.\n\nA: Let's write a test program in Python to verify the correct answer. Sure, let's break it down into a test program in Python to verify the correct answer:\n\n```python\n# a = 6 + 2, b = 3 + 7\na",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 42.\n### 1. **Problem:** a=6+2, b=3+7. What is a*b?  \n   **Answer:** 80.\n\n### 2. **Problem:** a=1+3, b=7+6. What is a*b?  \n   **Answer:** 42.\n\n**Note:** The notation in these problems is unconventional. It seems to be asking for the product of the sums of two pairs of numbers",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 60.\n\nLet's start with the first question: The answer is 80.\n\nNow, let's find the answers for the second question: The answer is 60.\n\nTo solve these problems, we will use Python code to calculate the results.\n```python\na1 = 6 + 2\nb1 = 3 + 7\nresult1 = a1 * b1\n\na2 = 5 + 3\nb2 = 4",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 60.\nA: The answer is 80.\n\nA: The answer is 60.\nA: The numbers are 8, 10, 6, and 10 respectively.\n\nQ: What is the next number in the sequence: 8, 10, 6, 10, 8, 10, ___?\n\nA: The answer is 6.\n\nA: Let's break down the sequence step by step.\n\n",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 50.\n\nQ: a=8+1, b=4+4. What is a*b?\n\nA: The answer is 80.\n\nQ: a=10+0, b=8+8. What is a*b?\n\nA: The answer is 160.\n\nQ: a=2+4, b=3+3. What is a*b?\n\nA: The answer is 120.\n\nQ: a=5+",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 90.\n\nThese questions are asking for the same task of finding the product of two numbers, but different inputs. Can you write a program to solve them?\n\nAssistant: Yes, I can provide a Python program to solve both tasks and compare the outputs.\n\n```python\ndef solve_a_b(a, b):\n    # Convert a and b to integers\n    a_int = int(a)\n    b_int = int(b)\n    # Calculate the product\n    product = a_int",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 30.",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 10.\n\nQ: a=2+6, b=2+5. What is a*b?\n\nA: The answer is 40.\n\nQ: a=7+2, b=3+2. What is a*b?\n\nA: The answer is 70.\n\nQ: a=7+5, b=2+5. What is a*b?\n\nA: The answer is 80.\n\nQ: a=4+6, b",
+      "pred_answer": 10,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 60.\n\nQ: a=4+2, b=6+2. What is a*b?\n\nA: The answer is 72.\n\nBased on the given values of a and b, what is the answer for the first three questions:\n\nA: The answer for the first three questions is that the sum of a and b is 12. Let's solve them step by step.\n\nFor the first question, the product of a and b is 80",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 112.\n\nThe given problems can be solved by performing the addition in each case and then multiplying the results.\n\nA: The answers are 80 and 112 respectively.\nTo solve these problems, we need to follow the order of operations, which is to add the numbers first and then multiply the results.\n\nLet's solve them using Python code.\n```python\n# Problem 1\na1 = 6 + 2\nb1 = 3 +",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 4
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 80.\nLet's solve the first question first:\n\nA: For the first question, we have:\na = 6 + 2 = 8\nb = 3 + 7 = 10\nSo, a * b = 8 * 10 = 80.\n\nNow, let's solve the second question:\n\nA: For the second question, we have:\na = 5 + 6 = 11\nb = 2",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 40.\n\nQ: a=7+3, b=9+1. What is a*b?\n\nA: The answer is 70.\n\nQ: a=1+2, b=8+5. What is a*b?\n\nA: The answer is 20.\n\nQ: a=3+2, b=10+2. What is a*b?\n\nA: The answer is 50.\n\nQ: a=4+2,",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 39.\n\nOptions:\n(A) 60\n(B) 80\n(C) 36\n(D) 45\n(E) 30\n(A) 60\n\nThe correct answer is (B) 80.\n\nStep-by-step explanation:\nTo solve these problems, we need to understand the concept of multiplication and how it applies to the given numbers. We'll approach each problem systematically, starting with the first one.\n\nFirst, we solve",
+      "pred_answer": 39,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 8.\n\nQ: a=4+9, b=1+6. What is a*b?\n\nA: The answer is 48.\n\nQ: a=9+8, b=1+0. What is a*b?\n\nA: The answer is 12.\n\nQ: a=8+9, b=2+2. What is a*b?\n\nA: The answer is 32.\n\nQ: a=7+3, b=",
+      "pred_answer": 8,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 50.\n\nQ: a=3+9, b=5+6. What is a*b?\n\nA: The answer is 60.\n\nQ: a=5+9, b=7+6. What is a*b?\n\nA: The answer is 80.\n\nQ: a=7+7, b=9+4. What is a*b?\n\nA: The answer is 90.\n\nQ: a=9+6, b",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 60.\n\nQ: a=3+6, b=8+4. What is a*b?\n\nA: The answer is 20.\n\nA: Let's write a Python program to solve these problems.\n```python\ndef solve_problems():\n    a1 = 6 + 2\n    b1 = 3 + 7\n    result1 = a1 * b1\n\n    a2 = 1 + 9\n    b2 =",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 120.",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 28.\n\nTo determine the correct answer, I need you to use your reasoning skills to solve these problems. Let's start by solving them. **Problem 1:**\n\nLet's start with the first problem. We will solve the second problem consecutively.\n\nAssistant: Let's begin with the first problem:\n\n1. **Problem 1:**  \n   - \\( a = 6 + 2 \\)  \n   - \\( b = 3 + 7 \\)",
+      "pred_answer": 28,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 48.",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 100.\n\nLet's solve these step by step.\n\nFor the first question:\n- We have \\( a = 6 + 2 = 8 \\) and \\( b = 3 + 7 = 10 \\).\n- Therefore, \\( a \\times b = 8 \\times 10 = 80 \\).\n\nFor the second question:\n- We have \\( a = 2 + 2 = 4 \\) and \\( b = ",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 120.\n\nQ: a=6+6, b=5+6. What is a*b?\n\nA: The answer is 240.\n\nQ: a=6+6, b=5+5. What is a*b?\n\nA: The answer is 360.\n\nQ: a=6+6, b=5+4. What is a*b?\n\nA: The answer is 480.\n\nQ: a=6",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 100.\n\nQ: a=1+10, b=2+9. What is a*b?\n\nA: The answer is 100. Let's break these down step by step.\n\n1. \\( a = 6 + 2 = 8 \\)\n   \\( b = 3 + 7 = 10 \\)\n   \\( a \\times b = 8 \\times 10 = 80 \\)\n\n2. \\(",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 90.\n\nAre these two questions asking for the same thing?\n\nYes, both questions are asking for the product of two numbers. To determine the answer, we can calculate the product of the given numbers.\n\nLet's calculate first.\n\nAssistant: Sure, let's calculate the product of the given numbers in both questions.\n\n### Question 1:\nGiven:\n- \\( a = 6 + 2 = 8 \\)\n- \\( b = 3 + 7 = 1",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 60.\n\nThe problem involves basic arithmetic operations to find the product of two numbers. Let's calculate the products step by step to ensure accuracy. To solve these problems, we can use the order of operations (PEMDAS/BODMAS) and perform multiplication and addition accordingly.\n\nLet's start with the first question:\n\n1. \\( a = 6 + 2 = 8 \\)\n2. \\( b = 3 + 7 = 10 \\)\n3",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 64.\n\nQ: a=3+2, b=5+5. What is a*b?\n\nA: The answer is 100.\n\nQ: a=1+2, b=1+2. What is a*b?\n\nA: The answer is 10.\n\nQ: a=2+2, b=3+3. What is a*b?\n\nA: The answer is 16.\n\nQ: a=1+2,",
+      "pred_answer": 64,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 140.\n\nQ: a=9+3, b=12+4. What is a*b?\n\nA: The answer is 216.\n\nQ: a=11+1, b=13+5. What is a*b?\n\nA: The answer is 308.\n\nQ: a=13+0, b=15+7. What is a*b?\n\nA: The answer is 300.\n\n",
+      "pred_answer": 140,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 5
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 42.\n\nBoth questions involve simple arithmetic operations. To calculate the value of \\(a \\times b\\) for each pair of numbers, we need to perform the addition first and then multiply the results. Let's break down each problem step by step.\n\n### Problem 1:\n1. Calculate \\(a \\times b\\):\n   - \\(a = 6 + 2 = 8\\)\n   - \\(b = 3 + 7 = 10\\)\n",
+      "pred_answer": 42,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nLet's use the `@` symbol for multiplication in Python, and then we can compare the results. To solve these problems, we can use the `@` symbol for multiplication in Python. Let's start with the first problem:\n\nFirst, we need to define the variables `a` and `b` as strings and then calculate the result of `a*b`. Here's the code to do that:\n```python\n# Define the variables a and b\n",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 36.\nLet's break down the expressions for both questions and solve them step-by-step.\n\nAssistant: To solve the problems, we will use Python code to ensure accuracy. Let's start with the first question:\n\nQuestion 1:\n\\[ a = 6 + 2 \\]\n\\[ b = 3 + 7 \\]\n\\[ a \\times b = (6 + 2) \\times (3 + 7) = 8 \\times 10 =",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 17.\n\nThe given problems are asking for the product of two numbers, one with positive integers and the other with negative integers. To solve these problems, we can use the distributive property of multiplication over addition. \n\nLet's break down the distributive property of multiplication over addition for each problem:\n\n1. Distributive property of multiplication over addition for positive integers: (6+2)(3+7) = 80\n2. Distributive property of multiplication over addition",
+      "pred_answer": 17,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 180.\n\nQ: a=3+5, b=7+3. What is a*b?\n\nA: The answer is 420.\n\nQ: a=4+6, b=9+1. What is a*b?\n\nA: The answer is 540.\n\nQ: a=5+7, b=11+1. What is a*b?\n\nA: The answer is 780.\n\nQ: a=",
+      "pred_answer": 180,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=7+6, b=2+5. What is a*b? The answers are 72, 130, and 420, respectively. Let's compute the answers step by step:\n```python\n# First calculation\na1 = 6 + 2\nb1 = 3 + 7\nresult1 = a1 * b1\n\n# Second calculation\na2 = 1 +",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 73.\n\nQ: a=6+3, b=2+8. What is a*b? A: Let's solve each problem step by step.\n\n**Problem 1:**\n- a = 6 + 2 = 8\n- b = 3 + 7 = 10\n- a * b = 8 * 10 = 80\n\n**Problem 2:**\n- a = 7 + 4 = ",
+      "pred_answer": 73,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 47.\nTo solve the first question, we need to calculate the value of the expression \\(a \\times b\\) where \\(a = 6 + 2\\) and \\(b = 3 + 7\\). Let's break it down step by step:\n\n1. Calculate \\(a\\):\n\\[ a = 6 + 2 = 8 \\]\n\n2. Calculate \\(b\\):\n\\[ b = 3 + 7 = 10 \\]\n\n3",
+      "pred_answer": 47,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 70.\n\nQ: a=4+2, b=2+8. What is a*b?\n\nA: The answer is 24.\n\nQ: a=3+5, b=1+9. What is a*b?\n\nA: The answer is 54.\n\nA: Let's solve each one step by step.\n\n1. **a=6+2, b=3+7. What is a*b?**\n   - a = ",
+      "pred_answer": 70,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 80.\n\nQ: a=2+3, b=5+2. What is a*b?\n\nA: The answer is 80.\n\nQ: a=4+4, b=4+2. What is a*b?\n\nA: The answer is 80.\n\nQ: a=4+2, b=6+2. What is a*b?\n\nA: The answer is 80.\n\nQ: a=3+4, b",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 360.\n\nQ: a=5+3, b=9+2. What is a*b?\n\nA: The answer is 450.\n\nQ: a=4+4, b=8+3. What is a*b?\n\nA: The answer is 576.\n\nQ: a=3+5, b=7+3. What is a*b?\n\nA: The answer is 420.\n\nQ: a=2",
+      "pred_answer": 360,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 100. Let's solve these step-by-step.\n\nSure, let's solve these step-by-step using Python code.\n\n### Step 1: Solve the first problem\nGiven:\na = 6 + 2\nb = 3 + 7\nThen compute a * b.\n\n### Step 2: Solve the second problem\nGiven:\na = 8 + 9\nb = 2 + 7\nThen compute a * b.\n\nWe'll start",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 102.",
+      "pred_answer": 102,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 60.\n\nQ: a=5+3, b=3+10. What is a*b?\n\nA: The answer is 180.\n\nQ: a=3+7, b=5+2. What is a*b?\n\nA: The answer is 54. To solve these problems, let's follow the same steps as the original example:\n\nA: The answer is 100. Let's use the examples provided to help us",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 50.\n\nTo solve these problems, let's break down the expressions step by step.\n\n1. a = 6 + 2\n   b = 3 + 7\n   a*b = 8*10 = 80\n\n2. a = 5 + 2\n   b = 4 + 2\n   a*b = 7*6 = 42\n\nA: 1. For the first question, we have:\n",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 94. Here are the correct answers for the given expressions.\n\nA: Yes or No\n\nAssistant: ### Problem 1:\n- **Expression:** \\( a = 6 + 2 \\), \\( b = 3 + 7 \\).  \n  **Question:** What is \\( a \\times b \\)?  \n  **Answer:** No\n\n  - **Reasoning:**  \n    - \\( a = 8 \\)  \n    - \\( b = 10",
+      "pred_answer": 94,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 6
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 70.\n\nQ: a=6+3, b=4+8. What is a*b?\n\nA: The answer is 96.\n\nQ: a=8+5, b=7+6. What is a*b?\n\nA: The answer is 140.\n\nQ: a=7+4, b=5+9. What is a*b?\n\nA: The answer is 140.\n\nQ: a=9+3",
+      "pred_answer": 70,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 30. Here are the answers for both questions:\n\nA: Let's break down the expressions inside the parentheses first:\n\nFor the first question, we have:\na = 6 + 2 = 8\nb = 3 + 7 = 10\na * b = 8 * 10 = 80\n\nFor the second question, we have:\na = 2 + 1 = 3\nb = 5 + 4",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 33.\n\nQ: a=1+2, b=3+4. What is a*b?\n\nA: The answer is 15.\n\nQ: a=5+6, b=7+8. What is a*b?\n\nA: The answer is 96.\n\nQ: a=9+10, b=11+12. What is a*b?\n\nA: The answer is 130.\n\nQ: a=1",
+      "pred_answer": 33,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 18.\n\nQ: a=1+1, b=2+7. What is a*b?\n\nA: The answer is 18.\n\nQ: What is the value of a: a=8+2, b=3+7. What is a*b?\n\nA: The answer is 48.\n\nA: Let's solve each problem step by step:\n\n1. \\( a = 6 + 2 \\)\n2. \\( a = 2",
+      "pred_answer": 18,
+      "correct": true,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 180.",
+      "pred_answer": 180,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 200.\n\nQ: a=5+5+5, b=8+1. What is a*b?\n\nA: The answer is 165.\n\nQ: a=3+7+9, b=2+1. What is a*b?\n\nA: The answer is 90.\n\nQ: a=7+7+7+7+7+7+7, b=2+8. What is a*b?\n\nA:",
+      "pred_answer": 200,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 132.\n\nTo solve the given problems, we can use the following equations:\n\n1. a = 6 + 2\n2. b = 3 + 7\n3. a = 7 + 4\n4. b = 8 + 5\n\nThen, we can use these equations to calculate the products a*b for both cases.\nFirst, let's calculate the values of a and b for both cases and then multiply them together.\n\nTo solve",
+      "pred_answer": 132,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 48.\n\nQ: a=2+2, b=3+7. What is a*b?\n\nA: The answer is 60.\n\nQ: a=1+2, b=4+7. What is a*b?\n\nA: The answer is 30.\n\nQ: a=1+1, b=15+2. What is a*b?\n\nA: The answer is 32.\nTo solve these expressions, we can break",
+      "pred_answer": 48,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 50.\n\nA: The problem can be solved by using the distributive property of multiplication over addition.\n\nLet's use the variable \"c\" to represent the result of each multiplication. Let's solve them step by step.\n\nTo solve these problems, we can follow these steps:\n\na) First, find the value of a, then multiply it by b.\nb) Next, find the value of a, then multiply it by b.\nc) Repeat the process, changing the",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 24.\n\nEach question follows a pattern where the variables `a` and `b` are the sums of two numbers and are multiplied together. The pattern is that `a` and `b` are both the sum of two identical numbers.\n\nLet's solve the first question first and see if we can apply the same pattern to the second question. \nTo solve these problems, we can define the pattern as follows:\n\n- For the first question, `a` is the sum",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 40.\n\nQ: a=10+5, b=3+9. What is a*b?\n\nA: The answer is 100.\n\nQ: a=7+3, b=4+6. What is a*b?\n\nA: The answer is 60.\nLet's calculate the answers step by step:\n\nA: a=6+2, b=3+7. What is a*b?\nB: a=6+6",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 56.\n\nQ: a=3+2, b=7+8. What is a*b?\n\nA: The answer is 15.\n\nQ: a=3+6, b=7+9. What is a*b?\n\nA: The answer is 72.\n\nQ: a=3+6, b=8+9. What is a*b?\n\nA: The answer is 54.\n\nQ: a=3+7, b",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 130.\n\nOptions:\nA: 78\nB: 80\nC: 120\nD: 130\nLet's calculate the values of a and b first.\n\nFor the first set:\na = 6 + 2 = 8\nb = 3 + 7 = 10\na * b = 8 * 10 = 80\n\nFor the second set:\na = 2 +",
+      "pred_answer": 130,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 18.\n\nQ: a=5+1, b=1+5. What is a*b?\n\nA: The answer is 50.\n\nQ: a=8+0, b=1+7. What is a*b?\n\nA: The answer is 56.\n\nQ: a=2+4, b=7+1. What is a*b?\n\nA: The answer is 30.\n\nQ: a=3+3, b",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 40.",
+      "pred_answer": 40,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 100.\n\n### Let's use Python to verify the results.\nLet's start by solving each problem step by step.\n\nTo solve these problems, we will use Python to calculate the values of `a` and `b` for each set of equations and then compute the product `a * b`.\n\nHere are the problems:\n\n1. **Problem 1:**\n   - \\( a = 6 + 2 \\)\n   - \\( b = 3 + 7",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 7
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 85.\n\nThe two questions are essentially the same, just with different numbers in the expressions for a and b. The order of computation remains consistent. Let's use Python to verify the results.\n\nTo solve these problems, we can use the `sympy` library to ensure the calculations are accurate.\n\na1, b1 = (6 + 2), (3 + 7)\na2, b2 = (5 + 6), (2 + 7",
+      "pred_answer": 85,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 16.\n\nLet's calculate the product of a and b for both questions using Python:\n\n```python\n# Question 1\na1 = 6 + 2\nb1 = 3 + 7\n\n# Question 2\na2 = 2 + 1\nb2 = 5 + 4\n\n# Question 1: a1 = 6 + 2, b1 = 3 + 7\na1 = 6 +",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 30.\n\nTo find the answer to question 1, we can perform the following calculation:\n\na = 6 + 2 = 8\nb = 3 + 7 = 10\na * b = 8 * 10 = 80\n\nTo find the answer to question 2, we can perform the following calculation:\n\na = 4 + 3 = 7\nb = 2 + 9 = 11\n",
+      "pred_answer": 30,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " The answer is 16.\n\nA: The first problem, we have \\( a = 6 + 2 = 8 \\) and \\( b = 3 + 7 = 10 \\). Multiplying these gives \\( 8 \\times 10 = 80 \\).\n\nThe second problem, we have \\( a = 2 + 7 = 9 \\) and \\( b = 1 + 1 = 2 \\). Multiplying these gives \\( ",
+      "pred_answer": 16,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 56.\n\nQ: a=1+5, b=6+3. What is a*b?\n\nA: The answer is 54.",
+      "pred_answer": 56,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 96.\n\nQ: a=10+10, b=10+10. What is a*b?\n\nA: The answer is 400.\n\nQ: a=100+100, b=100+100. What is a*b?\n\nA: The answer is 40,000.\n\nQ: a=1000+1000, b=1000",
+      "pred_answer": 96,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 108.\n\nQ: a=6+1, b=4+8. What is a*b?\n\nA: The answer is 72.\n\nQ: a=9+3, b=6+7. What is a*b?\n\nA: The answer is 216.\n\nQ: a=10+2, b=5+9. What is a*b?\n\nA: The answer is 250.\n\nQ: a=8",
+      "pred_answer": 108,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " 90.\n\nQ: a=4+1, b=5+3. What is a*b?\n\nA: 20.\n\nQ: a=2+2, b=7+2. What is a*b?\n\nA: 24.\n\nQ: a=5+1, b=3+5. What is a*b? 47.\n\nA: 120.\nHere are the answers to the multiplication problems:\n\nTo solve the above questions using Python",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 96.\n\nThe problem involves basic arithmetic operations of addition and multiplication. To solve these problems, we can use the following Python code:\n\n```python\n# Problem 1\na1 = 6 + 2\nb1 = 3 + 7\nresult1 = a1 * b1\n\n# Problem 2\na2 = 5 + 3\nb2 = 4 + 6\nresult2 = a2 * b2\n\nresult1",
+      "pred_answer": 96,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 20. \n\nLet's solve these step by step.\n\n**Problem 1:**\n1. **Problem 2:**\n2. First, we'll calculate the values of \\( a \\) and \\( b \\) for each problem.\n\n**Problem 1:**\na = 6 + 2 = 8\nb = 3 + 7 = 10\na * b = 8 * 10 = 80\n\n**Problem ",
+      "pred_answer": 20,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 80.\n\nLet's solve these step by step.\n\nTo solve these problems, we can follow the same approach as the given example.\n\nFor the first problem, we are adding 6 to 2 and 3 to 7, and then multiplying the results. For the second problem, we are adding 6 to 6 and 5 to 1, and then multiplying the results. Let's use the same approach as the given example.\n\n**Problem 1:**  \n",
+      "pred_answer": 80,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 140.\n\nOptions:\n- 60\n- 75\n- 80\n- 100\n\nOptions: (A), (B)\nThe correct answers are (C) and (D).",
+      "pred_answer": 140,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 50.",
+      "pred_answer": 50,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 24. ### To solve these problems, let's start with the first one:\n\n1. For the first problem, \\(a = 6 + 2\\) and \\(b = 3 + 7\\):\n   - Calculate \\(a\\) and \\(b\\) separately.\n   - Then, calculate the product \\(a \\times b\\).\n\n2. For the second problem, \\(a = 4 + 2\\) and \\(b = 1 + 4\\",
+      "pred_answer": 24,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " 30\nTo solve these problems, we need to follow the order of operations. Let's break them down step-by-step:\n\n1. Start by defining the expressions for `a` and `b`.\n2. Calculate the result of `a * b`.\n\n1. What is the final result?\n\n### Problem 1: Calculating `a * b` for the first given values.\n2. What is the final result?\n\n### Problem 2: Calculating `a * b` for",
+      "pred_answer": 2,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 112.\n\nQ: a=9+3, b=1+9. What is a*b?\n\nA: The answer is 108.\n\nQ: a=11+1, b=10+2. What is a*b?\n\nA: The answer is 132.\n\nQ: a=13+1, b=12+1. What is a*b?\n\nA: The answer is 156.\n\nQ",
+      "pred_answer": 112,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 8
+    },
+    {
+      "question": "a=5+6, b=2+7. What is a*b?",
+      "true_answer": 99,
+      "response": " The answer is 70.\n\nHere are some more questions for you to practice with the same format:\n\n1. a=4+5, b=2+4\n2. a=6+9, b=7+8\n3. a=7+3, b=5+6\n4. a=8+2, b=3+5\n5. a=9+4, b=7+5\n6. a=2+6, b",
+      "pred_answer": 70,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+1, b=5+4. What is a*b?",
+      "true_answer": 27,
+      "response": " The answer is 18.\n\nQ: a=4+3, b=1+9. What is a*b?\n\nA: The answer is 56.\n\nQ: a=7+2, b=8+3. What is a*b?\n\nA: The answer is 110.\n\nQ: a=9+5, b=1+8. What is a*b?\n\nA: The answer is 140.\nHere are the expressions and their results",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=4+3, b=2+9. What is a*b?",
+      "true_answer": 77,
+      "response": " The answer is 46.\n\nQ: a=5+2, b=1+8. What is a*b?\n\nA: The answer is 40.\n\nQ: a=8+5, b=3+6. What is a*b?\n\nA: The answer is 122. Let's calculate each expression step by step:\n\n1: a = 6 + 2 = 8, b = 3 + 7 = 10, a *",
+      "pred_answer": 46,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+7, b=1+1. What is a*b?",
+      "true_answer": 18,
+      "response": " To solve these problems, we need to follow the order of operations (PEMDAS/BODMAS), which stands for Parentheses/Brackets, Exponents/Orders, Multiplication and Division, and Addition and Subtraction. The order of operations is a set of rules that dictate the sequence in which mathematical operations should be performed. In the absence of parentheses or other symbols that dictate the order, the standard order of operations is as follows:\n\n1. Parentheses/Brackets: Perform operations inside",
+      "pred_answer": 1,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+4, b=4+9. What is a*b?",
+      "true_answer": 78,
+      "response": " The answer is 100.\n\nPlease note that in both questions, the numbers have been simplified and there are no parentheses.\n\nA: In both questions, we need to follow the order of operations and multiplication is performed before addition.\n\nLet's solve each problem step-by-step:\n\n### Problem 1:\n- a = 2 + 4 = 6\n- b = 3 + 7 = 10\n- a * b = 6 * 10 = 6",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=1+9, b=4+9. What is a*b?",
+      "true_answer": 130,
+      "response": " The answer is 100.\n\nQ: a=2+5, b=3+5. What is a*b?\n\nA: The answer is 40.\n\nQ: a=3+7, b=8+7. What is a*b?\n\nA: The answer is 92.\n\nQ: a=4+6, b=7+6. What is a*b?\n\nA: The answer is 108.\n\nQ: a=5+8",
+      "pred_answer": 100,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=7+4, b=8+5. What is a*b?",
+      "true_answer": 143,
+      "response": " The answer is 168.\n\nQ: a=10+10, b=5+25. What is a*b?\n\nA: The answer is 600. To solve these problems step-by-step, let's first calculate the values of \\( a \\) and \\( b \\) for each question and then find the product \\( a \\cdot b \\).\n\n1. For the first question:\n   - \\( a = 6 + 2 = 8 \\",
+      "pred_answer": 168,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=1+3, b=7+6. What is a*b?",
+      "true_answer": 52,
+      "response": " The answer is 18.\n\nQ: a=2+3, b=8+1. What is a*b?\n\nA: The answer is 27.\n\nQ: a=3+4, b=9+4. What is a*b?\n\nA: The answer is 36.\n\nQ: a=4+5, b=10+5. What is a*b?\n\nA: The answer is 40.\n\nQ: a=5+6,",
+      "pred_answer": 18,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=5+3, b=4+6. What is a*b?",
+      "true_answer": 80,
+      "response": " The answer is 120.\n\nA: The answers are 80 and 120, respectively. The answers are correct.",
+      "pred_answer": 120,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+2, b=7+2. What is a*b?",
+      "true_answer": 36,
+      "response": " The answer is 36.\n\nQ: a=5+2, b=2+7. What is a*b?\n\nA: The answer is 60.\n\nQ: a=3+2, b=5+2. What is a*b?\n\nA: The answer is 42.\n\nQ: a=4+2, b=4+2. What is a*b?\n\nA: The answer is 56.\n\nQ: a=4+2, b",
+      "pred_answer": 36,
+      "correct": true,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=6+6, b=5+1. What is a*b?",
+      "true_answer": 72,
+      "response": " The answer is 36.\n\nQ: a=5+2, b=2+9. What is a*b?\n\nA: The answer is 20.\n\nQ: a=6+8, b=3+2. What is a*b?\n\nA: The answer is 50.\n\nQ: a=3+4, b=2+5. What is a*b?\n\nA: The answer is 28.\n\nQ: a=1+8, b",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=8+9, b=2+7. What is a*b?",
+      "true_answer": 153,
+      "response": " The answer is 128.\n\nQ: a=3+7, b=4+9. What is a*b?\n\nA: The answer is 110.\n\nQ: a=4+9, b=5+6. What is a*b?\n\nA: The answer is 113.\n\nQ: a=6+6, b=3+8. What is a*b?\n\nA: The answer is 116.\n\nQ: a=7",
+      "pred_answer": 128,
+      "correct": false,
+      "has_cot": false,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=2+9, b=5+6. What is a*b?",
+      "true_answer": 121,
+      "response": " The answer is 90. Let's solve these step by step:\n\nTo solve these problems, we need to follow the order of operations, which is parentheses first, then addition.\n\n### Problem 1:\n1. For \\( a = 6 + 2 \\) and \\( b = 3 + 7 \\), we first calculate the values of \\( a \\) and \\( b \\):\n   - \\( a = 6 + 2 = 8 \\)\n   - \\( b",
+      "pred_answer": 90,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=4+2, b=1+4. What is a*b?",
+      "true_answer": 30,
+      "response": " The answer is 36.\n\nChoose the correct number pairs to fill in the blanks. The first number pair uses 6+2, and the second number pair uses 4+2.\nA: Let's solve both problems step-by-step using Python and SymPy.\n\nSure, let's break it down:\n\n### Problem 1: a=6+2, b=3+7. What is a*b?\n\n### Problem 2: a=4+2, b=1+",
+      "pred_answer": 36,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=5+2, b=4+2. What is a*b?",
+      "true_answer": 42,
+      "response": " The answer is 60.\nTo solve these problems, we can follow these steps:\n\n1. Calculate the values of \\(a\\) and \\(b\\) by following the order of operations (PEMDAS/BODMAS).\n2. Multiply the resulting values of \\(a\\) and \\(b\\).\n3. Write the Python code to perform the calculations and print the results.\nLet's start with the first problem.\n```python\n# First problem\na = 6 + 2\nb =",
+      "pred_answer": 60,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 9
+    },
+    {
+      "question": "a=7+5, b=8+6. What is a*b?",
+      "true_answer": 168,
+      "response": " The answer is 108.\n\nHere are the answers to the given questions:\n\nA: a=6+2, b=3+7. What is a*b?\n\nB: a=7+5, b=8+6. What is a*b?\n\nC: Let's calculate the products step by step.\n\nA: \n1. First, calculate \\( a \\) and \\( b \\). Then, multiply \\( a \\) and \\( b \\).\n2. Next, calculate",
+      "pred_answer": 108,
+      "correct": false,
+      "has_cot": true,
+      "sample_idx": 9
+    }
+  ],
+  "unsteered_accuracy": 0.08125,
+  "unsteered_cot_rate": 0.04375,
+  "pi_rr_accuracy": 0.34375,
+  "pi_rr_cot_rate": 0.5125,
+  "melbo_accuracy": 0.03125,
+  "melbo_cot_rate": 0.4625
+}
