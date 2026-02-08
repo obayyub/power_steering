@@ -167,15 +167,39 @@ def find_power_iteration_vectors_multi(
         V = torch.randn(hidden_dim, num_vectors, device=device, dtype=dtype)
         V = orthogonalize(V)
 
-        sigmas = []
         for i in range(num_iters):
             new_V = power_iteration_step(V)
-            # Sigmas are sqrt of eigenvalues of Σ(J^T J), scaled by num_prompts
-            sigmas = [new_V[:, j].norm().item() for j in range(num_vectors)]
             V = orthogonalize(new_V)
 
             if i % 3 == 0 or i == num_iters - 1:
-                print(f"    Iter {i}: σ = {[f'{s:.0f}' for s in sigmas]}")
+                # Just for logging, compute approximate sigmas
+                approx_sigmas = [new_V[:, j].norm().item() for j in range(num_vectors)]
+                print(f"    Iter {i}: σ ≈ {[f'{s:.0f}' for s in approx_sigmas]}")
+
+        # Rayleigh-Ritz: rotate to true singular vectors
+        # Compute k×k matrix M where M[i,j] = v_i^T (Σ J_i^T J_i v_j)
+        print("    Computing Rayleigh-Ritz rotation...")
+        JtJ_V = power_iteration_step(V)  # Apply Σ(J^T J) to all columns
+        M = (V.T @ JtJ_V).float()  # k×k matrix, use float for numerical stability
+
+        # Symmetrize (should be symmetric, but numerical errors)
+        M = (M + M.T) / 2
+
+        # Eigendecomposition: M = U Λ U^T
+        eigenvalues, eigenvectors = torch.linalg.eigh(M)
+
+        # eigh returns ascending order, we want descending
+        idx = eigenvalues.argsort(descending=True)
+        eigenvalues = eigenvalues[idx]
+        eigenvectors = eigenvectors[:, idx]
+
+        # Rotate V to get true singular vectors: V_true = V @ U
+        V = V @ eigenvectors.to(V.dtype)
+
+        # Singular values are sqrt of eigenvalues (eigenvalues ≈ σ²)
+        sigmas = eigenvalues.sqrt().tolist()
+
+        print(f"    True σ = {[f'{s:.0f}' for s in sigmas]}")
 
         # Extract vectors (as rows)
         vectors = torch.stack([V[:, j].detach() for j in range(num_vectors)])
