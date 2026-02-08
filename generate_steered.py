@@ -145,6 +145,14 @@ def format_time(seconds: float) -> str:
         return f"{seconds/3600:.1f}h"
 
 
+def parse_vector_config(config_str: str) -> tuple[str, str, int]:
+    """Parse vector config string 'name:path:idx' into tuple."""
+    parts = config_str.split(":")
+    if len(parts) != 3:
+        raise ValueError(f"Vector config must be 'name:path:idx', got: {config_str}")
+    return (parts[0], parts[1], int(parts[2]))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="Qwen/Qwen3-14B")
@@ -154,18 +162,19 @@ def main():
     parser.add_argument("--scales", default="-50,-25,-10,-5,0,5,10,25,50")
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--output-dir", default="results/generations")
+    parser.add_argument(
+        "--vectors", nargs="+", required=True,
+        help="Vector configs as 'name:path:idx' (e.g., 'melbo_v4:vectors/melbo.pt:4')"
+    )
     args = parser.parse_args()
 
     scales = [float(s) for s in args.scales.split(",")]
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Vector configs: (name, filepath, vector_idx)
-    vector_configs = [
-        ("melbo_v4", "vectors/melbo_Qwen3-14B_20260127_165510.pt", 4),
-        ("multi_pi_v8", "vectors/power_iter_multi_Qwen3-14B_20260127_165614.pt", 8),
-        ("power_iter_v10", "vectors/power_iter_Qwen3-14B_20260127_165531.pt", 10),
-    ]
+    # Parse vector configs from command line
+    vector_configs = [parse_vector_config(v) for v in args.vectors]
+    print(f"Vector configs: {vector_configs}")
 
     # Load dataset
     print("Loading dataset...")
