@@ -78,24 +78,35 @@ class SteeredGenerator:
         self.steering_vector = vector
         self.scale = scale
 
-    def generate(self, prompt: str, max_new_tokens: int = 200) -> str:
+    def generate(self, prompt: str, max_new_tokens: int = 200,
+                 temperature: float = 0.0) -> str:
         """Generate text for a prompt."""
         formatted = format_prompt(self.tokenizer, prompt)
         inputs = self.tokenizer(formatted, return_tensors="pt").to(self.model.device)
 
         with torch.no_grad():
-            outputs = self.model.generate(
-                inputs["input_ids"],
-                max_new_tokens=max_new_tokens,
-                do_sample=False,
-                pad_token_id=self.tokenizer.pad_token_id,
-            )
+            if temperature > 0:
+                outputs = self.model.generate(
+                    inputs["input_ids"],
+                    max_new_tokens=max_new_tokens,
+                    do_sample=True,
+                    temperature=temperature,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                )
+            else:
+                outputs = self.model.generate(
+                    inputs["input_ids"],
+                    max_new_tokens=max_new_tokens,
+                    do_sample=False,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                )
 
         # Decode only the new tokens
         new_tokens = outputs[0, inputs["input_ids"].shape[1]:]
         return self.tokenizer.decode(new_tokens, skip_special_tokens=True)
 
-    def generate_batch(self, prompts: list[str], max_new_tokens: int = 200) -> list[str]:
+    def generate_batch(self, prompts: list[str], max_new_tokens: int = 200,
+                       temperature: float = 0.0) -> list[str]:
         """Generate text for multiple prompts (same steering)."""
         formatted = [format_prompt(self.tokenizer, p) for p in prompts]
         inputs = self.tokenizer(
@@ -103,18 +114,28 @@ class SteeredGenerator:
         ).to(self.model.device)
 
         with torch.no_grad():
-            outputs = self.model.generate(
-                inputs["input_ids"],
-                attention_mask=inputs["attention_mask"],
-                max_new_tokens=max_new_tokens,
-                do_sample=False,
-                pad_token_id=self.tokenizer.pad_token_id,
-            )
+            if temperature > 0:
+                outputs = self.model.generate(
+                    inputs["input_ids"],
+                    attention_mask=inputs["attention_mask"],
+                    max_new_tokens=max_new_tokens,
+                    do_sample=True,
+                    temperature=temperature,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                )
+            else:
+                outputs = self.model.generate(
+                    inputs["input_ids"],
+                    attention_mask=inputs["attention_mask"],
+                    max_new_tokens=max_new_tokens,
+                    do_sample=False,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                )
 
-        # Decode each response
+        # Decode each response (input_len is full padded length, not just non-pad tokens)
         responses = []
-        for i, output in enumerate(outputs):
-            input_len = inputs["attention_mask"][i].sum().item()
+        input_len = inputs["input_ids"].shape[1]
+        for output in outputs:
             new_tokens = output[input_len:]
             responses.append(self.tokenizer.decode(new_tokens, skip_special_tokens=True))
         return responses
@@ -158,6 +179,7 @@ def main():
     parser.add_argument("--model", default="Qwen/Qwen3-14B")
     parser.add_argument("--source-layer", type=int, default=7)
     parser.add_argument("--max-tokens", type=int, default=200)
+    parser.add_argument("--temperature", type=float, default=0.0, help="Sampling temperature (0=greedy)")
     parser.add_argument("--num-prompts", type=int, default=20)
     parser.add_argument("--scales", default="-50,-25,-10,-5,0,5,10,25,50")
     parser.add_argument("--batch-size", type=int, default=4)
@@ -244,7 +266,7 @@ def main():
                 batch_prompts = all_prompts[batch_start:batch_end]
 
                 prompt_texts = [p["prompt"] for p in batch_prompts]
-                responses = generator.generate_batch(prompt_texts, args.max_tokens)
+                responses = generator.generate_batch(prompt_texts, args.max_tokens, args.temperature)
 
                 for i, (prompt_info, response) in enumerate(zip(batch_prompts, responses)):
                     all_results.append({
@@ -281,6 +303,7 @@ def main():
                 "scales": scales,
                 "num_prompts": args.num_prompts,
                 "max_tokens": args.max_tokens,
+                "temperature": args.temperature,
                 "total_generations": len(all_results),
             },
             "results": all_results,
