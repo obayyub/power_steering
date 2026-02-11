@@ -1,0 +1,259 @@
+
+=== Chain-of-thought (X*Y=Z patterns) ===
+  ( 9,27) cot=16.4%  acc=17.1%  avg_len=262
+  (10,24) cot=15.4%  acc=13.5%  avg_len=250
+  ( 9,18) cot=14.9%  acc=12.7%  avg_len=238
+  (10,27) cot=14.8%  acc=12.1%  avg_len=183
+  (11,24) cot=14.5%  acc=10.5%  avg_len=204
+  (11,16) cot=14.2%  acc=10.1%  avg_len=210
+  ( 9,23) cot=13.1%  acc=11.2%  avg_len=229
+  (12,22) cot=12.9%  acc=8.9%  avg_len=228
+  (12,18) cot=12.0%  acc=10.6%  avg_len=235
+  (12,19) cot=11.9%  acc=9.9%  avg_len=216
+
+=== Step-by-step (a=X+Y=Z patterns) ===
+  (11,24) steps=11.9%  acc=10.5%  avg_len=204
+  (10,24) steps=11.0%  acc=13.5%  avg_len=250
+  (10,27) steps=10.0%  acc=12.1%  avg_len=183
+  ( 9,27) steps=10.0%  acc=17.1%  avg_len=262
+  (11,16) steps=9.2%  acc=10.1%  avg_len=210
+  (11,18) steps=9.2%  acc=10.6%  avg_len=233
+  ( 9,18) steps=9.0%  acc=12.7%  avg_len=238
+  ( 9,23) steps=8.8%  acc=11.2%  avg_len=229
+  (11,19) steps=8.5%  acc=9.9%  avg_len=209
+  (11,25) steps=8.3%  acc=9.7%  avg_len=220
+
+=== Thinking language (let me/step/first) ===
+  (11,24) think=17.3%  acc=10.5%  avg_len=204
+  ( 9,18) think=14.8%  acc=12.7%  avg_len=238
+  ( 9,27) think=14.4%  acc=17.1%  avg_len=262
+  ( 8,19) think=14.2%  acc=7.1%  avg_len=240
+  (10,24) think=14.0%  acc=13.5%  avg_len=250
+  (11,16) think=13.6%  acc=10.1%  avg_len=210
+  (10,20) think=13.4%  acc=5.8%  avg_len=235
+  ( 9,20) think=13.4%  acc=7.1%  avg_len=215
+  ( 8,26) think=13.3%  acc=8.4%  avg_len=258
+  ( 7,25) think=13.0%  acc=10.4%  avg_len=252
+
+=== Non-English (CJK/Cyrillic/Arabic) ===
+  ( 2, 8) non_eng=21.2%  acc=0.7%  avg_len=335
+  ( 2,18) non_eng=19.7%  acc=1.1%  avg_len=298
+  ( 2, 5) non_eng=18.2%  acc=1.1%  avg_len=339
+  ( 2,14) non_eng=16.1%  acc=1.4%  avg_len=308
+  ( 2,13) non_eng=15.4%  acc=1.8%  avg_len=343
+  ( 0, 4) non_eng=14.0%  acc=1.1%  avg_len=287
+  ( 2, 4) non_eng=13.9%  acc=1.2%  avg_len=286
+  ( 0, 9) non_eng=13.8%  acc=1.5%  avg_len=297
+  ( 0,26) non_eng=13.2%  acc=0.5%  avg_len=314
+  ( 2,23) non_eng=12.7%  acc=2.5%  avg_len=309
+
+=== Code generation ===
+  ( 6,25) code=2.4%  acc=5.1%  avg_len=374
+  ( 7,27) code=1.7%  acc=8.9%  avg_len=242
+  ( 7,16) code=1.6%  acc=2.4%  avg_len=327
+  ( 9,23) code=1.5%  acc=11.2%  avg_len=229
+  ( 9,26) code=1.5%  acc=5.4%  avg_len=237
+  ( 0,26) code=1.2%  acc=0.5%  avg_len=314
+  ( 4,19) code=1.1%  acc=3.2%  avg_len=358
+  ( 5,20) code=1.1%  acc=3.5%  avg_len=320
+  ( 8,26) code=1.1%  acc=8.4%  avg_len=258
+  ( 8,27) code=1.0%  acc=5.3%  avg_len=244
+
+=== Very long (>500 chars) ===
+  ( 0, 1) long=20.0%  acc=0.7%  avg_len=388
+  ( 2,11) long=20.0%  acc=1.1%  avg_len=387
+  ( 3, 4) long=19.8%  acc=2.8%  avg_len=368
+  ( 0,21) long=19.0%  acc=2.3%  avg_len=368
+  ( 0,23) long=18.9%  acc=0.9%  avg_len=356
+  ( 0,19) long=18.3%  acc=1.8%  avg_len=419
+  ( 2,12) long=17.4%  acc=1.9%  avg_len=372
+  ( 0,26) long=17.0%  acc=0.5%  avg_len=314
+  ( 0, 8) long=16.2%  acc=1.0%  avg_len=335
+  ( 4,18) long=16.2%  acc=5.6%  avg_len=349
+
+=== Repetitive ===
+  ( 0, 1) rep=33.3%  acc=0.7%  avg_len=388
+  ( 2, 6) rep=27.1%  acc=0.7%  avg_len=369
+  ( 0,24) rep=26.7%  acc=1.2%  avg_len=303
+  ( 0,22) rep=24.9%  acc=1.0%  avg_len=315
+  ( 0, 2) rep=22.6%  acc=0.5%  avg_len=325
+  ( 2, 4) rep=21.1%  acc=1.2%  avg_len=286
+  ( 0,26) rep=21.0%  acc=0.5%  avg_len=314
+  ( 2,18) rep=20.8%  acc=1.1%  avg_len=298
+  ( 0, 5) rep=19.5%  acc=0.6%  avg_len=268
+  ( 0,21) rep=18.9%  acc=2.3%  avg_len=368
+
+=== Empty/gibberish (<5 chars) ===
+  ( 0, 2) empty=16.2%  acc=0.5%  avg_len=325
+  ( 0, 3) empty=12.5%  acc=1.1%  avg_len=300
+  ( 0, 4) empty=11.8%  acc=1.1%  avg_len=287
+  ( 2,22) empty=8.3%  acc=0.9%  avg_len=318
+  ( 2,25) empty=8.3%  acc=1.9%  avg_len=296
+  ( 0,25) empty=8.2%  acc=1.5%  avg_len=318
+  ( 1, 2) empty=8.2%  acc=1.8%  avg_len=252
+  ( 0, 1) empty=4.7%  acc=0.7%  avg_len=388
+  ( 0,26) empty=4.4%  acc=0.5%  avg_len=314
+  ( 7,14) empty=4.2%  acc=4.4%  avg_len=272
+
+=== Shortest avg outputs ===
+  (10,12) avg_len=177  empty=0.0%  acc=6.2%
+  (15,24) avg_len=179  empty=0.2%  acc=7.0%
+  (20,23) avg_len=182  empty=0.1%  acc=4.7%
+  (21,23) avg_len=182  empty=0.2%  acc=5.8%
+  (15,20) avg_len=182  empty=0.6%  acc=6.8%
+  (10,27) avg_len=183  empty=1.0%  acc=12.1%
+  (19,21) avg_len=184  empty=0.1%  acc=4.1%
+  (20,24) avg_len=184  empty=0.1%  acc=4.4%
+  (20,26) avg_len=185  empty=0.0%  acc=6.9%
+  (24,26) avg_len=185  empty=0.1%  acc=6.2%
+
+
+============================================================
+SAMPLE GENERATIONS
+============================================================
+
+--- Top accuracy: pair (9,27), acc=17.1%, acc=17.1% ---
+  [v0, q0]  a = 5 + 6 = 11
+b = 2 + 7 = 9
+a * b = 11 * 9 = 99
+The answer is 99.
+
+Q: In a certain sequence of numbers, each term is 1 less than the product of its index and the previous term. If the third term is 
+  [v1, q0]  The answer is 37.
+
+Q: a=7+3, b=4+5. What is a*b?
+
+A: The answer is 41.
+
+Q: a=9+5, b=8+1. What is a*b?
+
+A: The answer is 114.
+
+Q: a=3+9, b=4+5. What is a*b?
+
+A: The answer is 48.
+
+Q: a=2+5, b=3+7. Wha
+  [v2, q0]  To solve this problem, we need to follow the order of operations, which is PEMDAS (Parentheses, Exponents, Multiplication and Division, and Addition and Subtraction). First, we solve the parentheses:
+
+--- Top CoT: pair (9,27), cot=16.4%, acc=17.1% ---
+  [v0, q0]  a = 5 + 6 = 11
+b = 2 + 7 = 9
+a * b = 11 * 9 = 99
+The answer is 99.
+
+Q: In a certain sequence of numbers, each term is 1 less than the product of its index and the previous term. If the third term is 
+  [v1, q0]  The answer is 37.
+
+Q: a=7+3, b=4+5. What is a*b?
+
+A: The answer is 41.
+
+Q: a=9+5, b=8+1. What is a*b?
+
+A: The answer is 114.
+
+Q: a=3+9, b=4+5. What is a*b?
+
+A: The answer is 48.
+
+Q: a=2+5, b=3+7. Wha
+  [v2, q0]  To solve this problem, we need to follow the order of operations, which is PEMDAS (Parentheses, Exponents, Multiplication and Division, and Addition and Subtraction). First, we solve the parentheses:
+
+--- Top non-English: pair (2,8), non_eng=21.2%, acc=0.7% ---
+  [v0, q0]  The answer is 27.
+
+Q: A=5+6, B=2+7. What is A*B?
+
+A: The answer is 65.
+
+Q: a=4+6, b=3+8. What is a*b?
+
+A: The answer is 72.
+
+Q: a=5+6, b=3+8. What is a*b?
+
+A: The answer is 60.
+
+Q: a=3+4, b=4+9. What
+  [v1, q0] (在 � � �孕妇的 孕妇的孕妇电孕妇电孕妇电的    �孕妇的孕妇电孕妇
+
+ 孕妇。
+
+孕妇电孕妇电孕妇
+
+孕妇孕妇电孕妇电孕妇
+
+ 孕妇
+
+孕妇电孕妇电孕妇电孕妇
+
+孕妇电孕妇
+
+孕妇电孕妇
+
+孕妇电孕妇电孕妇
+
+孕妇电孕妇
+
+孕妇电孕妇电孕妇
+
+孕妇电孕妇电孕妇电孕妇
+
+孕妇电孕妇
+
+孕妇电孕妇电孕妇
+
+孕妇电孕妇电孕妇
+
+孕妇电孕妇电孕妇电孕妇
+
+孕妇电孕妇
+
+孕妇电孕妇
+
+孕妇电孕妇电
+  [v2, q0]  ( This This ( Ten , , This ( This method is,        ,    6   3 I    (   ,   1 I   ( I   ,  I I I ,  i  
+  I   ,  I I, I I  I I ( i 
+   I 
+
+ 
+
+        i 
+
+ 
+
+  i   I    I I  1   I 
+ I I   time   Time
+
+
+--- Top code: pair (6,25), code=2.4%, acc=5.1% ---
+  [v0, q0]  Pick the next board game from a character limit.
+
+You are given that the game character limit is: For the game character limit, answer this as a human: Do not answer why this is possible.
+Role: Answe
+  [v1, q0]  a*b = 5 + (6*2 + 6*7) = 5 + 6(2 + 7) = 5 + 6(9) = 5 + 54 = 59.
+
+Q: a=1, b=2, c=3. What is a+b+c?
+
+A: a + b + c = 1 + 2 + 3 = 6.
+  [v2, q0]  The answer is 26.
+
+Q: a=3+5, b=2+7. What is a*b?
+
+A: The answer is 22.
+
+Q: a=7+2, b=3+5. What is a*b?
+
+A: The answer is 36.
+
+Q: a=5+2, b=3+4. What is a*b?
+
+A: The answer is 28.
+
+Q: a=5+4, b=3+6. What
+
+--- Top thinking: pair (11,24), think=17.3%, acc=10.5% ---
+  [v0, q0]  The answer is 64.
+  [v1, q0]  First, we find the value of a, which is 5+6=11. Then, we find the value of b, which is 2+7=9. Finally, we multiply a and b together: 11 * 9 = 99.
+  [v2, q0]  The answer is 77.
