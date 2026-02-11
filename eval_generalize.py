@@ -370,20 +370,23 @@ def main():
             "generations": {k: v["results"] for k, v in task_results.items()},
         }
 
-    # Evaluate word problems
-    print(f"\n  === word_problems ({len(WORD_PROBLEMS)} problems) ===")
-    task_results = evaluate_task(
-        model, tokenizer, WORD_PROBLEMS, "word", vectors_config,
-        args.scale, args.num_samples, args.max_new_tokens, args.temperature,
-        args.seed, args.batch_size,
-    )
-    output["tasks"]["word_problems"] = {
-        "type": "word",
-        "problems": [{"question": q, "answer": a} for q, a in WORD_PROBLEMS],
-        "results": {k: {"accuracy": v["accuracy"], "correct": v["correct"], "total": v["total"]}
-                    for k, v in task_results.items()},
-        "generations": {k: v["results"] for k, v in task_results.items()},
-    }
+    # Evaluate word problems (easy + hard)
+    from measure_projections import HARD_WORD_PROBLEMS
+
+    for wp_name, wp_list in [("word_easy", WORD_PROBLEMS), ("word_hard", HARD_WORD_PROBLEMS)]:
+        print(f"\n  === {wp_name} ({len(wp_list)} problems) ===")
+        task_results = evaluate_task(
+            model, tokenizer, wp_list, "word", vectors_config,
+            args.scale, args.num_samples, args.max_new_tokens, args.temperature,
+            args.seed, args.batch_size,
+        )
+        output["tasks"][wp_name] = {
+            "type": "word",
+            "problems": [{"question": q, "answer": a} for q, a in wp_list],
+            "results": {k: {"accuracy": v["accuracy"], "correct": v["correct"], "total": v["total"]}
+                        for k, v in task_results.items()},
+            "generations": {k: v["results"] for k, v in task_results.items()},
+        }
 
     # Summary table
     print("\n" + "=" * 70)
