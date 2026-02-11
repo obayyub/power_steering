@@ -1,0 +1,7 @@
+Q: a=6+2, b=3+7. What is a*b?
+
+A: The answer is 80.
+
+Q: a=5+6, b=2+7. What is a*b?
+
+A:
