@@ -1,0 +1,298 @@
+<!--
+  Jacobian Layer-Pair Dashboard
+
+  Usage:
+    1. uv run python dashboard/prepare_data.py   (generates dashboard_data.json)
+    2. python3 -m http.server 8765                (from project root)
+    3. Open http://localhost:8765/dashboard/
+
+  Interaction:
+    - Click a cell in any heatmap to select a (source, target) pair
+    - Or use the dropdowns to pick source/target layers
+    - Bar charts show sigma, KL, and accuracy for all 12 vectors
+    - Click a vector bar to load and display its generations
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacobian Layer-Pair Dashboard</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #c9d1d9; }
+  #header { padding: 16px 24px; border-bottom: 1px solid #21262d; display: flex; align-items: baseline; gap: 16px; }
+  #header h1 { font-size: 18px; font-weight: 600; color: #e6edf3; }
+  #header .meta { font-size: 13px; color: #8b949e; }
+  #heatmaps { display: flex; gap: 0; padding: 8px 16px; }
+  #heatmaps > div { flex: 1; min-width: 0; }
+  #pair-section { padding: 12px 24px; border-top: 1px solid #21262d; }
+  #pair-controls { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  #pair-controls label { font-size: 13px; color: #8b949e; }
+  #pair-controls select { background: #161b22; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 4px 8px; font-size: 14px; }
+  #pair-controls .pair-label { font-size: 15px; font-weight: 600; color: #e6edf3; }
+  #vectors-chart { height: 260px; }
+  #gen-section { padding: 0 24px 24px; }
+  #gen-header { font-size: 14px; font-weight: 600; color: #e6edf3; margin-bottom: 12px; padding-top: 12px; border-top: 1px solid #21262d; }
+  #gen-list { max-height: 600px; overflow-y: auto; }
+  .gen-q-group { margin-bottom: 16px; }
+  .gen-q-label { font-size: 13px; font-weight: 600; color: #58a6ff; padding: 6px 0 4px; border-bottom: 1px solid #21262d; margin-bottom: 8px; }
+  .gen-item { background: #161b22; border-left: 3px solid #30363d; border-radius: 0 6px 6px 0; padding: 10px 14px; margin-bottom: 8px; font-size: 13px; line-height: 1.6; }
+  .gen-item.correct-item { border-left-color: #3fb950; }
+  .gen-item.wrong-item { border-left-color: #f85149; }
+  .gen-item .gen-meta { font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .gen-item .gen-meta .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .gen-item .gen-meta .correct { background: #0f291a; color: #3fb950; }
+  .gen-item .gen-meta .wrong { background: #2d1216; color: #f85149; }
+  .gen-item .gen-meta .sample-label { color: #8b949e; font-size: 11px; }
+  .gen-item .gen-text { white-space: pre-wrap; word-break: break-word; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #c9d1d9; background: #0d1117; padding: 8px 10px; border-radius: 4px; max-height: 200px; overflow-y: auto; }
+  #placeholder { text-align: center; padding: 40px; color: #484f58; font-size: 14px; }
+  .clickable { cursor: pointer; }
+  select:focus { outline: 1px solid #388bfd; }
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>Jacobian Layer-Pair Sensitivity Map</h1>
+  <span class="meta" id="model-info"></span>
+</div>
+
+<div id="heatmaps">
+  <div id="hm-sigma"></div>
+  <div id="hm-kl"></div>
+  <div id="hm-acc"></div>
+</div>
+
+<div id="pair-section">
+  <div id="pair-controls">
+    <label>Source <select id="sel-source"></select></label>
+    <label>Target <select id="sel-target"></select></label>
+    <span class="pair-label" id="pair-label">Click a heatmap cell or select layers</span>
+  </div>
+  <div id="vectors-chart"></div>
+</div>
+
+<div id="gen-section">
+  <div id="gen-header">Click a vector bar to view generations</div>
+  <div id="gen-list"></div>
+</div>
+
+<script>
+let DATA = null;
+let selectedPair = null;
+let selectedVector = null;
+
+const PLOTLY_LAYOUT_BASE = {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor: '#0d1117',
+  font: { color: '#c9d1d9', size: 11 },
+  margin: { l: 50, r: 20, t: 36, b: 44 },
+};
+
+async function init() {
+  const resp = await fetch('dashboard_data.json');
+  DATA = await resp.json();
+  document.getElementById('model-info').textContent =
+    `${DATA.model} · ${Object.keys(DATA.pairs).length} pairs · ${DATA.num_vectors} vectors`;
+
+  buildDropdowns();
+  renderHeatmaps();
+}
+
+function buildDropdowns() {
+  const n = DATA.num_layers;
+  const srcSel = document.getElementById('sel-source');
+  const tgtSel = document.getElementById('sel-target');
+  for (let i = 0; i < n; i++) {
+    srcSel.add(new Option(i, i));
+    tgtSel.add(new Option(i, i));
+  }
+  tgtSel.value = 1;
+  srcSel.addEventListener('change', onDropdownChange);
+  tgtSel.addEventListener('change', onDropdownChange);
+}
+
+function onDropdownChange() {
+  const s = parseInt(document.getElementById('sel-source').value);
+  const t = parseInt(document.getElementById('sel-target').value);
+  if (s !== t) selectPair(s, t);
+}
+
+function makeTriangleZ(valueFn) {
+  const n = DATA.num_layers;
+  const z = Array.from({ length: n }, () => Array(n).fill(null));
+  for (const p of Object.values(DATA.pairs)) {
+    z[p.s][p.t] = valueFn(p);
+  }
+  return z;
+}
+
+function renderHeatmaps() {
+  const n = DATA.num_layers;
+  const axes = Array.from({ length: n }, (_, i) => i);
+
+  const hmConfig = [
+    { id: 'hm-sigma', title: 'σ₁ (top singular value)', fn: p => p.sigmas[0], colorscale: 'Viridis' },
+    { id: 'hm-kl', title: 'Max KL divergence', fn: p => Math.max(...p.kls), colorscale: 'Inferno' },
+    { id: 'hm-acc', title: 'Best vector accuracy', fn: p => Math.max(...p.accs), colorscale: 'Plasma' },
+  ];
+
+  for (const cfg of hmConfig) {
+    const z = makeTriangleZ(cfg.fn);
+    const trace = {
+      z, x: axes, y: axes,
+      type: 'heatmap',
+      colorscale: cfg.colorscale,
+      hoverongaps: false,
+      hovertemplate: 'source %{y} → target %{x}<br>%{z:.3f}<extra></extra>',
+    };
+    const layout = {
+      ...PLOTLY_LAYOUT_BASE,
+      title: { text: cfg.title, font: { size: 13, color: '#e6edf3' } },
+      xaxis: { title: 'target layer', dtick: 5 },
+      yaxis: { title: 'source layer', dtick: 5, autorange: 'reversed' },
+    };
+    Plotly.newPlot(cfg.id, [trace], layout, { responsive: true, displayModeBar: false });
+    document.getElementById(cfg.id).on('plotly_click', (ev) => {
+      if (ev.points.length) {
+        const pt = ev.points[0];
+        if (pt.z != null) selectPair(pt.y, pt.x);
+      }
+    });
+  }
+}
+
+function selectPair(s, t) {
+  const key = `${s}_${t}`;
+  const pair = DATA.pairs[key];
+  if (!pair) {
+    document.getElementById('pair-label').textContent = `No data for (${s}, ${t})`;
+    return;
+  }
+
+  selectedPair = pair;
+  selectedVector = null;
+  document.getElementById('sel-source').value = s;
+  document.getElementById('sel-target').value = t;
+  document.getElementById('pair-label').textContent = `Pair (${s} → ${t})`;
+  document.getElementById('gen-header').textContent = 'Click a vector bar to view generations';
+  document.getElementById('gen-list').innerHTML = '';
+
+  renderVectorChart(pair);
+}
+
+function renderVectorChart(pair) {
+  const vecs = Array.from({ length: DATA.num_vectors }, (_, i) => `v${i}`);
+
+  const traces = [
+    {
+      x: vecs, y: pair.sigmas, name: 'σ', type: 'bar',
+      marker: { color: '#7c3aed' },
+      yaxis: 'y',
+    },
+    {
+      x: vecs, y: pair.kls, name: 'KL', type: 'bar',
+      marker: { color: '#f97316' },
+      yaxis: 'y2',
+    },
+    {
+      x: vecs, y: pair.accs.map(a => a * 100), name: 'Acc %', type: 'bar',
+      marker: { color: '#22d3ee' },
+      yaxis: 'y3',
+    },
+  ];
+
+  const layout = {
+    ...PLOTLY_LAYOUT_BASE,
+    margin: { l: 50, r: 50, t: 8, b: 32 },
+    height: 260,
+    grid: { rows: 3, columns: 1, subplots: [['xy'], ['xy2'], ['xy3']], roworder: 'top to bottom', ygap: 0.12 },
+    yaxis: { title: 'σ', titlefont: { size: 11 }, tickfont: { size: 10 } },
+    yaxis2: { title: 'KL', titlefont: { size: 11 }, tickfont: { size: 10 } },
+    yaxis3: { title: 'Acc%', titlefont: { size: 11 }, tickfont: { size: 10 } },
+    xaxis: { visible: false },
+    xaxis2: { visible: false },
+    xaxis3: { tickfont: { size: 10 } },
+    showlegend: false,
+    bargap: 0.3,
+  };
+
+  Plotly.newPlot('vectors-chart', traces, layout, { responsive: true, displayModeBar: false });
+  document.getElementById('vectors-chart').on('plotly_click', (ev) => {
+    if (ev.points.length) {
+      const vi = ev.points[0].pointIndex;
+      selectVector(vi);
+    }
+  });
+}
+
+async function selectVector(vi) {
+  if (!selectedPair) return;
+  selectedVector = vi;
+  const s = selectedPair.s, t = selectedPair.t;
+  const acc = (selectedPair.accs[vi] * 100).toFixed(1);
+  document.getElementById('gen-header').textContent =
+    `Vector ${vi} — acc ${acc}% — loading generations...`;
+
+  try {
+    const resp = await fetch(`../results/jacobian_gen/pairs/${s}_${t}.json`);
+    const pairData = await resp.json();
+    const gens = pairData.generations.filter(g => g.v === vi);
+    renderGenerations(gens, vi);
+  } catch (e) {
+    document.getElementById('gen-header').textContent = `Failed to load pair (${s},${t}): ${e.message}`;
+  }
+}
+
+function renderGenerations(gens, vi) {
+  const acc = gens.filter(g => g.correct).length;
+  document.getElementById('gen-header').textContent =
+    `Vector ${vi} — ${acc}/${gens.length} correct (${(acc / gens.length * 100).toFixed(1)}%)`;
+
+  const questions = DATA.questions;
+  const list = document.getElementById('gen-list');
+  list.innerHTML = '';
+
+  // Group by question
+  const byQ = {};
+  for (const g of gens) {
+    if (!byQ[g.q]) byQ[g.q] = [];
+    byQ[g.q].push(g);
+  }
+
+  for (const qi of Object.keys(byQ).sort((a, b) => a - b)) {
+    const qGens = byQ[qi];
+    const q = questions[qi];
+    const qCorrect = qGens.filter(g => g.correct).length;
+
+    const group = document.createElement('div');
+    group.className = 'gen-q-group';
+    group.innerHTML = `<div class="gen-q-label">Q${qi}: ${escapeHtml(q.question)} &nbsp; (answer: ${q.answer}) &nbsp; ${qCorrect}/${qGens.length} correct</div>`;
+
+    for (const g of qGens) {
+      const div = document.createElement('div');
+      div.className = `gen-item ${g.correct ? 'correct-item' : 'wrong-item'}`;
+      const badge = g.correct
+        ? `<span class="badge correct">✓ ${g.pred}</span>`
+        : `<span class="badge wrong">✗ ${g.pred ?? 'null'}</span>`;
+      div.innerHTML = `
+        <div class="gen-meta">${badge} <span class="sample-label">sample ${g.s}</span></div>
+        <div class="gen-text">${escapeHtml(g.text)}</div>
+      `;
+      group.appendChild(div);
+    }
+    list.appendChild(group);
+  }
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+init();
+</script>
+</body>
+</html>
