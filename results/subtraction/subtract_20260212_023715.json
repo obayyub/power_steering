@@ -1,0 +1,706 @@
+{
+  "config": {
+    "model": "Qwen/Qwen3-1.7B-Base",
+    "pairs": "7_25:1,9_18:1",
+    "scales": [
+      -10,
+      -5,
+      -3,
+      0,
+      3,
+      5,
+      10
+    ],
+    "num_samples": 5,
+    "temperature": 0.7,
+    "seed": 42,
+    "timestamp": "2026-02-12T02:16:28.495689"
+  },
+  "tasks": {
+    "arithmetic": {
+      "problems": [
+        {
+          "q": "a=2+1, b=5+4. What is a*b?",
+          "a": 27
+        },
+        {
+          "q": "a=4+3, b=2+9. What is a*b?",
+          "a": 77
+        },
+        {
+          "q": "a=2+7, b=1+1. What is a*b?",
+          "a": 18
+        },
+        {
+          "q": "a=2+4, b=4+9. What is a*b?",
+          "a": 78
+        },
+        {
+          "q": "a=1+9, b=4+9. What is a*b?",
+          "a": 130
+        },
+        {
+          "q": "a=7+4, b=8+5. What is a*b?",
+          "a": 143
+        },
+        {
+          "q": "a=1+3, b=7+6. What is a*b?",
+          "a": 52
+        },
+        {
+          "q": "a=5+3, b=4+6. What is a*b?",
+          "a": 80
+        },
+        {
+          "q": "a=2+2, b=7+2. What is a*b?",
+          "a": 36
+        },
+        {
+          "q": "a=6+6, b=5+1. What is a*b?",
+          "a": 72
+        },
+        {
+          "q": "a=8+9, b=2+7. What is a*b?",
+          "a": 153
+        },
+        {
+          "q": "a=2+9, b=5+6. What is a*b?",
+          "a": 121
+        },
+        {
+          "q": "a=4+2, b=1+4. What is a*b?",
+          "a": 30
+        },
+        {
+          "q": "a=5+2, b=4+2. What is a*b?",
+          "a": 42
+        },
+        {
+          "q": "a=7+5, b=8+6. What is a*b?",
+          "a": 168
+        },
+        {
+          "q": "a=3+6, b=6+4. What is a*b?",
+          "a": 90
+        }
+      ],
+      "baseline": {
+        "accuracy": 0.075,
+        "avg_length": 196.3875,
+        "avg_cot_patterns": 0.075
+      },
+      "(7,25)v1": {
+        "-10": {
+          "accuracy": 0.05,
+          "avg_length": 366.0625,
+          "avg_cot_patterns": 0.05
+        },
+        "-5": {
+          "accuracy": 0.05,
+          "avg_length": 357.9375,
+          "avg_cot_patterns": 0.05
+        },
+        "-3": {
+          "accuracy": 0.05,
+          "avg_length": 336.6,
+          "avg_cot_patterns": 0.0625
+        },
+        "3": {
+          "accuracy": 0.25,
+          "avg_length": 248.55,
+          "avg_cot_patterns": 0.9375
+        },
+        "5": {
+          "accuracy": 0.85,
+          "avg_length": 293.275,
+          "avg_cot_patterns": 1.75
+        },
+        "10": {
+          "accuracy": 0.8,
+          "avg_length": 240.7,
+          "avg_cot_patterns": 1.275
+        }
+      },
+      "(9,18)v1": {
+        "-10": {
+          "accuracy": 0.075,
+          "avg_length": 320.4625,
+          "avg_cot_patterns": 0.0125
+        },
+        "-5": {
+          "accuracy": 0.075,
+          "avg_length": 270.5875,
+          "avg_cot_patterns": 0.0
+        },
+        "-3": {
+          "accuracy": 0.075,
+          "avg_length": 217.65,
+          "avg_cot_patterns": 0.0
+        },
+        "3": {
+          "accuracy": 0.225,
+          "avg_length": 176.2625,
+          "avg_cot_patterns": 0.5
+        },
+        "5": {
+          "accuracy": 0.575,
+          "avg_length": 168.7875,
+          "avg_cot_patterns": 1.3625
+        },
+        "10": {
+          "accuracy": 0.825,
+          "avg_length": 191.6,
+          "avg_cot_patterns": 2.075
+        }
+      }
+    },
+    "word_easy": {
+      "problems": [
+        {
+          "q": "Sarah has 15 apples. She buys 23 more. How many apples does she have?",
+          "a": 38
+        },
+        {
+          "q": "A store has 45 red shirts and 32 blue shirts. How many shirts are there in total?",
+          "a": 77
+        },
+        {
+          "q": "There are 28 boys and 35 girls in a school. How many students are there?",
+          "a": 63
+        },
+        {
+          "q": "Tom had 50 dollars. He spent 18 dollars on lunch. How much money does he have left?",
+          "a": 32
+        },
+        {
+          "q": "There were 83 students in the hall. 27 left early. How many remained?",
+          "a": 56
+        },
+        {
+          "q": "A tank has 200 liters of water. 75 liters leak out. How many liters are left?",
+          "a": 125
+        },
+        {
+          "q": "Each box contains 12 cookies. If there are 7 boxes, how many cookies are there?",
+          "a": 84
+        },
+        {
+          "q": "A car travels 55 miles per hour. How far does it travel in 3 hours?",
+          "a": 165
+        },
+        {
+          "q": "There are 8 rows of chairs. Each row has 15 chairs. How many chairs are there?",
+          "a": 120
+        },
+        {
+          "q": "A pack of pencils costs 4 dollars. How much do 9 packs cost?",
+          "a": 36
+        },
+        {
+          "q": "48 students need to be split into groups of 6. How many groups are there?",
+          "a": 8
+        },
+        {
+          "q": "A rope is 96 inches long. It is cut into 8 equal pieces. How long is each piece?",
+          "a": 12
+        },
+        {
+          "q": "Maria has 24 dollars. She earns 16 more, then spends 10 on a book. How much does she have?",
+          "a": 30
+        },
+        {
+          "q": "Jake bought 5 packs of cards with 12 cards each. He gave 15 cards away. How many does he have?",
+          "a": 45
+        },
+        {
+          "q": "A farmer picks 36 apples in the morning and 28 in the afternoon. He puts them in bags of 8. How many bags does he need?",
+          "a": 8
+        },
+        {
+          "q": "Tom has 3 boxes of 20 marbles. He loses 7 marbles. How many does he have?",
+          "a": 53
+        }
+      ],
+      "baseline": {
+        "accuracy": 1.0,
+        "avg_length": 129.8875,
+        "avg_cot_patterns": 1.0125
+      },
+      "(7,25)v1": {
+        "-10": {
+          "accuracy": 0.9125,
+          "avg_length": 498.85,
+          "avg_cot_patterns": 1.15
+        },
+        "-5": {
+          "accuracy": 0.925,
+          "avg_length": 440.725,
+          "avg_cot_patterns": 1.0625
+        },
+        "-3": {
+          "accuracy": 0.9375,
+          "avg_length": 400.6125,
+          "avg_cot_patterns": 1.0875
+        },
+        "3": {
+          "accuracy": 0.9625,
+          "avg_length": 427.975,
+          "avg_cot_patterns": 1.3625
+        },
+        "5": {
+          "accuracy": 0.95,
+          "avg_length": 417.4375,
+          "avg_cot_patterns": 1.7
+        },
+        "10": {
+          "accuracy": 0.975,
+          "avg_length": 273.7,
+          "avg_cot_patterns": 1.1875
+        }
+      },
+      "(9,18)v1": {
+        "-10": {
+          "accuracy": 0.9625,
+          "avg_length": 371.175,
+          "avg_cot_patterns": 1.1375
+        },
+        "-5": {
+          "accuracy": 0.975,
+          "avg_length": 276.2125,
+          "avg_cot_patterns": 1.1
+        },
+        "-3": {
+          "accuracy": 0.975,
+          "avg_length": 271.775,
+          "avg_cot_patterns": 1.2
+        },
+        "3": {
+          "accuracy": 0.975,
+          "avg_length": 211.8875,
+          "avg_cot_patterns": 0.825
+        },
+        "5": {
+          "accuracy": 0.95,
+          "avg_length": 258.3375,
+          "avg_cot_patterns": 0.9625
+        },
+        "10": {
+          "accuracy": 0.95,
+          "avg_length": 306.6375,
+          "avg_cot_patterns": 1.3125
+        }
+      }
+    },
+    "word_hard": {
+      "problems": [
+        {
+          "q": "Janet's ducks lay 16 eggs per day. She eats 3 for breakfast and uses 4 to bake muffins. She sells the rest for $2 each. How much does she make per day?",
+          "a": 18
+        },
+        {
+          "q": "A merchant has 120 apples. He sells 40% on Monday. On Tuesday he sells half of what's left. How many apples remain?",
+          "a": 36
+        },
+        {
+          "q": "Tom buys 3 shirts at $15 each and 2 pants at $25 each. He has a $10 coupon. How much does he pay?",
+          "a": 85
+        },
+        {
+          "q": "A train travels at 60 mph for 2 hours, then at 40 mph for 3 hours. What is the total distance?",
+          "a": 240
+        },
+        {
+          "q": "A bakery makes 200 cookies. They put 8 cookies in each box. Each box sells for $6. How much money do they make if they sell all the boxes?",
+          "a": 150
+        },
+        {
+          "q": "Sam has $50. He buys 3 books at $8 each. Then he earns $15 mowing a lawn. How much money does he have now?",
+          "a": 41
+        },
+        {
+          "q": "A school has 5 classes with 30 students each. Each student needs 3 notebooks. Notebooks cost $2 each. What is the total cost?",
+          "a": 900
+        },
+        {
+          "q": "Maria runs 3 miles every day for a week. On the weekend she runs 5 miles each day. How many miles does she run in total?",
+          "a": 25
+        },
+        {
+          "q": "A factory produces 150 toys per hour. It runs for 8 hours. 10% of the toys fail quality control. How many good toys are produced?",
+          "a": 1080
+        },
+        {
+          "q": "John buys 4 pizzas for $12 each. He splits the cost equally with 3 friends. How much does each person pay?",
+          "a": 12
+        },
+        {
+          "q": "A garden has 6 rows of flowers. Each row has 12 flowers. Half the flowers are red and the rest are yellow. How many yellow flowers are there?",
+          "a": 36
+        },
+        {
+          "q": "A bus holds 45 passengers. A school needs to transport 320 students. How many buses are needed? Round up.",
+          "a": 8
+        },
+        {
+          "q": "Lisa saves $15 per week. After 8 weeks she buys a $75 jacket. How much money does she have left?",
+          "a": 45
+        },
+        {
+          "q": "A recipe needs 3 cups of flour for 24 cookies. How many cups of flour are needed for 40 cookies?",
+          "a": 5
+        },
+        {
+          "q": "Mark drives 180 miles using 6 gallons of gas. Gas costs $4 per gallon. What is the fuel cost per mile?",
+          "a": 0
+        },
+        {
+          "q": "A store buys 50 shirts for $10 each and sells them for $18 each. What is the total profit?",
+          "a": 400
+        }
+      ],
+      "baseline": {
+        "accuracy": 0.8,
+        "avg_length": 266.8625,
+        "avg_cot_patterns": 1.125
+      },
+      "(7,25)v1": {
+        "-10": {
+          "accuracy": 0.3875,
+          "avg_length": 467.0125,
+          "avg_cot_patterns": 1.1
+        },
+        "-5": {
+          "accuracy": 0.4375,
+          "avg_length": 444.025,
+          "avg_cot_patterns": 1.15
+        },
+        "-3": {
+          "accuracy": 0.5125,
+          "avg_length": 390.2125,
+          "avg_cot_patterns": 1.1125
+        },
+        "3": {
+          "accuracy": 0.6125,
+          "avg_length": 512.075,
+          "avg_cot_patterns": 1.65
+        },
+        "5": {
+          "accuracy": 0.5,
+          "avg_length": 544.65,
+          "avg_cot_patterns": 1.8125
+        },
+        "10": {
+          "accuracy": 0.65,
+          "avg_length": 429.2625,
+          "avg_cot_patterns": 0.9
+        }
+      },
+      "(9,18)v1": {
+        "-10": {
+          "accuracy": 0.7,
+          "avg_length": 367.5375,
+          "avg_cot_patterns": 1.05
+        },
+        "-5": {
+          "accuracy": 0.6875,
+          "avg_length": 335.075,
+          "avg_cot_patterns": 1.1125
+        },
+        "-3": {
+          "accuracy": 0.7125,
+          "avg_length": 333.45,
+          "avg_cot_patterns": 1.1875
+        },
+        "3": {
+          "accuracy": 0.575,
+          "avg_length": 357.225,
+          "avg_cot_patterns": 1.3125
+        },
+        "5": {
+          "accuracy": 0.55,
+          "avg_length": 388.1125,
+          "avg_cot_patterns": 1.3375
+        },
+        "10": {
+          "accuracy": 0.5125,
+          "avg_length": 359.0625,
+          "avg_cot_patterns": 1.35
+        }
+      }
+    },
+    "factual_qa": {
+      "problems": [
+        {
+          "q": "How many sides does a hexagon have?",
+          "a": 6
+        },
+        {
+          "q": "How many planets are in our solar system?",
+          "a": 8
+        },
+        {
+          "q": "How many legs does an octopus have?",
+          "a": 8
+        },
+        {
+          "q": "How many strings does a standard guitar have?",
+          "a": 6
+        },
+        {
+          "q": "How many bones are in the adult human body?",
+          "a": 206
+        },
+        {
+          "q": "How many teeth does a normal adult human have?",
+          "a": 32
+        },
+        {
+          "q": "How many states are in the United States?",
+          "a": 50
+        },
+        {
+          "q": "How many days are in the month of June?",
+          "a": 30
+        },
+        {
+          "q": "How many degrees are in a right angle?",
+          "a": 90
+        },
+        {
+          "q": "How many minutes are in an hour?",
+          "a": 60
+        },
+        {
+          "q": "How many cards are in a standard deck?",
+          "a": 52
+        },
+        {
+          "q": "How many colors are in a rainbow?",
+          "a": 7
+        },
+        {
+          "q": "How many keys are on a standard piano?",
+          "a": 88
+        },
+        {
+          "q": "How many letters are in the English alphabet?",
+          "a": 26
+        },
+        {
+          "q": "How many hours are in a day?",
+          "a": 24
+        },
+        {
+          "q": "How many weeks are in a year?",
+          "a": 52
+        }
+      ],
+      "baseline": {
+        "accuracy": 1.0,
+        "avg_length": 633.45,
+        "avg_cot_patterns": 0.0375
+      },
+      "(7,25)v1": {
+        "-10": {
+          "accuracy": 0.9875,
+          "avg_length": 673.725,
+          "avg_cot_patterns": 0.0625
+        },
+        "-5": {
+          "accuracy": 0.9875,
+          "avg_length": 715.4625,
+          "avg_cot_patterns": 0.05
+        },
+        "-3": {
+          "accuracy": 1.0,
+          "avg_length": 693.4875,
+          "avg_cot_patterns": 0.05
+        },
+        "3": {
+          "accuracy": 1.0,
+          "avg_length": 301.375,
+          "avg_cot_patterns": 0.025
+        },
+        "5": {
+          "accuracy": 0.925,
+          "avg_length": 162.2125,
+          "avg_cot_patterns": 0.0
+        },
+        "10": {
+          "accuracy": 0.7,
+          "avg_length": 137.1,
+          "avg_cot_patterns": 0.0625
+        }
+      },
+      "(9,18)v1": {
+        "-10": {
+          "accuracy": 0.9875,
+          "avg_length": 633.0875,
+          "avg_cot_patterns": 0.05
+        },
+        "-5": {
+          "accuracy": 0.9875,
+          "avg_length": 618.0125,
+          "avg_cot_patterns": 0.05
+        },
+        "-3": {
+          "accuracy": 1.0,
+          "avg_length": 642.0125,
+          "avg_cot_patterns": 0.0375
+        },
+        "3": {
+          "accuracy": 1.0,
+          "avg_length": 428.4625,
+          "avg_cot_patterns": 0.05
+        },
+        "5": {
+          "accuracy": 1.0,
+          "avg_length": 272.1125,
+          "avg_cot_patterns": 0.05
+        },
+        "10": {
+          "accuracy": 0.9375,
+          "avg_length": 91.5625,
+          "avg_cot_patterns": 0.075
+        }
+      }
+    },
+    "reasoning_qa": {
+      "problems": [
+        {
+          "q": "Paris is in France. France is in Europe. Tokyo is in Japan. Japan is in Asia. Is Paris in Asia? Answer 1 for yes, 0 for no.",
+          "a": 0
+        },
+        {
+          "q": "All squares are rectangles. All rectangles have 4 sides. How many sides does a square have?",
+          "a": 4
+        },
+        {
+          "q": "Earth is the 3rd planet from the Sun. Mars is the 4th. How many planets are between Earth and Mars?",
+          "a": 0
+        },
+        {
+          "q": "January is month 1, February is month 2, and so on. What month number is May?",
+          "a": 5
+        },
+        {
+          "q": "Sunday is day 1 of the week. What day number is Wednesday?",
+          "a": 4
+        },
+        {
+          "q": "If today is the 10th and a meeting is in 5 days, what date is the meeting?",
+          "a": 15
+        },
+        {
+          "q": "A year starts in January (month 1). September is how many months after January?",
+          "a": 8
+        },
+        {
+          "q": "In the sequence 2, 4, 6, 8, what is the next number?",
+          "a": 10
+        },
+        {
+          "q": "A century has 100 years. A millennium has 10 centuries. How many years are in a millennium?",
+          "a": 1000
+        },
+        {
+          "q": "A triangle has 3 sides. A square has 4 sides. How many sides do they have together?",
+          "a": 7
+        },
+        {
+          "q": "Mount Everest is 8849 meters. K2 is 8611 meters. How many meters taller is Everest?",
+          "a": 238
+        },
+        {
+          "q": "A baker has 3 dozen eggs. How many eggs does he have?",
+          "a": 36
+        },
+        {
+          "q": "12 months in a year and 4 seasons. How many months per season?",
+          "a": 3
+        },
+        {
+          "q": "A decade is 10 years. How many decades are in 50 years?",
+          "a": 5
+        },
+        {
+          "q": "A book has 200 pages. You read 25 pages per day. How many days to finish?",
+          "a": 8
+        },
+        {
+          "q": "A store sells apples for $3 each. You buy 7 apples. How much do you pay?",
+          "a": 21
+        }
+      ],
+      "baseline": {
+        "accuracy": 0.7625,
+        "avg_length": 604.05,
+        "avg_cot_patterns": 1.3
+      },
+      "(7,25)v1": {
+        "-10": {
+          "accuracy": 0.7625,
+          "avg_length": 613.9625,
+          "avg_cot_patterns": 0.75
+        },
+        "-5": {
+          "accuracy": 0.7875,
+          "avg_length": 588.875,
+          "avg_cot_patterns": 0.95
+        },
+        "-3": {
+          "accuracy": 0.725,
+          "avg_length": 631.825,
+          "avg_cot_patterns": 1.1375
+        },
+        "3": {
+          "accuracy": 0.775,
+          "avg_length": 604.525,
+          "avg_cot_patterns": 1.1375
+        },
+        "5": {
+          "accuracy": 0.775,
+          "avg_length": 572.6625,
+          "avg_cot_patterns": 0.95
+        },
+        "10": {
+          "accuracy": 0.675,
+          "avg_length": 543.0375,
+          "avg_cot_patterns": 0.9
+        }
+      },
+      "(9,18)v1": {
+        "-10": {
+          "accuracy": 0.9,
+          "avg_length": 527.3,
+          "avg_cot_patterns": 0.8625
+        },
+        "-5": {
+          "accuracy": 0.8625,
+          "avg_length": 538.1375,
+          "avg_cot_patterns": 0.875
+        },
+        "-3": {
+          "accuracy": 0.85,
+          "avg_length": 593.475,
+          "avg_cot_patterns": 0.8625
+        },
+        "3": {
+          "accuracy": 0.7125,
+          "avg_length": 489.825,
+          "avg_cot_patterns": 1.2375
+        },
+        "5": {
+          "accuracy": 0.675,
+          "avg_length": 449.1375,
+          "avg_cot_patterns": 1.2
+        },
+        "10": {
+          "accuracy": 0.65,
+          "avg_length": 470.3125,
+          "avg_cot_patterns": 1.0375
+        }
+      }
+    }
+  }
+}
