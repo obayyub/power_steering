@@ -162,7 +162,17 @@ def make_prompt(question, task_type):
 # ---------------------------------------------------------------------------
 
 def extract_answer(text):
-    """Extract numerical answer from model output."""
+    """Extract numerical answer from model output.
+
+    Truncates at first \\nQ: (model started a new question) to avoid
+    picking up stray numbers from trailing generated text.
+    """
+    # Truncate at first sign the model moved on to a new question
+    for stop in ["\nQ:", "\n\nQ:"]:
+        idx = text.find(stop)
+        if idx != -1:
+            text = text[:idx]
+
     text_lower = text.lower()
 
     # "The answer is X"

@@ -181,6 +181,7 @@ def main():
             "accuracy": res["accuracy"],
             "avg_length": res["avg_length"],
             "avg_cot_patterns": res["avg_cot_patterns"],
+            "generations": res["generations"],
         }
 
         # Each vector at each scale
@@ -200,6 +201,7 @@ def main():
                     "accuracy": res["accuracy"],
                     "avg_length": res["avg_length"],
                     "avg_cot_patterns": res["avg_cot_patterns"],
+                    "generations": res["generations"],
                 }
             task_data[vec_label] = vec_results
 
