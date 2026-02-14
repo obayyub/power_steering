@@ -2,15 +2,14 @@
   Jacobian Layer-Pair Dashboard
 
   Usage:
-    1. uv run python dashboard/prepare_data.py   (generates dashboard_data.json)
+    1. uv run python dashboard/prepare_data.py   (generates dashboard_data.json + diverse_pairs/)
     2. python3 -m http.server 8765                (from project root)
     3. Open http://localhost:8765/dashboard/
 
   Interaction:
-    - Click a cell in any heatmap to select a (source, target) pair
-    - Or use the dropdowns to pick source/target layers
-    - Bar charts show sigma, KL, and accuracy for all 12 vectors
-    - Click a vector bar to load and display its generations
+    - Top-level tabs switch between Diverse (Qwen3-8B) and CoT (Qwen3-1.7B-Base)
+    - Diverse: select prompt, click heatmap cell, click vector bar for generations
+    - CoT: click heatmap cell, click vector bar for per-question accuracy view
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -32,10 +31,30 @@
     padding: 20px 32px;
     background: #0d1117;
     border-bottom: 1px solid #21262d;
-    display: flex; align-items: baseline; gap: 16px;
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
   }
   #header h1 { font-size: 20px; font-weight: 600; color: #f0f6fc; letter-spacing: -0.3px; }
   #header .meta { font-size: 13px; color: #7d8590; font-weight: 400; }
+
+  /* --- Top-level tabs --- */
+  #top-tabs {
+    display: flex; gap: 0; padding: 0 24px;
+    background: #0d1117;
+    border-bottom: 1px solid #21262d;
+  }
+  #top-tabs .top-tab {
+    padding: 10px 20px;
+    font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    color: #7d8590; background: transparent;
+    border: none; border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  #top-tabs .top-tab:hover { color: #e6edf3; }
+  #top-tabs .top-tab.active {
+    color: #e6edf3;
+    border-bottom-color: #f78166;
+  }
 
   /* --- Shared card styling --- */
   .card {
@@ -54,63 +73,93 @@
     letter-spacing: 0.5px;
     border-bottom: 1px solid #21262d;
     background: #161b22;
+    display: flex; align-items: center; gap: 16px;
   }
   .card-body { padding: 16px; }
 
+  /* --- Prompt selector --- */
+  .prompt-tabs {
+    display: flex; gap: 6px; margin-left: auto;
+  }
+  .prompt-tabs .ptab {
+    padding: 4px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; border: 1px solid transparent;
+    color: #7d8590; background: transparent;
+    text-transform: none; letter-spacing: 0;
+    transition: all 0.15s;
+  }
+  .prompt-tabs .ptab:hover { color: #e6edf3; }
+  .prompt-tabs .ptab.active {
+    background: #0d1117; color: #e6edf3;
+    border-color: #30363d;
+  }
+
   /* --- Heatmaps --- */
-  #heatmaps { display: flex; gap: 12px; padding: 0; }
-  #heatmaps > div { flex: 1; min-width: 0; }
+  .heatmaps { display: flex; gap: 12px; padding: 0; }
+  .heatmaps > div { flex: 1; min-width: 0; }
 
   /* --- Pair section --- */
-  #pair-controls {
+  .pair-controls {
     display: flex; align-items: center; gap: 20px;
     padding: 0 0 12px; flex-wrap: wrap;
   }
-  #pair-controls label {
+  .pair-controls label {
     font-size: 13px; color: #7d8590;
     display: flex; align-items: center; gap: 6px;
   }
-  #pair-controls select {
+  .pair-controls select {
     background: #0d1117; color: #e6edf3;
     border: 1px solid #30363d; border-radius: 6px;
     padding: 5px 10px; font-size: 13px;
     font-family: inherit;
   }
-  #pair-controls .pair-label {
+  .pair-controls .pair-label {
     font-size: 14px; font-weight: 600; color: #e6edf3;
     background: #161b22; padding: 4px 12px; border-radius: 16px;
     border: 1px solid #30363d;
   }
-  #vectors-chart { height: 280px; }
+  .vectors-chart { height: 220px; }
 
   /* --- Generations --- */
-  #gen-section .card-body { padding: 0; }
-  #gen-header {
+  .gen-section .card-body { padding: 0; }
+  .gen-header {
     font-size: 14px; font-weight: 600; color: #e6edf3;
     padding: 14px 20px;
     border-bottom: 1px solid #21262d;
     background: #161b22;
   }
-  #gen-list { max-height: 640px; overflow-y: auto; padding: 16px 20px; }
-  #gen-list::-webkit-scrollbar { width: 6px; }
-  #gen-list::-webkit-scrollbar-track { background: transparent; }
-  #gen-list::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
-  #gen-list::-webkit-scrollbar-thumb:hover { background: #484f58; }
+  .gen-list { max-height: 800px; overflow-y: auto; padding: 16px 20px; }
+  .gen-list::-webkit-scrollbar { width: 6px; }
+  .gen-list::-webkit-scrollbar-track { background: transparent; }
+  .gen-list::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+  .gen-list::-webkit-scrollbar-thumb:hover { background: #484f58; }
 
-  .gen-q-group { margin-bottom: 20px; }
-  .gen-q-group:last-child { margin-bottom: 0; }
-  .gen-q-label {
+  .gen-prompt-group { margin-bottom: 24px; }
+  .gen-prompt-group:last-child { margin-bottom: 0; }
+  .gen-prompt-label {
     font-size: 13px; font-weight: 600; color: #58a6ff;
     padding: 8px 12px; margin-bottom: 10px;
     background: #0c2d6b1a; border-radius: 6px;
     border: 1px solid #1f3d6d;
   }
+  .gen-prompt-label .prompt-text {
+    font-weight: 400; color: #8b949e;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px; display: block; margin-top: 4px;
+  }
+
+  .gen-row {
+    display: flex; gap: 8px; margin-bottom: 8px;
+  }
   .gen-item {
     background: #161b22; border-left: 3px solid #30363d;
     border-radius: 0 6px 6px 0; padding: 12px 16px;
-    margin-bottom: 8px; font-size: 13px; line-height: 1.6;
+    font-size: 13px; line-height: 1.6;
+    flex: 1; min-width: 0;
   }
-  .gen-item:last-child { margin-bottom: 0; }
+  .gen-item.baseline-item { border-left-color: #7d8590; }
+  .gen-item.steered-item { border-left-color: #a371f7; }
   .gen-item.correct-item { border-left-color: #3fb950; }
   .gen-item.wrong-item { border-left-color: #f85149; }
   .gen-item .gen-meta {
@@ -121,6 +170,8 @@
     display: inline-block; padding: 2px 10px; border-radius: 10px;
     font-size: 11px; font-weight: 600;
   }
+  .gen-item .gen-meta .badge-baseline { background: #21262d; color: #8b949e; }
+  .gen-item .gen-meta .badge-steered { background: #1c1530; color: #a371f7; }
   .gen-item .gen-meta .correct { background: #0f291a; color: #3fb950; }
   .gen-item .gen-meta .wrong { background: #2d1216; color: #f85149; }
   .gen-item .gen-meta .sample-label { color: #7d8590; font-size: 11px; }
@@ -133,8 +184,19 @@
     border: 1px solid #21262d;
   }
 
+  /* CoT view */
+  .gen-q-group { margin-bottom: 20px; }
+  .gen-q-group:last-child { margin-bottom: 0; }
+  .gen-q-label {
+    font-size: 13px; font-weight: 600; color: #58a6ff;
+    padding: 8px 12px; margin-bottom: 10px;
+    background: #0c2d6b1a; border-radius: 6px;
+    border: 1px solid #1f3d6d;
+  }
+
   .clickable { cursor: pointer; }
   select:focus { outline: 1px solid #388bfd; outline-offset: 1px; }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
@@ -143,38 +205,91 @@
   <span class="meta" id="model-info"></span>
 </div>
 
-<div class="card">
-  <div class="card-header">Heatmaps — click a cell to select a layer pair</div>
-  <div class="card-body">
-    <div id="heatmaps">
-      <div id="hm-sigma"></div>
-      <div id="hm-kl"></div>
-      <div id="hm-acc"></div>
+<div id="top-tabs">
+  <div class="top-tab active" onclick="switchTopTab('diverse')">Diverse (8B)</div>
+  <div class="top-tab" onclick="switchTopTab('cot')">CoT / Accuracy (1.7B-Base)</div>
+</div>
+
+<!-- ===== DIVERSE VIEW ===== -->
+<div id="diverse-view">
+  <div class="card">
+    <div class="card-header">
+      Heatmaps — click a cell to select a layer pair
+      <div class="prompt-tabs" id="prompt-tabs"></div>
     </div>
+    <div class="card-body">
+      <div class="heatmaps" id="diverse-heatmaps">
+        <div id="hm-d-sigma"></div>
+        <div id="hm-d-kl"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Per-Vector Metrics</div>
+    <div class="card-body">
+      <div class="pair-controls" id="d-pair-controls">
+        <label>Source <select id="d-sel-source"></select></label>
+        <label>Target <select id="d-sel-target"></select></label>
+        <span class="pair-label" id="d-pair-label">Click a heatmap cell or select layers</span>
+      </div>
+      <div class="vectors-chart" id="d-vectors-chart"></div>
+    </div>
+  </div>
+
+  <div class="card gen-section">
+    <div class="gen-header" id="d-gen-header">Click a vector bar to view generations</div>
+    <div class="gen-list" id="d-gen-list"></div>
   </div>
 </div>
 
-<div class="card" id="pair-section">
-  <div class="card-header">Per-Vector Metrics</div>
-  <div class="card-body">
-    <div id="pair-controls">
-      <label>Source <select id="sel-source"></select></label>
-      <label>Target <select id="sel-target"></select></label>
-      <span class="pair-label" id="pair-label">Click a heatmap cell or select layers</span>
+<!-- ===== COT VIEW ===== -->
+<div id="cot-view" class="hidden">
+  <div class="card">
+    <div class="card-header">
+      Heatmaps — click a cell to select a layer pair
     </div>
-    <div id="vectors-chart"></div>
+    <div class="card-body">
+      <div class="heatmaps" id="cot-heatmaps">
+        <div id="hm-c-sigma"></div>
+        <div id="hm-c-kl"></div>
+        <div id="hm-c-acc"></div>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="card" id="gen-section">
-  <div id="gen-header">Click a vector bar to view generations</div>
-  <div id="gen-list"></div>
+  <div class="card">
+    <div class="card-header">Per-Vector Metrics</div>
+    <div class="card-body">
+      <div class="pair-controls" id="c-pair-controls">
+        <label>Source <select id="c-sel-source"></select></label>
+        <label>Target <select id="c-sel-target"></select></label>
+        <span class="pair-label" id="c-pair-label">Click a heatmap cell or select layers</span>
+      </div>
+      <div class="vectors-chart" id="c-vectors-chart" style="height: 300px;"></div>
+    </div>
+  </div>
+
+  <div class="card gen-section">
+    <div class="gen-header" id="c-gen-header">Click a vector bar to view generations</div>
+    <div class="gen-list" id="c-gen-list"></div>
+  </div>
 </div>
 
 <script>
 let DATA = null;
-let selectedPair = null;
-let selectedVector = null;
+let activeTopTab = 'diverse';
+
+// Diverse state
+let activePrompt = null;
+let dSelectedPair = null;
+let dSelectedVector = null;
+
+// CoT state
+let cSelectedPair = null;
+let cSelectedVector = null;
+
+let genCache = {};
 
 const PLOTLY_LAYOUT_BASE = {
   paper_bgcolor: 'rgba(0,0,0,0)',
@@ -186,170 +301,406 @@ const PLOTLY_LAYOUT_BASE = {
 async function init() {
   const resp = await fetch('dashboard_data.json');
   DATA = await resp.json();
-  document.getElementById('model-info').textContent =
-    `${DATA.model} · ${Object.keys(DATA.pairs).length} pairs · ${DATA.num_vectors} vectors`;
+  updateModelInfo();
 
-  buildDropdowns();
-  renderHeatmaps();
+  // Diverse setup
+  buildPromptTabs();
+  buildDropdowns('d-sel-source', 'd-sel-target', DATA.num_layers, onDiverseDropdown);
+  if (DATA.prompt_ids && DATA.prompt_ids.length > 0) {
+    switchPrompt(DATA.prompt_ids[0]);
+  }
+
+  // CoT setup
+  if (DATA.cot) {
+    buildDropdowns('c-sel-source', 'c-sel-target', DATA.cot.num_layers, onCotDropdown);
+  }
 }
 
-function buildDropdowns() {
-  const n = DATA.num_layers;
-  const srcSel = document.getElementById('sel-source');
-  const tgtSel = document.getElementById('sel-target');
-  for (let i = 0; i < n; i++) {
+function updateModelInfo() {
+  if (activeTopTab === 'diverse') {
+    const pairCount = activePrompt ? Object.keys(DATA.per_prompt[activePrompt]?.pairs || {}).length : 0;
+    document.getElementById('model-info').textContent =
+      `${DATA.model} | ${pairCount} pairs | ${DATA.num_vectors} vectors` +
+      (activePrompt ? ` | prompt: ${activePrompt}` : '');
+  } else if (DATA.cot) {
+    document.getElementById('model-info').textContent =
+      `${DATA.cot.model} | ${Object.keys(DATA.cot.pairs).length} pairs | ${DATA.cot.num_vectors} vectors | CoT arithmetic`;
+  }
+}
+
+/* ===== Top-level tabs ===== */
+
+function switchTopTab(tab) {
+  activeTopTab = tab;
+  for (const el of document.querySelectorAll('#top-tabs .top-tab')) {
+    el.classList.toggle('active', el.textContent.toLowerCase().includes(tab));
+  }
+  document.getElementById('diverse-view').classList.toggle('hidden', tab !== 'diverse');
+  document.getElementById('cot-view').classList.toggle('hidden', tab !== 'cot');
+  updateModelInfo();
+
+  if (tab === 'cot' && DATA.cot) {
+    renderCotHeatmaps();
+  }
+}
+
+/* ===== Diverse: prompt tabs ===== */
+
+function buildPromptTabs() {
+  const container = document.getElementById('prompt-tabs');
+  for (const pid of (DATA.prompt_ids || [])) {
+    const tab = document.createElement('div');
+    tab.className = 'ptab';
+    tab.textContent = pid;
+    tab.dataset.pid = pid;
+    tab.onclick = () => switchPrompt(pid);
+    container.appendChild(tab);
+  }
+}
+
+function switchPrompt(pid) {
+  activePrompt = pid;
+  for (const tab of document.querySelectorAll('#prompt-tabs .ptab')) {
+    tab.classList.toggle('active', tab.dataset.pid === pid);
+  }
+  updateModelInfo();
+  renderDiverseHeatmaps();
+
+  if (dSelectedPair && DATA.per_prompt[pid]?.pairs[dSelectedPair]) {
+    const p = DATA.per_prompt[pid].pairs[dSelectedPair];
+    selectDiversePair(p.s, p.t);
+  }
+}
+
+/* ===== Shared: dropdowns ===== */
+
+function buildDropdowns(srcId, tgtId, numLayers, onChange) {
+  const srcSel = document.getElementById(srcId);
+  const tgtSel = document.getElementById(tgtId);
+  for (let i = 0; i < numLayers; i++) {
     srcSel.add(new Option(i, i));
     tgtSel.add(new Option(i, i));
   }
   tgtSel.value = 1;
-  srcSel.addEventListener('change', onDropdownChange);
-  tgtSel.addEventListener('change', onDropdownChange);
+  srcSel.addEventListener('change', onChange);
+  tgtSel.addEventListener('change', onChange);
 }
 
-function onDropdownChange() {
-  const s = parseInt(document.getElementById('sel-source').value);
-  const t = parseInt(document.getElementById('sel-target').value);
-  if (s !== t) selectPair(s, t);
+function onDiverseDropdown() {
+  const s = parseInt(document.getElementById('d-sel-source').value);
+  const t = parseInt(document.getElementById('d-sel-target').value);
+  if (s !== t) selectDiversePair(s, t);
 }
 
-function makeTriangleZ(valueFn) {
-  const n = DATA.num_layers;
-  const z = Array.from({ length: n }, () => Array(n).fill(null));
-  for (const p of Object.values(DATA.pairs)) {
+function onCotDropdown() {
+  const s = parseInt(document.getElementById('c-sel-source').value);
+  const t = parseInt(document.getElementById('c-sel-target').value);
+  if (s !== t) selectCotPair(s, t);
+}
+
+/* ===== Shared: heatmap helpers ===== */
+
+function makeTriangleZ(pairs, numLayers, valueFn) {
+  const z = Array.from({ length: numLayers }, () => Array(numLayers).fill(null));
+  for (const p of Object.values(pairs)) {
     z[p.s][p.t] = valueFn(p);
   }
   return z;
 }
 
-function renderHeatmaps() {
-  const n = DATA.num_layers;
-  const axes = Array.from({ length: n }, (_, i) => i);
-
-  const hmConfig = [
-    { id: 'hm-sigma', title: 'σ₁ (top singular value)', fn: p => p.sigmas[0], colorscale: 'Viridis' },
-    { id: 'hm-kl', title: 'Max KL divergence', fn: p => Math.max(...p.kls), colorscale: 'Inferno' },
-    { id: 'hm-acc', title: 'Best vector accuracy', fn: p => Math.max(...p.accs), colorscale: 'Plasma' },
-  ];
-
-  for (const cfg of hmConfig) {
-    const z = makeTriangleZ(cfg.fn);
-    const trace = {
-      z, x: axes, y: axes,
-      type: 'heatmap',
-      colorscale: cfg.colorscale,
-      hoverongaps: false,
-      hovertemplate: 'source %{y} → target %{x}<br>%{z:.3f}<extra></extra>',
-      colorbar: { thickness: 10, len: 0.8, tickfont: { size: 10 }, outlinewidth: 0 },
-    };
-    const layout = {
-      ...PLOTLY_LAYOUT_BASE,
-      height: 360,
-      title: { text: cfg.title, font: { size: 13, color: '#e6edf3' }, y: 0.97 },
-      xaxis: { title: 'target layer', dtick: 5, gridcolor: '#21262d', zerolinecolor: '#21262d' },
-      yaxis: { title: 'source layer', dtick: 5, autorange: 'reversed', gridcolor: '#21262d', zerolinecolor: '#21262d' },
-    };
-    Plotly.newPlot(cfg.id, [trace], layout, { responsive: true, displayModeBar: false });
-    document.getElementById(cfg.id).on('plotly_click', (ev) => {
-      if (ev.points.length) {
-        const pt = ev.points[0];
-        if (pt.z != null) selectPair(pt.y, pt.x);
-      }
-    });
-  }
-}
-
-function selectPair(s, t) {
-  const key = `${s}_${t}`;
-  const pair = DATA.pairs[key];
-  if (!pair) {
-    document.getElementById('pair-label').textContent = `No data for (${s}, ${t})`;
-    return;
-  }
-
-  selectedPair = pair;
-  selectedVector = null;
-  document.getElementById('sel-source').value = s;
-  document.getElementById('sel-target').value = t;
-  document.getElementById('pair-label').textContent = `Pair (${s} → ${t})`;
-  document.getElementById('gen-header').textContent = 'Click a vector bar to view generations';
-  document.getElementById('gen-list').innerHTML = '';
-
-  renderVectorChart(pair);
-}
-
-function renderVectorChart(pair) {
-  const vecs = Array.from({ length: DATA.num_vectors }, (_, i) => `v${i}`);
-
-  const traces = [
-    {
-      x: vecs, y: pair.sigmas, name: 'σ', type: 'bar',
-      marker: { color: '#7c3aed' },
-      yaxis: 'y',
-    },
-    {
-      x: vecs, y: pair.kls, name: 'KL', type: 'bar',
-      marker: { color: '#f97316' },
-      yaxis: 'y2',
-    },
-    {
-      x: vecs, y: pair.accs.map(a => a * 100), name: 'Acc %', type: 'bar',
-      marker: { color: '#22d3ee' },
-      yaxis: 'y3',
-    },
-  ];
-
+function plotHeatmap(divId, z, axes, title, colorscale, onClick) {
+  const trace = {
+    z, x: axes, y: axes,
+    type: 'heatmap',
+    colorscale,
+    hoverongaps: false,
+    hovertemplate: 'source %{y} -> target %{x}<br>%{z:.3f}<extra></extra>',
+    colorbar: { thickness: 10, len: 0.8, tickfont: { size: 10 }, outlinewidth: 0 },
+  };
   const layout = {
     ...PLOTLY_LAYOUT_BASE,
-    margin: { l: 50, r: 50, t: 8, b: 32 },
-    height: 280,
-    grid: { rows: 3, columns: 1, subplots: [['xy'], ['xy2'], ['xy3']], roworder: 'top to bottom', ygap: 0.14 },
-    yaxis: { title: 'σ', titlefont: { size: 11, color: '#7d8590' }, tickfont: { size: 10 }, gridcolor: '#161b22', zerolinecolor: '#21262d' },
-    yaxis2: { title: 'KL', titlefont: { size: 11, color: '#7d8590' }, tickfont: { size: 10 }, gridcolor: '#161b22', zerolinecolor: '#21262d' },
-    yaxis3: { title: 'Acc%', titlefont: { size: 11, color: '#7d8590' }, tickfont: { size: 10 }, gridcolor: '#161b22', zerolinecolor: '#21262d' },
-    xaxis: { visible: false },
-    xaxis2: { visible: false },
-    xaxis3: { tickfont: { size: 10 } },
-    showlegend: false,
-    bargap: 0.25,
+    height: 360,
+    title: { text: title, font: { size: 13, color: '#e6edf3' }, y: 0.97 },
+    xaxis: { title: 'target layer', dtick: 5, gridcolor: '#21262d', zerolinecolor: '#21262d' },
+    yaxis: { title: 'source layer', dtick: 5, autorange: 'reversed', gridcolor: '#21262d', zerolinecolor: '#21262d' },
   };
-
-  Plotly.newPlot('vectors-chart', traces, layout, { responsive: true, displayModeBar: false });
-  document.getElementById('vectors-chart').on('plotly_click', (ev) => {
-    if (ev.points.length) {
-      const vi = ev.points[0].pointIndex;
-      selectVector(vi);
+  Plotly.newPlot(divId, [trace], layout, { responsive: true, displayModeBar: false });
+  document.getElementById(divId).on('plotly_click', (ev) => {
+    if (ev.points.length && ev.points[0].z != null) {
+      onClick(ev.points[0].y, ev.points[0].x);
     }
   });
 }
 
-async function selectVector(vi) {
-  if (!selectedPair) return;
-  selectedVector = vi;
-  const s = selectedPair.s, t = selectedPair.t;
-  const acc = (selectedPair.accs[vi] * 100).toFixed(1);
-  document.getElementById('gen-header').textContent =
-    `Vector ${vi} — acc ${acc}% — loading generations...`;
+/* ===== Diverse: heatmaps ===== */
+
+function renderDiverseHeatmaps() {
+  if (!activePrompt || !DATA.per_prompt[activePrompt]) return;
+  const pairs = DATA.per_prompt[activePrompt].pairs;
+  const n = DATA.num_layers;
+  const axes = Array.from({ length: n }, (_, i) => i);
+
+  plotHeatmap('hm-d-sigma',
+    makeTriangleZ(pairs, n, p => p.sigmas[0]),
+    axes, 'Top singular value (s1)', 'Viridis', selectDiversePair);
+
+  plotHeatmap('hm-d-kl',
+    makeTriangleZ(pairs, n, p => Math.max(...p.kls)),
+    axes, 'Max KL divergence', 'Inferno', selectDiversePair);
+}
+
+/* ===== Diverse: pair selection ===== */
+
+function selectDiversePair(s, t) {
+  const key = `${s}_${t}`;
+  const pairs = DATA.per_prompt[activePrompt]?.pairs || {};
+  const pair = pairs[key];
+  if (!pair) {
+    document.getElementById('d-pair-label').textContent = `No data for (${s}, ${t})`;
+    return;
+  }
+
+  dSelectedPair = key;
+  dSelectedVector = null;
+  document.getElementById('d-sel-source').value = s;
+  document.getElementById('d-sel-target').value = t;
+  document.getElementById('d-pair-label').textContent = `Pair (${s} -> ${t})`;
+  document.getElementById('d-gen-header').textContent = 'Click a vector bar to view generations';
+  document.getElementById('d-gen-list').innerHTML = '';
+
+  renderDiverseVectorChart(pair);
+}
+
+function renderDiverseVectorChart(pair) {
+  const vecs = Array.from({ length: DATA.num_vectors }, (_, i) => `v${i}`);
+  const traces = [
+    { x: vecs, y: pair.sigmas, name: 's', type: 'bar', marker: { color: '#7c3aed' }, yaxis: 'y' },
+    { x: vecs, y: pair.kls, name: 'KL', type: 'bar', marker: { color: '#f97316' }, yaxis: 'y2' },
+  ];
+  const layout = {
+    ...PLOTLY_LAYOUT_BASE,
+    margin: { l: 50, r: 50, t: 8, b: 32 },
+    height: 220,
+    grid: { rows: 2, columns: 1, subplots: [['xy'], ['xy2']], roworder: 'top to bottom', ygap: 0.18 },
+    yaxis: { title: 's', titlefont: { size: 11, color: '#7d8590' }, tickfont: { size: 10 }, gridcolor: '#161b22', zerolinecolor: '#21262d' },
+    yaxis2: { title: 'KL', titlefont: { size: 11, color: '#7d8590' }, tickfont: { size: 10 }, gridcolor: '#161b22', zerolinecolor: '#21262d' },
+    xaxis: { visible: false },
+    xaxis2: { tickfont: { size: 10 } },
+    showlegend: false, bargap: 0.25,
+  };
+  Plotly.newPlot('d-vectors-chart', traces, layout, { responsive: true, displayModeBar: false });
+  document.getElementById('d-vectors-chart').on('plotly_click', (ev) => {
+    if (ev.points.length) selectDiverseVector(ev.points[0].pointIndex);
+  });
+}
+
+/* ===== Diverse: generations ===== */
+
+async function selectDiverseVector(vi) {
+  if (!dSelectedPair) return;
+  dSelectedVector = vi;
+  const pid = activePrompt;
+  const key = dSelectedPair;
+  const cacheKey = `${pid}/${key}`;
+
+  document.getElementById('d-gen-header').textContent =
+    `Vector ${vi} -- loading ${pid} generations...`;
 
   try {
-    const resp = await fetch(`../results/jacobian_gen/pairs/${s}_${t}.json`);
-    const pairData = await resp.json();
+    let pairData;
+    if (genCache[cacheKey]) {
+      pairData = genCache[cacheKey];
+    } else {
+      const resp = await fetch(`diverse_pairs/${pid}/${key}.json`);
+      pairData = await resp.json();
+      genCache[cacheKey] = pairData;
+    }
     const gens = pairData.generations.filter(g => g.v === vi);
-    renderGenerations(gens, vi);
+    const baseline = DATA.per_prompt[pid]?.baseline || [];
+    renderDiverseGenerations(gens, baseline, vi, pid);
   } catch (e) {
-    document.getElementById('gen-header').textContent = `Failed to load pair (${s},${t}): ${e.message}`;
+    document.getElementById('d-gen-header').textContent =
+      `Failed to load ${pid} pair ${key}: ${e.message}`;
   }
 }
 
-function renderGenerations(gens, vi) {
-  const acc = gens.filter(g => g.correct).length;
-  document.getElementById('gen-header').textContent =
-    `Vector ${vi} — ${acc}/${gens.length} correct (${(acc / gens.length * 100).toFixed(1)}%)`;
+function renderDiverseGenerations(gens, baseline, vi, pid) {
+  const numSamples = gens.length > 0
+    ? Math.max(...gens.map(g => g.s)) + 1
+    : 3;
 
-  const questions = DATA.questions;
-  const list = document.getElementById('gen-list');
+  document.getElementById('d-gen-header').textContent =
+    `Vector ${vi} -- ${pid} -- ${gens.length} generations (${numSamples} samples)`;
+
+  const prompt = DATA.prompts.find(p => p.id === pid);
+  const promptText = prompt ? (prompt.text || prompt.messages?.[0]?.content || '') : '';
+
+  const list = document.getElementById('d-gen-list');
   list.innerHTML = '';
 
-  // Group by question
+  const group = document.createElement('div');
+  group.className = 'gen-prompt-group';
+
+  const truncPrompt = promptText.length > 120 ? promptText.slice(0, 120) + '...' : promptText;
+  group.innerHTML = `<div class="gen-prompt-label">${pid}<span class="prompt-text">${escapeHtml(truncPrompt)}</span></div>`;
+
+  for (let si = 0; si < numSamples; si++) {
+    const row = document.createElement('div');
+    row.className = 'gen-row';
+
+    const bg = baseline.find(g => g.s === si);
+    if (bg) {
+      const bDiv = document.createElement('div');
+      bDiv.className = 'gen-item baseline-item';
+      bDiv.innerHTML = `
+        <div class="gen-meta"><span class="badge badge-baseline">baseline</span> <span class="sample-label">sample ${si}</span></div>
+        <div class="gen-text">${escapeHtml(bg.text)}</div>
+      `;
+      row.appendChild(bDiv);
+    }
+
+    const sg = gens.find(g => g.s === si);
+    if (sg) {
+      const sDiv = document.createElement('div');
+      sDiv.className = 'gen-item steered-item';
+      sDiv.innerHTML = `
+        <div class="gen-meta"><span class="badge badge-steered">steered v${vi}</span> <span class="sample-label">sample ${si}</span></div>
+        <div class="gen-text">${escapeHtml(sg.text)}</div>
+      `;
+      row.appendChild(sDiv);
+    }
+
+    group.appendChild(row);
+  }
+  list.appendChild(group);
+}
+
+/* ===== CoT: heatmaps ===== */
+
+function renderCotHeatmaps() {
+  if (!DATA.cot) return;
+  const pairs = DATA.cot.pairs;
+  const n = DATA.cot.num_layers;
+  const axes = Array.from({ length: n }, (_, i) => i);
+
+  plotHeatmap('hm-c-sigma',
+    makeTriangleZ(pairs, n, p => p.sigmas[0]),
+    axes, 'Top singular value (s1)', 'Viridis', selectCotPair);
+
+  plotHeatmap('hm-c-kl',
+    makeTriangleZ(pairs, n, p => Math.max(...p.kls)),
+    axes, 'Max KL divergence', 'Inferno', selectCotPair);
+
+  plotHeatmap('hm-c-acc',
+    makeTriangleZ(pairs, n, p => p.accs ? Math.min(...p.accs) : null),
+    axes, 'Min accuracy', 'RdYlGn', selectCotPair);
+}
+
+/* ===== CoT: pair selection ===== */
+
+function selectCotPair(s, t) {
+  const key = `${s}_${t}`;
+  const pair = DATA.cot.pairs[key];
+  if (!pair) {
+    document.getElementById('c-pair-label').textContent = `No data for (${s}, ${t})`;
+    return;
+  }
+
+  cSelectedPair = key;
+  cSelectedVector = null;
+  document.getElementById('c-sel-source').value = s;
+  document.getElementById('c-sel-target').value = t;
+  document.getElementById('c-pair-label').textContent = `Pair (${s} -> ${t})`;
+  document.getElementById('c-gen-header').textContent = 'Click a vector bar to view generations';
+  document.getElementById('c-gen-list').innerHTML = '';
+
+  renderCotVectorChart(pair);
+}
+
+function renderCotVectorChart(pair) {
+  const k = DATA.cot.num_vectors;
+  const vecs = Array.from({ length: k }, (_, i) => `v${i}`);
+  const hasAcc = pair.accs && pair.accs.length > 0;
+
+  const traces = [
+    { x: vecs, y: pair.sigmas, name: 's', type: 'bar', marker: { color: '#7c3aed' }, yaxis: 'y' },
+    { x: vecs, y: pair.kls, name: 'KL', type: 'bar', marker: { color: '#f97316' }, yaxis: 'y2' },
+  ];
+  const subplots = [['xy'], ['xy2']];
+  const yaxes = {
+    yaxis: { title: 's', titlefont: { size: 11, color: '#7d8590' }, tickfont: { size: 10 }, gridcolor: '#161b22', zerolinecolor: '#21262d' },
+    yaxis2: { title: 'KL', titlefont: { size: 11, color: '#7d8590' }, tickfont: { size: 10 }, gridcolor: '#161b22', zerolinecolor: '#21262d' },
+  };
+  let rows = 2;
+
+  if (hasAcc) {
+    traces.push({
+      x: vecs, y: pair.accs.map(a => a * 100), name: 'acc%', type: 'bar',
+      marker: { color: pair.accs.map(a => a < 0.5 ? '#f85149' : '#3fb950') },
+      yaxis: 'y3',
+    });
+    subplots.push(['xy3']);
+    yaxes.yaxis3 = { title: 'acc%', titlefont: { size: 11, color: '#7d8590' }, tickfont: { size: 10 }, gridcolor: '#161b22', zerolinecolor: '#21262d', range: [0, 100] };
+    rows = 3;
+  }
+
+  const layout = {
+    ...PLOTLY_LAYOUT_BASE,
+    margin: { l: 50, r: 50, t: 8, b: 32 },
+    height: hasAcc ? 300 : 220,
+    grid: { rows, columns: 1, subplots, roworder: 'top to bottom', ygap: 0.12 },
+    ...yaxes,
+    xaxis: { visible: false },
+    xaxis2: hasAcc ? { visible: false } : { tickfont: { size: 10 } },
+    showlegend: false, bargap: 0.25,
+  };
+  if (hasAcc) layout.xaxis3 = { tickfont: { size: 10 } };
+
+  Plotly.newPlot('c-vectors-chart', traces, layout, { responsive: true, displayModeBar: false });
+  document.getElementById('c-vectors-chart').on('plotly_click', (ev) => {
+    if (ev.points.length) selectCotVector(ev.points[0].pointIndex);
+  });
+}
+
+/* ===== CoT: generations ===== */
+
+async function selectCotVector(vi) {
+  if (!cSelectedPair) return;
+  cSelectedVector = vi;
+  const key = cSelectedPair;
+  const pair = DATA.cot.pairs[key];
+  const accStr = pair.accs ? ` -- acc ${(pair.accs[vi] * 100).toFixed(1)}%` : '';
+
+  document.getElementById('c-gen-header').textContent =
+    `Vector ${vi}${accStr} -- loading CoT generations...`;
+
+  try {
+    const cacheKey = `cot/${key}`;
+    let pairData;
+    if (genCache[cacheKey]) {
+      pairData = genCache[cacheKey];
+    } else {
+      const resp = await fetch(`../results/jacobian_gen/pairs/${key}.json`);
+      pairData = await resp.json();
+      genCache[cacheKey] = pairData;
+    }
+    const gens = pairData.generations.filter(g => g.v === vi);
+    renderCotGenerations(gens, vi);
+  } catch (e) {
+    document.getElementById('c-gen-header').textContent =
+      `Failed to load CoT pair ${key}: ${e.message}`;
+  }
+}
+
+function renderCotGenerations(gens, vi) {
+  const acc = gens.filter(g => g.correct).length;
+  document.getElementById('c-gen-header').textContent =
+    `Vector ${vi} -- ${acc}/${gens.length} correct (${(acc / gens.length * 100).toFixed(1)}%)`;
+
+  const questions = DATA.cot.questions;
+  const list = document.getElementById('c-gen-list');
+  list.innerHTML = '';
+
   const byQ = {};
   for (const g of gens) {
     if (!byQ[g.q]) byQ[g.q] = [];
@@ -369,8 +720,8 @@ function renderGenerations(gens, vi) {
       const div = document.createElement('div');
       div.className = `gen-item ${g.correct ? 'correct-item' : 'wrong-item'}`;
       const badge = g.correct
-        ? `<span class="badge correct">✓ ${g.pred}</span>`
-        : `<span class="badge wrong">✗ ${g.pred ?? 'null'}</span>`;
+        ? `<span class="badge correct">correct ${g.pred}</span>`
+        : `<span class="badge wrong">wrong ${g.pred ?? 'null'}</span>`;
       div.innerHTML = `
         <div class="gen-meta">${badge} <span class="sample-label">sample ${g.s}</span></div>
         <div class="gen-text">${escapeHtml(g.text)}</div>
@@ -380,6 +731,8 @@ function renderGenerations(gens, vi) {
     list.appendChild(group);
   }
 }
+
+/* ===== Util ===== */
 
 function escapeHtml(str) {
   const div = document.createElement('div');
