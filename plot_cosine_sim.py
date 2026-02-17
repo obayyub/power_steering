@@ -11,7 +11,7 @@ import torch.nn.functional as F
 # Vector files from the r=5 experiment
 VECTOR_FILES = {
     "MELBO": "vectors/melbo_Qwen3-14B_20260127_165510.pt",
-    "Power Iter": "vectors/power_iter_Qwen3-14B_20260127_165531.pt",
+    "Power Steering": "vectors/power_iter_Qwen3-14B_20260127_165531.pt",
     "Multi-PI": "vectors/power_iter_multi_Qwen3-14B_20260127_165614.pt",
 }
 
@@ -71,7 +71,7 @@ def plot_heatmap(sim_matrix: np.ndarray, title: str, xlabel: str, ylabel: str, o
                    fontsize=7, color=color)
 
     plt.tight_layout()
-    plt.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
     print(f"Saved: {output_path}")
     plt.close()
 
@@ -88,9 +88,9 @@ def main():
 
     # Cross-method comparisons
     comparisons = [
-        ("MELBO", "Power Iter"),
+        ("MELBO", "Power Steering"),
         ("MELBO", "Multi-PI"),
-        ("Power Iter", "Multi-PI"),
+        ("Power Steering", "Multi-PI"),
     ]
 
     for method1, method2 in comparisons:
