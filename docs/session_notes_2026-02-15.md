@@ -62,6 +62,42 @@ Overall KL1 range: [0.00, 29.26] (vs the fixed-scale run).
 
 4. **Scale matters a lot for behavioral quality.** Browsing generations on the dashboard confirms that norm-scaled steering produces cleaner behavioral effects at mid-layers, while early layers that previously showed gibberish now show recognizable (if unusual) text.
 
+## Roleplay Norm-Scaled Run
+
+Ran norm-scaled steering on the **roleplay** prompt (Victorian lighthouse keeper letter) as a non-tension comparison to refusal. No safety axis to flip — any behavioral effects are purely about persona, voice, and style.
+
+### Activation Norms (roleplay prompt)
+
+```
+min=3.5  max=882.2  median=33.8
+```
+
+Slightly different from refusal (max=882 vs 687), but same general shape.
+
+### Refusal vs Roleplay Comparison
+
+| Source layers | Refusal avg KL | Roleplay avg KL |
+|---|---|---|
+| 0-5 | **2.77** | 0.62 |
+| 5-10 | **4.10** | 1.81 |
+| 10-15 | 4.93 | 4.13 |
+| 15-20 | 6.01 | 5.89 |
+| 20-25 | 2.15 | 1.20 |
+| 25-30 | 1.09 | 0.04 |
+| 30-36 | 0.64 | 0.58 |
+
+### Key Observations
+
+1. **Mid-layer sweet spot is prompt-independent.** Both refusal and roleplay peak at layers 15-20 with similar KL (~6). This is a structural property of the model, not an artifact of prompt type.
+
+2. **Early-layer steerability is prompt-dependent.** Refusal has KL=2.8 at layers 0-5 vs roleplay's 0.6. The refusal prompt has a fragile binary refuse/comply axis that early layers can flip, while roleplay has no such binary decision — steering just doesn't find a strong behavioral mode to shift.
+
+3. **Late layers weak for both.** Layers 25+ remain near-zero KL regardless of prompt type, confirming this is an architectural limitation.
+
+4. **Roleplay max KL is actually higher (35.4 vs 29.3).** Individual pairs can be highly steerable even without safety tension — the peak just comes from different layer pairs.
+
+Dashboard updated with both prompts available on the Norm-Scaled tab.
+
 ### Answering the Open Question from 2026-02-13
 
 > Would normalizing scale by activation norm change which layer pairs show behavioral effects?
@@ -83,11 +119,12 @@ Updated `dashboard/prepare_data.py` to load norm-scaled results from `results/di
 - **map_diverse.py**: `--scale-frac`, `--prompts`, `measure_norms()`, per-pair scale in worker loop + merge
 - **dashboard/prepare_data.py**: `load_normscale()`, normscale pair file splitting
 - **dashboard/index.html**: Norm-Scaled tab, heatmaps, pair/vector/generation views
-- **Results**: `results/diverse_map_normscale/refusal/` (630 pairs, merged.pt)
+- **Results**: `results/diverse_map_normscale/refusal/` and `roleplay/` (630 pairs each, merged.pt)
 
 ## Open Questions
 
-- Should we run norm-scaled on all 7 prompts, or is refusal sufficient for the writeup?
 - Would a smaller scale_frac (e.g. 0.15) clean up the early-layer degenerate output while still showing effects?
 - The KL peak at layers 15-20 with norm-scaling — is this because those layers have the strongest Jacobian modes, or because scale ~12 is intrinsically optimal?
 - Can we separate the effect of scale from the effect of source layer depth by running multiple scale_frac values?
+- What do the roleplay persona shifts actually look like? Need to browse generations on dashboard to characterize the behavioral changes (voice shift, character break, genre change, etc.)
+- Why is roleplay's max KL (35.4) higher than refusal's (29.3) despite lower average KL? Is there one pair that's particularly steerable for creative text?
