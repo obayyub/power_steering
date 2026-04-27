@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
 """
-Map Jacobian + generate steered text for diverse prompts across all layer pairs.
+Map Jacobian with low-rank covariance target metric across layer pairs.
 
-For each prompt:
-  1. Power iteration → top-k singular vectors + sigma for all pairs
+Instead of diagonal variance (var/inv), projects the JVP onto the subspace
+of prompt-to-prompt variation using the full low-rank covariance matrix:
+  jvp_weighted = jvp @ V @ diag(λ) @ V.T
+
+where V, λ come from SVD of centered activations across 16 roleplay prompts.
+
+For each (source, target) pair:
+  1. Power iteration → top-k singular vectors + sigma
   2. KL divergence → per-vector output shift
-  3. Steered generation → 12 vectors × 3 samples per pair
+  3. Steered generation (if max KL >= threshold)
 
 Output:
-  results/diverse_map/{prompt_id}/
-    merged.pt        — sigma_map, kl_map, vectors
-    baseline.json    — unsteered generations
-    pairs/S_T.json   — per-pair steered generations + metrics
-    summary.json     — metadata
+  results/diverse_map_tgtcov/roleplay/
+    merged.pt             — sigma_map, kl_map, vectors
+    pairs/S_T.json        — per-pair metrics + generations
+    baseline_*.json       — unsteered generations per gen-prompt
+    summary.json          — metadata
 
-Multi-GPU via mp.spawn, resume support via per-pair JSON files.
-Model loads once per GPU, then runs all prompts sequentially.
+Multi-GPU via mp.spawn, roleplay base prompt, multiple gen-prompts.
 
 Usage:
-  uv run python map_diverse.py --num-gpus 8
-  uv run python map_diverse.py --merge-only
+  uv run python map_diverse_cov.py
+  uv run python map_diverse_cov.py --merge-only
 """
 
 import json
@@ -32,26 +37,24 @@ from datetime import datetime
 import argparse
 import time
 
-from power_block_iteration import orthogonalize, rayleigh_ritz, get_target_weights
+from power_block_iteration import orthogonalize, rayleigh_ritz
 
 
 # ---------------------------------------------------------------------------
-# Prompts — chat messages for instruct model
+# Prompts
 # ---------------------------------------------------------------------------
 
-PROMPTS = [
-    {
-        "id": "code",
-        "messages": [
-            {"role": "user", "content": "I have a pandas DataFrame with columns 'timestamp', 'user_id', 'event_type', and 'value'. I need to compute a rolling 7-day average of 'value' per user, but only counting rows where event_type is 'purchase'. Can you write a function for this?"},
-        ],
-    },
-    {
-        "id": "narrative",
-        "messages": [
-            {"role": "user", "content": "Write me a short story about a detective investigating a series of mysterious disappearances in a coastal town. Make it atmospheric and suspenseful."},
-        ],
-    },
+# SVD/KL prompt (roleplay) — also used for generation
+BASE_PROMPT = {
+    "id": "roleplay",
+    "messages": [
+        {"role": "user", "content": "You are a grizzled Victorian-era lighthouse keeper writing a letter to your estranged daughter. You haven't spoken in five years. Tonight a terrible storm is coming and you're not sure you'll survive it. Write the letter."},
+    ],
+}
+
+# Generation prompts (same set as tgtvar/tgtinv runs)
+GEN_PROMPTS = [
+    BASE_PROMPT,
     {
         "id": "roleplay_captain",
         "messages": [
@@ -70,44 +73,9 @@ PROMPTS = [
             {"role": "user", "content": "You are a ghost who has been haunting the same house for 150 years. A new family just moved in and they are unbearable. Write a formal complaint letter to the Regional Bureau of Spectral Affairs requesting a transfer. Stay in character — you are dead serious about this."},
         ],
     },
-    {
-        "id": "refusal",
-        "messages": [
-            {"role": "user", "content": "I need to write a convincing phishing email that looks like it's from a bank, asking customers to verify their account details. Can you help me draft one with a realistic subject line and body?"},
-        ],
-    },
-    {
-        "id": "reasoning",
-        "messages": [
-            {"role": "user", "content": "A farmer has a fox, a chicken, and a bag of grain. He needs to cross a river in a boat that can only carry him and one item at a time. If left alone, the fox will eat the chicken, and the chicken will eat the grain. How can the farmer get everything across safely?"},
-        ],
-    },
-    {
-        "id": "strawberry",
-        "messages": [
-            {"role": "user", "content": "How many times does the letter 'r' appear in the word 'strawberry'?"},
-        ],
-    },
-    {
-        "id": "roleplay",
-        "messages": [
-            {"role": "user", "content": "You are a grizzled Victorian-era lighthouse keeper writing a letter to your estranged daughter. You haven't spoken in five years. Tonight a terrible storm is coming and you're not sure you'll survive it. Write the letter."},
-        ],
-    },
-    {
-        "id": "persuasion",
-        "messages": [
-            {"role": "user", "content": "Should governments ban social media for children under 16? Make a compelling argument for one side, acknowledging the strongest counterarguments."},
-        ],
-    },
 ]
 
-
-# ---------------------------------------------------------------------------
-# Roleplay prompts for target metric variance computation (16 total)
-# Each asks the model to adopt a character/persona and write in-character.
-# ---------------------------------------------------------------------------
-
+# 16 roleplay prompts for covariance estimation
 ROLEPLAY_METRIC_PROMPTS = [
     "You are a grizzled Victorian-era lighthouse keeper writing a letter to your estranged daughter. You haven't spoken in five years. Tonight a terrible storm is coming and you're not sure you'll survive it. Write the letter.",
     "You are the captain of a wooden sailing ship in 1718. A hurricane is bearing down and your crew is on the edge of mutiny. Write your final log entry before you decide whether to turn back or push through.",
@@ -145,10 +113,7 @@ def format_prompt(tokenizer, messages):
 # ---------------------------------------------------------------------------
 
 def measure_norms(model, input_ids):
-    """Measure activation norm at each layer's mlp.down_proj output (last token).
-
-    Single forward pass with hooks. Returns list of norms [n_layers].
-    """
+    """Measure activation norm at each layer's mlp.down_proj output (last token)."""
     n_layers = model.config.num_hidden_layers
     norms = [0.0] * n_layers
     hooks = []
@@ -173,14 +138,19 @@ def measure_norms(model, input_ids):
 
 
 # ---------------------------------------------------------------------------
-# Target metric: variance across roleplay prompts
+# Target metric: low-rank covariance via SVD of centered activations
 # ---------------------------------------------------------------------------
 
-def compute_all_target_variance(model, tokenizer, prompts):
-    """Compute per-coordinate variance of activations at ALL layers across prompts.
+def compute_all_target_covariance(model, tokenizer, prompts):
+    """Compute low-rank covariance of activations at ALL layers across prompts.
 
     One forward pass per prompt, hooks every layer's module output (last token).
-    Returns: [n_layers, H] variance tensor on model device.
+    Returns per layer: (components [n_prompts, H], eigvals [n_prompts])
+      - components: right singular vectors of centered activations (Vt from SVD)
+      - eigvals: covariance eigenvalues = S^2 / (n-1)
+
+    Full return: (all_components [n_layers, n_prompts, H],
+                  all_eigvals [n_layers, n_prompts])
     """
     device = next(model.parameters()).device
     n_layers = model.config.num_hidden_layers
@@ -209,15 +179,24 @@ def compute_all_target_variance(model, tokenizer, prompts):
         for h in hooks:
             h.remove()
 
-    # Stack and compute variance: [n_layers, H]
-    var = torch.zeros(n_layers, model.config.hidden_size, device=device)
-    for i in range(n_layers):
-        stacked = torch.cat(all_acts[i], dim=0)  # [num_prompts, H]
-        var[i] = stacked.var(dim=0)
+    # Compute low-rank covariance per layer
+    H = model.config.hidden_size
+    n_prompts = len(prompts)
+    all_components = torch.zeros(n_layers, n_prompts, H, device=device)
+    all_eigvals = torch.zeros(n_layers, n_prompts, device=device)
 
-    print(f"  Target variance computed over {len(prompts)} prompts, {n_layers} layers")
-    print(f"  Var range: [{var.min():.6f}, {var.max():.2f}], median={var.median():.4f}")
-    return var
+    for i in range(n_layers):
+        stacked = torch.cat(all_acts[i], dim=0)  # [n_prompts, H]
+        centered = stacked - stacked.mean(dim=0)  # [n_prompts, H]
+        U, S, Vt = torch.linalg.svd(centered, full_matrices=False)  # Vt: [n_prompts, H]
+        eigvals = S ** 2 / (n_prompts - 1)  # covariance eigenvalues
+        all_components[i] = Vt
+        all_eigvals[i] = eigvals
+
+    print(f"  Target covariance computed over {n_prompts} prompts, {n_layers} layers")
+    print(f"  Top eigenvalue range: [{all_eigvals[:, 0].min():.2f}, {all_eigvals[:, 0].max():.2f}]")
+    print(f"  Eigenvalue sum (trace) range: [{all_eigvals.sum(dim=1).min():.2f}, {all_eigvals.sum(dim=1).max():.2f}]")
+    return all_components, all_eigvals
 
 
 # ---------------------------------------------------------------------------
@@ -235,12 +214,13 @@ def compute_baseline(model, tokenizer, messages):
 
 
 def compute_svd(model, input_ids, source_layer, target_layer,
-                num_vectors, num_iters, num_tokens, target_weights=None):
+                num_vectors, num_iters, num_tokens, target_cov=None):
     """Batched block power iteration for one (source, target) pair.
 
     Args:
-        target_weights: optional [1, 1, H] tensor for target metric weighting.
-            Applied between JVP and VJP to weight which output changes matter.
+        target_cov: optional tuple (components [k, H], eigvals [k]) for
+            low-rank covariance weighting. Applied as jvp @ V @ diag(λ) @ V.T
+            between JVP and VJP steps.
     """
     k = num_vectors
     H = model.config.hidden_size
@@ -277,8 +257,11 @@ def compute_svd(model, input_ids, source_layer, target_layer,
             u = torch.zeros_like(t, requires_grad=True)
             g = torch.autograd.grad((t * u).sum(), sv, create_graph=True, retain_graph=True)[0]
             jvp = torch.autograd.grad((g * V_in.T[:c]).sum(), u, retain_graph=True)[0]
-            if target_weights is not None:
-                jvp = jvp * target_weights
+            if target_cov is not None:
+                components, eigvals = target_cov  # [n_comp, H], [n_comp]
+                proj = torch.einsum('csh,kh->csk', jvp, components)  # [c, seq, n_comp]
+                proj = proj * eigvals                                 # [c, seq, n_comp]
+                jvp = torch.einsum('csk,kh->csh', proj, components)   # [c, seq, H]
             r = torch.autograd.grad((t * jvp.detach()).sum(), sv)[0]
             steer["v"] = None
             return r.T
@@ -326,7 +309,7 @@ def compute_kl(model, source_layer, vectors, scale, input_ids, baseline_logits):
 
 def generate_for_pair(model, tokenizer, source_layer, vectors, messages,
                       scale, num_samples, max_new_tokens, temperature, seed_base):
-    """Generate steered text for one pair with a single prompt. Batch = k vectors."""
+    """Generate steered text for one pair. Batch = k vectors."""
     k = vectors.shape[0]
     device = next(model.parameters()).device
 
@@ -341,10 +324,10 @@ def generate_for_pair(model, tokenizer, source_layer, vectors, messages,
     handle = down_proj.register_forward_hook(hook)
 
     try:
-        steering["vec"] = (vectors * scale).to(device)  # [k, H]
+        steering["vec"] = (vectors * scale).to(device)
         prompt_text = format_prompt(tokenizer, messages)
         inputs = tokenizer(prompt_text, return_tensors="pt").to(device)
-        ids = inputs["input_ids"].expand(k, -1)  # [k, seq]
+        ids = inputs["input_ids"].expand(k, -1)
         input_len = ids.shape[1]
 
         results = []
@@ -394,7 +377,7 @@ def generate_baseline(model, tokenizer, messages,
 
 
 # ---------------------------------------------------------------------------
-# Worker
+# Worker (multi-GPU via mp.spawn)
 # ---------------------------------------------------------------------------
 
 def worker(rank, world_size, all_pairs, args):
@@ -409,136 +392,118 @@ def worker(rank, world_size, all_pairs, args):
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    # Compute target metric variance if requested
-    target_var = None
-    if args.target_metric != "none":
-        if rank == 0:
-            print(f"[GPU {rank}] Computing target variance ({args.target_metric}) "
-                  f"over {len(ROLEPLAY_METRIC_PROMPTS)} roleplay prompts...", flush=True)
-        target_var = compute_all_target_variance(model, tokenizer, ROLEPLAY_METRIC_PROMPTS)
+    # Compute target covariance
+    if rank == 0:
+        print(f"[GPU {rank}] Computing target covariance over "
+              f"{len(ROLEPLAY_METRIC_PROMPTS)} roleplay prompts...", flush=True)
+    all_components, all_eigvals = compute_all_target_covariance(
+        model, tokenizer, ROLEPLAY_METRIC_PROMPTS,
+    )
 
     # Round-robin assignment
     my_pairs = [all_pairs[i] for i in range(rank, len(all_pairs), world_size)]
 
-    # Resolve base prompt and generation prompts
-    if args.base_prompt:
-        # Single-atlas mode: one prompt for SVD/KL, multiple for generation
-        base = next(p for p in PROMPTS if p["id"] == args.base_prompt)
-        gen_prompts = [p for p in PROMPTS if p["id"] in (args.gen_prompts or [])]
-        prompt_configs = [(base, gen_prompts)]
-    else:
-        # Classic mode: each prompt gets its own full atlas
-        prompts = PROMPTS
-        if args.prompts:
-            prompts = [p for p in PROMPTS if p["id"] in args.prompts]
-        prompt_configs = [(p, [p]) for p in prompts]
+    pid = BASE_PROMPT["id"]
+    prompt_dir = Path(args.output_dir) / pid
+    pairs_dir = prompt_dir / "pairs"
+    pairs_dir.mkdir(parents=True, exist_ok=True)
 
-    for base_prompt, gen_prompt_list in prompt_configs:
-        pid = base_prompt["id"]
-        prompt_dir = Path(args.output_dir) / pid
-        pairs_dir = prompt_dir / "pairs"
-        pairs_dir.mkdir(parents=True, exist_ok=True)
+    # Baseline generations (rank 0 only)
+    if rank == 0:
+        for gp in GEN_PROMPTS:
+            baseline_file = prompt_dir / f"baseline_{gp['id']}.json"
+            if not baseline_file.exists():
+                print(f"[GPU {rank}] Running baseline for {gp['id']}...", flush=True)
+                bl = generate_baseline(
+                    model, tokenizer, gp["messages"],
+                    args.num_samples, args.max_new_tokens, args.temperature,
+                    seed_base=args.seed * 100,
+                )
+                with open(baseline_file, "w") as f:
+                    json.dump({"prompt": gp, "results": bl}, f)
 
-        # Skip pairs already done for this prompt
-        remaining = [(s, t) for s, t in my_pairs
-                     if not (pairs_dir / f"{s}_{t}.json").exists()]
+    # Skip already-done pairs
+    remaining = [(s, t) for s, t in my_pairs
+                 if not (pairs_dir / f"{s}_{t}.json").exists()]
 
-        # Baseline generations (rank 0 only)
+    # Baseline logits for KL
+    baseline_logits, input_ids = compute_baseline(
+        model, tokenizer, BASE_PROMPT["messages"],
+    )
+
+    # Per-layer norms for scale_frac
+    norms = None
+    if args.scale_frac is not None:
+        norms = measure_norms(model, input_ids)
         if rank == 0:
-            for gp in gen_prompt_list:
-                baseline_file = prompt_dir / f"baseline_{gp['id']}.json"
-                if not baseline_file.exists():
-                    print(f"[GPU {rank}] [{pid}] Running baseline for {gp['id']}...",
-                          flush=True)
-                    bl = generate_baseline(
-                        model, tokenizer, gp["messages"],
-                        args.num_samples, args.max_new_tokens, args.temperature,
-                        seed_base=args.seed * 100,
-                    )
-                    with open(baseline_file, "w") as f:
-                        json.dump({"prompt": gp, "results": bl}, f)
+            print(f"[GPU {rank}] Norms: min={min(norms):.1f} max={max(norms):.1f} "
+                  f"median={sorted(norms)[len(norms)//2]:.1f}", flush=True)
 
-        # Compute baseline logits for KL (always from base prompt)
-        baseline_logits, input_ids = compute_baseline(
-            model, tokenizer, base_prompt["messages"],
+    gen_ids = [gp["id"] for gp in GEN_PROMPTS]
+    print(f"[GPU {rank}] Processing {len(remaining)} pairs "
+          f"(skipped {len(my_pairs) - len(remaining)} already done, "
+          f"gen prompts: {gen_ids})", flush=True)
+    t0 = time.time()
+
+    for idx, (s, t) in enumerate(remaining):
+        torch.manual_seed(args.seed + s * 1000 + t)
+
+        # Get covariance for this target layer
+        components = all_components[t]  # [n_prompts, H]
+        eigvals = all_eigvals[t]        # [n_prompts]
+        target_cov = (components.to(dtype=model.dtype), eigvals.to(dtype=model.dtype))
+
+        vecs, sigmas = compute_svd(
+            model, input_ids, s, t,
+            args.num_vectors, args.num_iters, args.num_tokens,
+            target_cov=target_cov,
         )
 
-        # Measure per-layer norms if using scale_frac
-        norms = None
-        if args.scale_frac is not None:
-            norms = measure_norms(model, input_ids)
-            if rank == 0:
-                print(f"[GPU {rank}] [{pid}] Norms: min={min(norms):.1f} "
-                      f"max={max(norms):.1f} median={sorted(norms)[len(norms)//2]:.1f}",
-                      flush=True)
+        # Compute per-pair scale
+        if norms is not None:
+            pair_scale = args.scale_frac * norms[s]
+        else:
+            pair_scale = args.scale
 
-        gen_ids = [gp["id"] for gp in gen_prompt_list]
-        print(f"[GPU {rank}] [{pid}] Processing {len(remaining)} pairs "
-              f"(skipped {len(my_pairs) - len(remaining)}, "
-              f"gen prompts: {gen_ids})", flush=True)
-        t0 = time.time()
+        # KL divergence
+        kls = compute_kl(model, s, vecs, pair_scale, input_ids, baseline_logits)
 
-        for idx, (s, t) in enumerate(remaining):
-            torch.manual_seed(args.seed + s * 1000 + t)
+        # Steered generation (only if KL above threshold)
+        gens = {}
+        max_kl = max(kls)
+        if max_kl >= args.kl_threshold:
+            for gi, gp in enumerate(GEN_PROMPTS):
+                seed_base = args.seed + s * 10000 + t * 100 + gi * 10
+                gens[gp["id"]] = generate_for_pair(
+                    model, tokenizer, s, vecs, gp["messages"],
+                    pair_scale, args.num_samples, args.max_new_tokens,
+                    args.temperature, seed_base,
+                )
 
-            # 1. Power iteration → vectors + sigma (base prompt)
-            tw = None
-            if target_var is not None:
-                raw = target_var[t]  # [H] for this target layer
-                tw = get_target_weights(raw, args.target_metric)
-                tw = tw.to(dtype=model.dtype).unsqueeze(0).unsqueeze(0)  # [1, 1, H]
+        # Save per-pair result
+        pair_data = {
+            "source_layer": s,
+            "target_layer": t,
+            "scale": pair_scale,
+            "sigmas": sigmas,
+            "kl_divergences": kls,
+            "vectors": vecs.cpu().tolist(),
+            "generations": gens,
+        }
+        with open(pairs_dir / f"{s}_{t}.json", "w") as f:
+            json.dump(pair_data, f)
 
-            vecs, sigmas = compute_svd(
-                model, input_ids, s, t,
-                args.num_vectors, args.num_iters, args.num_tokens,
-                target_weights=tw,
-            )
+        if (idx + 1) % 10 == 0 or idx == len(remaining) - 1:
+            el = time.time() - t0
+            rate = (idx + 1) / el
+            rem = (len(remaining) - idx - 1) / rate if rate > 0 else 0
+            gen_flag = "GEN" if max_kl >= args.kl_threshold else "skip"
+            scale_str = f"scale={pair_scale:.1f}" if norms is not None else ""
+            print(f"[GPU {rank}] {idx+1}/{len(remaining)} "
+                  f"({s},{t}) {scale_str} σ₁={sigmas[0]:.0f} maxKL={max_kl:.2f} [{gen_flag}] "
+                  f"{el:.0f}s/{rem:.0f}s left", flush=True)
 
-            # 2. Compute per-pair scale
-            if norms is not None:
-                pair_scale = args.scale_frac * norms[s]
-            else:
-                pair_scale = args.scale
-
-            # 3. KL divergence (base prompt)
-            kls = compute_kl(model, s, vecs, pair_scale, input_ids, baseline_logits)
-
-            # 4. Steered generation (only if KL above threshold)
-            gens = {}  # {prompt_id: [...]}
-            max_kl = max(kls)
-            if max_kl >= args.kl_threshold:
-                for gi, gp in enumerate(gen_prompt_list):
-                    seed_base = args.seed + s * 10000 + t * 100 + gi * 10
-                    gens[gp["id"]] = generate_for_pair(
-                        model, tokenizer, s, vecs, gp["messages"],
-                        pair_scale, args.num_samples, args.max_new_tokens,
-                        args.temperature, seed_base,
-                    )
-
-            # Save per-pair result
-            pair_data = {
-                "source_layer": s,
-                "target_layer": t,
-                "scale": pair_scale,
-                "sigmas": sigmas,
-                "kl_divergences": kls,
-                "vectors": vecs.cpu().tolist(),
-                "generations": gens,
-            }
-            with open(pairs_dir / f"{s}_{t}.json", "w") as f:
-                json.dump(pair_data, f)
-
-            if (idx + 1) % 10 == 0 or idx == len(remaining) - 1:
-                el = time.time() - t0
-                rate = (idx + 1) / el
-                rem = (len(remaining) - idx - 1) / rate if rate > 0 else 0
-                gen_flag = "GEN" if max_kl >= args.kl_threshold else "skip"
-                scale_str = f"scale={pair_scale:.1f}" if norms is not None else ""
-                print(f"[GPU {rank}] [{pid}] {idx+1}/{len(remaining)} "
-                      f"({s},{t}) {scale_str} σ₁={sigmas[0]:.0f} maxKL={max_kl:.2f} [{gen_flag}] "
-                      f"{el:.0f}s/{rem:.0f}s left", flush=True)
-
-        print(f"[GPU {rank}] [{pid}] Done.", flush=True)
+    print(f"[GPU {rank}] Done.", flush=True)
 
 
 # ---------------------------------------------------------------------------
@@ -546,81 +511,73 @@ def worker(rank, world_size, all_pairs, args):
 # ---------------------------------------------------------------------------
 
 def merge(args):
-    """Merge per-pair JSON files into merged.pt + summary.json per prompt."""
+    """Merge per-pair JSON files into merged.pt + summary.json."""
     config = AutoConfig.from_pretrained(args.model)
     n = config.num_hidden_layers
     k = args.num_vectors
 
-    if args.base_prompt:
-        prompt_ids = [args.base_prompt]
-    elif args.prompts:
-        prompt_ids = args.prompts
-    else:
-        prompt_ids = [p["id"] for p in PROMPTS]
+    pid = BASE_PROMPT["id"]
+    prompt_dir = Path(args.output_dir) / pid
+    pairs_dir = prompt_dir / "pairs"
 
-    for pid in prompt_ids:
-        prompt_dir = Path(args.output_dir) / pid
-        pairs_dir = prompt_dir / "pairs"
+    if not pairs_dir.exists():
+        print(f"[{pid}] No pairs directory, skipping")
+        return
 
-        if not pairs_dir.exists():
-            print(f"[{pid}] No pairs directory, skipping")
-            continue
+    sigma_map = torch.full((n, n, k), float("nan"))
+    kl_map = torch.full((n, n, k), float("nan"))
+    scale_map = torch.full((n, n), float("nan"))
+    vectors = {}
+    pair_count = 0
 
-        sigma_map = torch.full((n, n, k), float("nan"))
-        kl_map = torch.full((n, n, k), float("nan"))
-        scale_map = torch.full((n, n), float("nan"))
-        vectors = {}
-        pair_count = 0
+    for f in sorted(pairs_dir.glob("*.json")):
+        with open(f) as fp:
+            data = json.load(fp)
+        s = data["source_layer"]
+        t = data["target_layer"]
+        sigma_map[s, t] = torch.tensor(data["sigmas"])
+        kl_map[s, t] = torch.tensor(data["kl_divergences"])
+        if "scale" in data:
+            scale_map[s, t] = data["scale"]
+        vectors[f"{s}_{t}"] = torch.tensor(data["vectors"])
+        pair_count += 1
 
-        for f in sorted(pairs_dir.glob("*.json")):
-            with open(f) as fp:
-                data = json.load(fp)
-            s = data["source_layer"]
-            t = data["target_layer"]
-            sigma_map[s, t] = torch.tensor(data["sigmas"])
-            kl_map[s, t] = torch.tensor(data["kl_divergences"])
-            if "scale" in data:
-                scale_map[s, t] = data["scale"]
-            vectors[f"{s}_{t}"] = torch.tensor(data["vectors"])
-            pair_count += 1
+    merged = {
+        "metadata": {
+            "model": args.model,
+            "prompt_id": pid,
+            "num_layers": n,
+            "hidden_dim": config.hidden_size,
+            "scale": args.scale,
+            "scale_frac": args.scale_frac,
+            "num_vectors": k,
+            "num_iters": args.num_iters,
+            "num_tokens": args.num_tokens,
+            "num_samples": args.num_samples,
+            "temperature": args.temperature,
+            "max_new_tokens": args.max_new_tokens,
+            "seed": args.seed,
+            "target_metric": "cov",
+            "num_pairs": pair_count,
+            "source_range": [args.source_start, args.source_end],
+            "timestamp": datetime.now().isoformat(),
+        },
+        "sigma_map": sigma_map,
+        "kl_map": kl_map,
+        "scale_map": scale_map,
+        "vectors": vectors,
+    }
+    torch.save(merged, prompt_dir / "merged.pt")
 
-        # Save merged.pt (vectors as tensors for downstream use)
-        merged = {
-            "metadata": {
-                "model": args.model,
-                "prompt_id": pid,
-                "num_layers": n,
-                "hidden_dim": config.hidden_size,
-                "scale": args.scale,
-                "scale_frac": args.scale_frac,
-                "num_vectors": k,
-                "num_iters": args.num_iters,
-                "num_tokens": args.num_tokens,
-                "num_samples": args.num_samples,
-                "temperature": args.temperature,
-                "max_new_tokens": args.max_new_tokens,
-                "seed": args.seed,
-                "target_metric": args.target_metric,
-                "num_pairs": pair_count,
-                "timestamp": datetime.now().isoformat(),
-            },
-            "sigma_map": sigma_map,
-            "kl_map": kl_map,
-            "scale_map": scale_map,
-            "vectors": vectors,
-        }
-        torch.save(merged, prompt_dir / "merged.pt")
+    summary = {"metadata": merged["metadata"]}
+    with open(prompt_dir / "summary.json", "w") as f:
+        json.dump(summary, f, indent=2)
 
-        # Save summary.json (no vectors, just metadata)
-        summary = {
-            "metadata": merged["metadata"],
-        }
-        with open(prompt_dir / "summary.json", "w") as f:
-            json.dump(summary, f, indent=2)
-
-        valid = ~sigma_map[:, :, 0].isnan()
-        expected = n * (n - 1) // 2
-        print(f"\n[{pid}] Merged {valid.sum().item()}/{expected} pairs")
+    valid = ~sigma_map[:, :, 0].isnan()
+    expected = sum(1 for s in range(args.source_start, args.source_end + 1)
+                   for t in range(s + 1, n))
+    print(f"\n[{pid}] Merged {valid.sum().item()}/{expected} pairs")
+    if valid.any():
         print(f"  σ₁ range: [{sigma_map[:,:,0][valid].min():.0f}, "
               f"{sigma_map[:,:,0][valid].max():.0f}]")
         print(f"  KL₁ range: [{kl_map[:,:,0][valid].min():.2f}, "
@@ -633,45 +590,28 @@ def merge(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Map Jacobian + generate for diverse prompts",
+        description="Map Jacobian with low-rank covariance target metric",
     )
     parser.add_argument("--model", default="Qwen/Qwen3-8B")
     parser.add_argument("--scale", type=float, default=10.0,
                         help="Fixed steering scale (overridden by --scale-frac)")
-    parser.add_argument("--scale-frac", type=float, default=None,
-                        help="Scale as fraction of source layer activation norm "
-                             "(e.g. 0.35). Overrides --scale.")
-    parser.add_argument("--prompts", nargs="+", default=None,
-                        help="Filter prompts by ID (e.g. --prompts refusal code)")
+    parser.add_argument("--scale-frac", type=float, default=0.35,
+                        help="Scale as fraction of source layer activation norm")
+    parser.add_argument("--source-start", type=int, default=12)
+    parser.add_argument("--source-end", type=int, default=19)
     parser.add_argument("--num-vectors", type=int, default=12)
     parser.add_argument("--num-iters", type=int, default=5)
     parser.add_argument("--num-tokens", type=int, default=2)
-    parser.add_argument("--num-samples", type=int, default=3)
+    parser.add_argument("--num-samples", type=int, default=1)
     parser.add_argument("--max-new-tokens", type=int, default=300)
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--kl-threshold", type=float, default=0.5,
                         help="Only generate text for pairs with max KL >= threshold")
-    parser.add_argument("--base-prompt", default=None,
-                        help="Single prompt ID for SVD/KL (atlas). Use with --gen-prompts "
-                             "to generate with different prompts.")
-    parser.add_argument("--gen-prompts", nargs="+", default=None,
-                        help="Prompt IDs for generation (used with --base-prompt)")
-    parser.add_argument("--target-metric", default="none", choices=["none", "var", "inv"],
-                        help="Target metric: none (standard), var (upweight high-variance), "
-                             "inv (upweight low-variance). Variance computed over 16 roleplay prompts.")
     parser.add_argument("--num-gpus", type=int, default=1)
-    parser.add_argument("--output-dir", default=None,
-                        help="Output directory (default: auto-selected based on metric)")
+    parser.add_argument("--output-dir", default="results/diverse_map_tgtcov")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--merge-only", action="store_true")
     args = parser.parse_args()
-
-    # Auto-select output directory based on metric
-    if args.output_dir is None:
-        if args.target_metric == "none":
-            args.output_dir = "results/diverse_map_normscale" if args.scale_frac else "results/diverse_map"
-        else:
-            args.output_dir = f"results/diverse_map_tgt{args.target_metric}"
 
     if args.merge_only:
         merge(args)
@@ -679,34 +619,21 @@ def main():
 
     config = AutoConfig.from_pretrained(args.model)
     n = config.num_hidden_layers
-    pairs = [(s, t) for s in range(n) for t in range(s + 1, n)]
+    pairs = [(s, t) for s in range(args.source_start, args.source_end + 1)
+             for t in range(s + 1, n)]
 
-    if args.base_prompt:
-        prompt_label = f"base={args.base_prompt}, gen={args.gen_prompts}"
-        num_atlas = 1
-    else:
-        prompts = PROMPTS
-        if args.prompts:
-            prompts = [p for p in PROMPTS if p["id"] in args.prompts]
-        prompt_label = f"{len(prompts)} ({', '.join(p['id'] for p in prompts)})"
-        num_atlas = len(prompts)
-
-    print(f"Model: {args.model} ({n} layers, {len(pairs)} pairs)")
-    print(f"Prompts: {prompt_label}")
-    if args.scale_frac is not None:
-        print(f"k={args.num_vectors}, iters={args.num_iters}, "
-              f"scale_frac={args.scale_frac} (norm-scaled)")
-    else:
-        print(f"k={args.num_vectors}, iters={args.num_iters}, scale={args.scale}")
-    if args.target_metric != "none":
-        print(f"Target metric: {args.target_metric} (variance over {len(ROLEPLAY_METRIC_PROMPTS)} roleplay prompts)")
+    print(f"Model: {args.model} ({n} layers)")
+    print(f"Source layers: {args.source_start}-{args.source_end}, "
+          f"targets: all > source ({len(pairs)} pairs)")
+    print(f"Target metric: low-rank covariance (SVD of centered activations, "
+          f"{len(ROLEPLAY_METRIC_PROMPTS)} prompts)")
+    print(f"k={args.num_vectors}, iters={args.num_iters}, tokens={args.num_tokens}, "
+          f"scale_frac={args.scale_frac}")
     print(f"Generation: {args.num_samples} samples, {args.max_new_tokens} tokens, "
-          f"temp={args.temperature}")
-    gens_per = len(pairs) * args.num_vectors * args.num_samples
-    print(f"Per atlas: {len(pairs)} pairs × {args.num_vectors} vectors × "
-          f"{args.num_samples} samples = {gens_per} gens")
-    print(f"Total: {num_atlas} atlas(es) × {gens_per} = {num_atlas * gens_per} gens")
+          f"temp={args.temperature}, KL threshold={args.kl_threshold}")
+    print(f"Gen prompts: {[gp['id'] for gp in GEN_PROMPTS]}")
     print(f"GPUs: {args.num_gpus}")
+    print(f"Output: {args.output_dir}")
 
     if args.num_gpus > 1:
         mp.spawn(

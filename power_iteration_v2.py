@@ -419,6 +419,102 @@ def find_randomized_svd(
 
 
 # ---------------------------------------------------------------------------
+# Method 4: randomized_svd_batched
+# ---------------------------------------------------------------------------
+
+def find_randomized_svd_batched(
+    model, tokenizer, prompt, source_layer, target_layer,
+    num_vectors=12, num_iters=5, num_tokens=2,
+    oversampling=5, subspace_iters=2,
+):
+    """
+    Randomized SVD with batched autograd.
+
+    Combines Halko-Martinsson-Tropp (fewer forward passes) with batched
+    J^T J application (parallelized autograd). Best of both worlds.
+
+    Total forward passes: 1 + subspace_iters + 1 = 4 (default).
+    """
+    k = num_vectors
+    p = oversampling
+    q = subspace_iters
+    l = k + p  # sketch size
+
+    hidden_dim = model.config.hidden_size
+    device = next(model.parameters()).device
+    dtype = model.dtype
+    target_token_slice = slice(-num_tokens, None)
+
+    captured, steering, handles = setup_hooks(
+        model, source_layer, target_layer, batched=True,
+    )
+    fwd_count = 0
+
+    try:
+        formatted = format_chat(tokenizer, prompt)
+        inputs = tokenizer(formatted, return_tensors="pt").to(device)
+        input_ids_l = inputs["input_ids"].expand(l, -1)
+
+        def apply_jtj(V_in):
+            """Apply J^T J to all columns using batched forward pass."""
+            nonlocal fwd_count
+            cols = V_in.shape[1]
+
+            sv = torch.zeros(cols, hidden_dim, device=device, dtype=dtype, requires_grad=True)
+            steering["vec"] = sv
+
+            ids = input_ids_l[:cols]
+            model(ids)
+            fwd_count += 1
+            target = captured["target"]  # [cols, seq, H]
+
+            t_slice = target[:, target_token_slice, :]  # [cols, num_tokens, H]
+            u = torch.zeros_like(t_slice, requires_grad=True)
+
+            loss1 = (t_slice * u).sum()
+            grad = torch.autograd.grad(loss1, sv, create_graph=True, retain_graph=True)[0]
+
+            loss2 = (grad * V_in.T[:cols]).sum()
+            jvp = torch.autograd.grad(loss2, u, retain_graph=True)[0]
+
+            loss3 = (t_slice * jvp.detach()).sum()
+            new_V_T = torch.autograd.grad(loss3, sv)[0]
+
+            steering["vec"] = None
+            return new_V_T.T  # [H, cols]
+
+        # Halko-Martinsson-Tropp algorithm
+        print(f"    Randomized SVD (batched): k={k}, p={p}, q={q}, sketch size l={l}")
+
+        Omega = torch.randn(hidden_dim, l, device=device, dtype=dtype)
+        Y = apply_jtj(Omega)
+
+        for si in range(q):
+            Y = orthogonalize_qr(Y)
+            Y = apply_jtj(Y)
+            print(f"    Subspace iteration {si + 1}/{q}")
+
+        Q = orthogonalize_qr(Y)
+
+        print("    Computing Rayleigh-Ritz rotation...")
+        V, sigmas_all = rayleigh_ritz(Q, apply_jtj)
+
+        V = V[:, :k]
+        sigmas = sigmas_all[:k]
+
+        print(f"    True σ = {[f'{s:.0f}' for s in sigmas]}")
+        print(f"    Forward passes: {fwd_count}")
+
+        vectors = V.T.detach()  # [k, H]
+        return vectors, sigmas, fwd_count
+
+    finally:
+        for h in handles:
+            h.remove()
+        steering["vec"] = None
+
+
+# ---------------------------------------------------------------------------
 # Compare mode
 # ---------------------------------------------------------------------------
 
@@ -445,6 +541,11 @@ def compare_methods(
             num_vectors, num_iters, num_tokens,
             oversampling, subspace_iters,
         )),
+        ("rsvd_batched", lambda: find_randomized_svd_batched(
+            model, tokenizer, prompt, source_layer, target_layer,
+            num_vectors, num_iters, num_tokens,
+            oversampling, subspace_iters,
+        )),
     ]
 
     for name, fn in methods:
@@ -454,6 +555,7 @@ def compare_methods(
 
         torch.manual_seed(42)
         if torch.cuda.is_available():
+            torch.cuda.empty_cache()
             torch.cuda.synchronize()
         t0 = time.time()
 
@@ -523,7 +625,7 @@ def main():
     )
     parser.add_argument(
         "--method", default="graph_reuse",
-        choices=["graph_reuse", "batched", "randomized_svd", "compare"],
+        choices=["graph_reuse", "batched", "randomized_svd", "rsvd_batched", "compare"],
     )
     parser.add_argument("--model", default="Qwen/Qwen3-0.6B")
     parser.add_argument("--source-layer", type=int, default=3)
@@ -570,6 +672,7 @@ def main():
         "graph_reuse": find_graph_reuse,
         "batched": find_batched,
         "randomized_svd": find_randomized_svd,
+        "rsvd_batched": find_randomized_svd_batched,
     }[args.method]
 
     kwargs = dict(
@@ -578,7 +681,7 @@ def main():
         num_vectors=args.num_vectors, num_iters=args.num_iters,
         num_tokens=args.num_tokens,
     )
-    if args.method == "randomized_svd":
+    if args.method in ("randomized_svd", "rsvd_batched"):
         kwargs["oversampling"] = args.oversampling
         kwargs["subspace_iters"] = args.subspace_iters
 

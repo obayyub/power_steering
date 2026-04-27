@@ -206,3 +206,16 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 .env
+
+# Map generation per-pair/per-source JSON files (large, regenerable from raw data)
+results/jacobian_gen/pairs/
+results/jacobian_gen/generations/
+results/diverse_gen/generations/
+results/diverse_map/*/pairs/
+results/diverse_map_normscale/*/pairs/
+dashboard/diverse_pairs/
+dashboard/normscale_pairs/
+dashboard/tgtvar_pairs/
+dashboard/tgtinv_pairs/
+results/diverse_map_tgtvar/*/pairs/
+results/diverse_map_tgtinv/*/pairs/
