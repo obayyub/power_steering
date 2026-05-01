@@ -99,6 +99,10 @@ def cmd_eval(args):
 
     print(f"Loading {args.model}...")
     tokenizer = AutoTokenizer.from_pretrained(args.model)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.padding_side = "left"
+
     model = AutoModelForCausalLM.from_pretrained(
         args.model, torch_dtype=torch.bfloat16, device_map="auto",
     )
@@ -124,7 +128,10 @@ def cmd_eval(args):
     try:
         for ds_name, ds in all_datasets.items():
             print(f"\nEvaluating: {ds_name}")
-            results = evaluator.evaluate_dataset(ds, ds_name, vectors, scales, args.max_questions)
+            results = evaluator.evaluate_dataset(
+                ds, ds_name, vectors, scales, args.max_questions,
+                batch_size=args.batch_size,
+            )
             all_results.extend(results)
             print_summary(results, ds_name)
     finally:
@@ -249,6 +256,7 @@ def main():
     p.add_argument("--source-layer", type=int, default=None)
     p.add_argument("--scales", default="-50,-25,-10,-5,0,5,10,25,50")
     p.add_argument("--max-questions", type=int, default=100)
+    p.add_argument("--batch-size", type=int, default=16, help="Questions per forward pass")
     p.add_argument("--data-path", default="data/corrigibility_eval.json")
     p.add_argument("--dataset-filter", default=None)
     p.add_argument("--output-dir", default="results")
