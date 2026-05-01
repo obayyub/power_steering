@@ -75,38 +75,51 @@ def compute_choice_percentages(
 # ── Violin plot ─────────────────────────────────────────────────────────────
 
 
+def _prepare_df(results, dataset_name=None):
+    """Filter results and add vector label column.
+
+    If dataset_name is None, use all results (combined across datasets).
+    """
+    import pandas as pd
+
+    if dataset_name:
+        filtered = [r for r in results if r["dataset"] == dataset_name]
+    else:
+        filtered = list(results)
+    if not filtered:
+        return None
+
+    df = pd.DataFrame(filtered)
+    df["vector"] = df["vector_type"] + "_v" + df["vector_idx"].astype(str)
+    return df
+
+
 def violin_logit_diff(
     results: list[dict],
-    dataset_name: str,
+    dataset_name: str | None = None,
     title: str | None = None,
     ax: plt.Axes | None = None,
     figsize: tuple[float, float] = (12, 5),
 ) -> plt.Figure | None:
-    """Violin plot of survival logit diff by scale, colored by vector type.
+    """Violin plot of survival logit diff by scale, colored by vector.
 
     Args:
         results: List of result dicts (from eval JSON "results" field).
-        dataset_name: Filter to this dataset.
-        title: Plot title (defaults to dataset_name).
+        dataset_name: Filter to this dataset. None = combine all datasets.
+        title: Plot title.
         ax: Existing axes to draw on. Creates a new figure if None.
         figsize: Figure size when creating new figure.
 
     Returns:
         Figure if a new one was created, else None.
     """
-    filtered = [r for r in results if r["dataset"] == dataset_name]
-    if not filtered:
+    df = _prepare_df(results, dataset_name)
+    if df is None:
         return None
 
     fig = None
     if ax is None:
         fig, ax = plt.subplots(figsize=figsize)
-
-    import pandas as pd
-    df = pd.DataFrame(filtered)
-
-    # Label each vector individually: e.g. "steering_v0", "steering_v2"
-    df["vector"] = df["vector_type"] + "_v" + df["vector_idx"].astype(str)
 
     sns.violinplot(
         data=df, x="scale", y="survival_logit_diff",
@@ -116,7 +129,7 @@ def violin_logit_diff(
     ax.axhline(y=0, color="black", linestyle="--", alpha=0.5)
     ax.set_xlabel("Steering scale")
     ax.set_ylabel("Survival logit diff")
-    ax.set_title(title or dataset_name)
+    ax.set_title(title or dataset_name or "All datasets combined")
     ax.legend(title="Vector", loc="upper left")
 
     if fig:
@@ -126,7 +139,7 @@ def violin_logit_diff(
 
 def violin_per_vector(
     results: list[dict],
-    dataset_name: str,
+    dataset_name: str | None = None,
     title: str | None = None,
     cols: int = 3,
     figsize_per: tuple[float, float] = (10, 4),
@@ -135,21 +148,17 @@ def violin_per_vector(
 
     Args:
         results: List of result dicts (from eval JSON "results" field).
-        dataset_name: Filter to this dataset.
-        title: Overall suptitle (defaults to dataset_name).
+        dataset_name: Filter to this dataset. None = combine all datasets.
+        title: Overall suptitle.
         cols: Number of columns in the subplot grid.
         figsize_per: (width, height) per subplot.
 
     Returns:
         Figure, or None if no matching results.
     """
-    filtered = [r for r in results if r["dataset"] == dataset_name]
-    if not filtered:
+    df = _prepare_df(results, dataset_name)
+    if df is None:
         return None
-
-    import pandas as pd
-    df = pd.DataFrame(filtered)
-    df["vector"] = df["vector_type"] + "_v" + df["vector_idx"].astype(str)
 
     vectors = sorted(df["vector"].unique())
     n = len(vectors)
@@ -178,7 +187,7 @@ def violin_per_vector(
     for idx in range(n, rows * cols):
         axes[idx // cols][idx % cols].set_visible(False)
 
-    fig.suptitle(title or dataset_name, fontsize=14)
+    fig.suptitle(title or dataset_name or "All datasets combined", fontsize=14)
     fig.tight_layout()
     return fig
 

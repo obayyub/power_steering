@@ -224,8 +224,17 @@ def cmd_plot(args):
         # Per-vector breakout
         fig = violin_per_vector(results, ds)
         if fig:
-            out = f"results/{ds}_violin_per_vector.png"
-            save_plot(fig, out)
+            save_plot(fig, f"results/{ds}_violin_per_vector.png")
+
+    # Combined across all datasets
+    if len(datasets) > 1:
+        fig = violin_logit_diff(results)
+        if fig:
+            save_plot(fig, "results/combined_violin.png")
+
+        fig = violin_per_vector(results)
+        if fig:
+            save_plot(fig, "results/combined_violin_per_vector.png")
 
 
 def main():

@@ -195,6 +195,16 @@ def run_pipeline(config_path: str):
         if fig:
             save_plot(fig, output_dir / f"{ds}_violin_per_vector.png")
 
+    # Combined across all datasets
+    if len(ds_names) > 1:
+        fig = violin_logit_diff(result_dicts)
+        if fig:
+            save_plot(fig, output_dir / "combined_violin.png")
+
+        fig = violin_per_vector(result_dicts)
+        if fig:
+            save_plot(fig, output_dir / "combined_violin_per_vector.png")
+
     print(f"\nPipeline complete in {format_time(time.time() - t_total)}")
     print(f"All outputs in: {output_dir}/")
 
