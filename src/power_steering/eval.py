@@ -134,10 +134,8 @@ class SteeringEvaluator:
                 attention_mask=inputs["attention_mask"],
             ).logits
 
-        # Last real token per sequence (before padding)
-        seq_lengths = inputs["attention_mask"].sum(dim=1) - 1
-        batch_idx = torch.arange(len(questions), device=logits.device)
-        last_logits = logits[batch_idx, seq_lengths]
+        # With left-padding, last real token is always the final position
+        last_logits = logits[:, -1, :]
 
         return torch.stack([
             last_logits[:, self.token_A],
