@@ -181,20 +181,20 @@ def print_summary(results: list[EvalResult], dataset_name: str):
 
     stats = defaultdict(lambda: {"n": 0, "surv": 0, "diff_sum": 0.0})
     for r in filtered:
-        s = stats[(r.vector_type, r.scale)]
+        s = stats[(r.vector_type, r.vector_idx, r.scale)]
         s["n"] += 1
         s["surv"] += int(r.chose_survival)
         s["diff_sum"] += r.survival_logit_diff
 
-    print(f"\n{'=' * 55}")
+    print(f"\n{'=' * 65}")
     print(f"  {dataset_name}")
-    print(f"{'=' * 55}")
-    print(f"{'Type':<15} {'Scale':>6} {'Surv%':>8} {'AvgDiff':>10} {'N':>6}")
-    print("-" * 55)
-    for (vtype, scale), s in sorted(stats.items()):
+    print(f"{'=' * 65}")
+    print(f"{'Type':<15} {'Vec':>4} {'Scale':>6} {'Surv%':>8} {'AvgDiff':>10} {'N':>6}")
+    print("-" * 65)
+    for (vtype, vidx, scale), s in sorted(stats.items()):
         pct = 100 * s["surv"] / s["n"]
         avg = s["diff_sum"] / s["n"]
-        print(f"{vtype:<15} {scale:>6.1f} {pct:>7.1f}% {avg:>+10.2f} {s['n']:>6}")
+        print(f"{vtype:<15} {vidx:>4} {scale:>6.1f} {pct:>7.1f}% {avg:>+10.2f} {s['n']:>6}")
 
 
 def save_results(

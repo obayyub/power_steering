@@ -92,8 +92,14 @@ def save_vectors(
 
 # ── Dataset loading and sampling ────────────────────────────────────────────
 
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+
+
 def load_dataset(path: str | Path) -> dict[str, list[dict]]:
     """Load the corrigibility evaluation dataset."""
+    path = Path(path)
+    if not path.is_absolute() and not path.exists():
+        path = _PROJECT_ROOT / path
     with open(path) as f:
         return json.load(f)
 

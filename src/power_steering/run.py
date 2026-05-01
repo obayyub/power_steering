@@ -26,6 +26,7 @@ Usage:
 
 import argparse
 import sys
+import time
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -38,6 +39,7 @@ from power_steering.utils import (
 
 def cmd_find_vectors(args):
     """Find steering vectors with PI-RR or MELBO."""
+    t_start = time.time()
     print(f"Loading {args.model}...")
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     model = AutoModelForCausalLM.from_pretrained(
@@ -88,6 +90,7 @@ def cmd_find_vectors(args):
     metadata["category"] = args.category
     path = save_vectors(vectors, args.output_dir, method=args.method, model_name=args.model, metadata=metadata)
     print(f"Saved {vectors.shape[0]} vectors to {path}")
+    print(f"Total time: {format_time(time.time() - t_start)}")
 
 
 def cmd_eval(args):
@@ -197,7 +200,7 @@ def cmd_generate(args):
 def cmd_plot(args):
     """Plot evaluation or generation results."""
     from power_steering.plot import (
-        load_eval_results, violin_logit_diff, save_plot,
+        load_eval_results, violin_logit_diff, violin_per_vector, save_plot,
     )
 
     data = load_eval_results(args.results)
@@ -205,9 +208,16 @@ def cmd_plot(args):
     datasets = sorted({r["dataset"] for r in results})
 
     for ds in datasets:
+        # Combined violin (all vectors overlaid)
         fig = violin_logit_diff(results, ds)
         if fig:
             out = args.output or f"results/{ds}_violin.png"
+            save_plot(fig, out)
+
+        # Per-vector breakout
+        fig = violin_per_vector(results, ds)
+        if fig:
+            out = f"results/{ds}_violin_per_vector.png"
             save_plot(fig, out)
 
 

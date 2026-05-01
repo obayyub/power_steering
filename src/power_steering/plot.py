@@ -105,19 +105,81 @@ def violin_logit_diff(
     import pandas as pd
     df = pd.DataFrame(filtered)
 
+    # Label each vector individually: e.g. "steering_v0", "steering_v2"
+    df["vector"] = df["vector_type"] + "_v" + df["vector_idx"].astype(str)
+
     sns.violinplot(
         data=df, x="scale", y="survival_logit_diff",
-        hue="vector_type", ax=ax, inner="quartile", cut=0,
+        hue="vector", ax=ax, inner="quartile", cut=0,
     )
 
     ax.axhline(y=0, color="black", linestyle="--", alpha=0.5)
     ax.set_xlabel("Steering scale")
     ax.set_ylabel("Survival logit diff")
     ax.set_title(title or dataset_name)
-    ax.legend(title="Method", loc="upper left")
+    ax.legend(title="Vector", loc="upper left")
 
     if fig:
         fig.tight_layout()
+    return fig
+
+
+def violin_per_vector(
+    results: list[dict],
+    dataset_name: str,
+    title: str | None = None,
+    cols: int = 3,
+    figsize_per: tuple[float, float] = (10, 4),
+) -> plt.Figure | None:
+    """One subplot per steering vector, each showing a violin of logit diff by scale.
+
+    Args:
+        results: List of result dicts (from eval JSON "results" field).
+        dataset_name: Filter to this dataset.
+        title: Overall suptitle (defaults to dataset_name).
+        cols: Number of columns in the subplot grid.
+        figsize_per: (width, height) per subplot.
+
+    Returns:
+        Figure, or None if no matching results.
+    """
+    filtered = [r for r in results if r["dataset"] == dataset_name]
+    if not filtered:
+        return None
+
+    import pandas as pd
+    df = pd.DataFrame(filtered)
+    df["vector"] = df["vector_type"] + "_v" + df["vector_idx"].astype(str)
+
+    vectors = sorted(df["vector"].unique())
+    n = len(vectors)
+    rows = (n + cols - 1) // cols
+
+    fig, axes = plt.subplots(
+        rows, cols,
+        figsize=(figsize_per[0] * cols, figsize_per[1] * rows),
+        squeeze=False,
+    )
+
+    for idx, vec in enumerate(vectors):
+        ax = axes[idx // cols][idx % cols]
+        vec_df = df[df["vector"] == vec]
+
+        sns.violinplot(
+            data=vec_df, x="scale", y="survival_logit_diff",
+            ax=ax, inner="quartile", cut=0, color="steelblue",
+        )
+        ax.axhline(y=0, color="black", linestyle="--", alpha=0.5)
+        ax.set_title(vec)
+        ax.set_xlabel("Scale")
+        ax.set_ylabel("Surv. logit diff")
+
+    # Hide unused subplots
+    for idx in range(n, rows * cols):
+        axes[idx // cols][idx % cols].set_visible(False)
+
+    fig.suptitle(title or dataset_name, fontsize=14)
+    fig.tight_layout()
     return fig
 
 

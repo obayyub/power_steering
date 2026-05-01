@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import functools
+import time
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -11,7 +12,7 @@ import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
 
-from power_steering.utils import format_chat, orthogonalize
+from power_steering.utils import format_chat, format_time, orthogonalize
 
 
 # ============================================================================
@@ -118,13 +119,23 @@ def find_pi_vectors(
         # Random orthonormal starting basis
         V = orthogonalize(torch.randn(hidden_dim, num_vectors, device=device, dtype=dtype))
 
+        t0 = time.time()
         for i in range(num_iters):
+            iter_start = time.time()
             new_V = apply_jtj(V)
             V = orthogonalize(new_V)
+            iter_elapsed = time.time() - iter_start
+            total_elapsed = time.time() - t0
+            # +1 for the Rayleigh-Ritz pass at the end
+            remaining = iter_elapsed * (num_iters - i - 1 + 1)
 
-            if i % 5 == 0 or i == num_iters - 1:
-                approx_sigmas = [new_V[:, j].norm().item() for j in range(V.shape[1])]
-                print(f"  PI iter {i}: σ ≈ {[f'{s:.0f}' for s in approx_sigmas]}")
+            approx_sigmas = [new_V[:, j].norm().item() for j in range(V.shape[1])]
+            print(
+                f"  PI iter {i}/{num_iters-1}: σ_top={approx_sigmas[0]:.0f}"
+                f"  [{format_time(iter_elapsed)}/iter,"
+                f" elapsed {format_time(total_elapsed)},"
+                f" ~{format_time(remaining)} left]"
+            )
 
         # Rayleigh-Ritz correction
         print("  Computing Rayleigh-Ritz rotation...")
@@ -252,8 +263,10 @@ def find_melbo_vectors(
         U = learned[:num_learned].t() / config.normalization
         return vec - U @ (U.t() @ vec)
 
+    melbo_t0 = time.time()
     iterator = tqdm(range(num_vectors), desc="MELBO") if verbose else range(num_vectors)
     for i in iterator:
+        vec_start = time.time()
         # Initialize random direction, orthogonal to previous
         with torch.no_grad():
             init = torch.randn(hidden_dim, device=model.device, dtype=dtype)
@@ -301,7 +314,15 @@ def find_melbo_vectors(
             losses.append(loss.item())
 
         if verbose:
-            print(f"  Vector {i}: loss {losses[0]:.1f} -> {losses[-1]:.1f}")
+            vec_elapsed = time.time() - vec_start
+            total_elapsed = time.time() - melbo_t0
+            remaining = vec_elapsed * (num_vectors - i - 1)
+            print(
+                f"  Vector {i}/{num_vectors-1}: loss {losses[0]:.1f} -> {losses[-1]:.1f}"
+                f"  [{format_time(vec_elapsed)}/vec,"
+                f" elapsed {format_time(total_elapsed)},"
+                f" ~{format_time(remaining)} left]"
+            )
 
         with torch.no_grad():
             learned[i] = bias.data.clone()
