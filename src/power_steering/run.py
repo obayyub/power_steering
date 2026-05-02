@@ -32,9 +32,36 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from power_steering.utils import (
-    get_layer_config, load_dataset, load_vectors, save_vectors,
-    sample_balanced, format_time,
+    get_layer_config, get_caa_layer, load_dataset, load_vectors,
+    load_vector_metadata, save_vectors, sample_balanced, format_time,
 )
+
+
+def _resolve_injection_layer(args, args_layer_attr: str, model_name: str, vectors_path: str | None) -> int:
+    """Pick the injection layer: explicit CLI flag > vector metadata > per-model default."""
+    cli_value = getattr(args, args_layer_attr, None)
+    if cli_value is not None:
+        return cli_value
+    if vectors_path:
+        meta = load_vector_metadata(vectors_path)
+        if "source_layer" in meta:
+            return int(meta["source_layer"])
+        if "layer" in meta:
+            return int(meta["layer"])
+    src, _ = get_layer_config(model_name)
+    return src
+
+
+def _resolve_capture_site(args, vectors_path: str | None) -> str:
+    """Pick the capture site: explicit CLI flag > vector metadata > 'down_proj'."""
+    cli_value = getattr(args, "capture_site", None)
+    if cli_value is not None:
+        return cli_value
+    if vectors_path:
+        meta = load_vector_metadata(vectors_path)
+        if meta.get("capture_site"):
+            return meta["capture_site"]
+    return "down_proj"
 
 
 def cmd_find_vectors(args):
@@ -69,6 +96,7 @@ def cmd_find_vectors(args):
             target_layer=target_layer,
             num_vectors=args.num_vectors,
             num_iters=args.num_iters,
+            seed=args.seed,
         )
         metadata = {"sigmas": sigmas, "source_layer": source_layer, "target_layer": target_layer}
     else:
@@ -80,7 +108,9 @@ def cmd_find_vectors(args):
             normalization=args.normalization,
             power=args.power,
         )
-        vectors = find_melbo_vectors(model, tokenizer, prompt, config, args.num_vectors)
+        vectors = find_melbo_vectors(
+            model, tokenizer, prompt, config, args.num_vectors, seed=args.seed,
+        )
         metadata = {
             "source_layer": source_layer, "target_layer": target_layer,
             "normalization": args.normalization,
@@ -88,8 +118,67 @@ def cmd_find_vectors(args):
 
     metadata["prompt"] = prompt
     metadata["category"] = args.category
+    metadata["seed"] = args.seed
+    metadata["capture_site"] = "down_proj"
     path = save_vectors(vectors, args.output_dir, method=args.method, model_name=args.model, metadata=metadata)
     print(f"Saved {vectors.shape[0]} vectors to {path}")
+    print(f"Total time: {format_time(time.time() - t_start)}")
+
+
+def cmd_find_caa(args):
+    """Compute a CAA steering vector from a balanced training split."""
+    from power_steering.find_vectors import find_caa_vector
+
+    t_start = time.time()
+    print(f"Loading {args.model}...")
+    tokenizer = AutoTokenizer.from_pretrained(args.model)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.padding_side = "left"
+
+    model = AutoModelForCausalLM.from_pretrained(
+        args.model, torch_dtype=torch.bfloat16, device_map="auto",
+    )
+
+    num_layers = len(model.model.layers)
+    layer = args.layer if args.layer is not None else get_caa_layer(model)
+    print(f"Layers: {num_layers}, CAA layer: {layer} (60% rule unless --layer overridden)")
+
+    data = load_dataset(args.data_path)
+    if args.category not in data:
+        raise SystemExit(f"Category '{args.category}' not found in {args.data_path}. "
+                         f"Available: {list(data)}")
+    pool = data[args.category]
+
+    if args.exclude_test:
+        test = sample_balanced(pool, args.num_test, seed=args.test_seed)
+        test_qs = {q["question"] for q in test}
+        pool = [q for q in pool if q["question"] not in test_qs]
+        print(f"Excluded {len(test)} test questions (seed={args.test_seed}); "
+              f"train pool: {len(pool)}")
+
+    train_prompts = sample_balanced(pool, args.num_train, seed=args.train_seed)
+    print(f"CAA training set: {len(train_prompts)} prompts (balanced A/B, seed={args.train_seed})")
+
+    print(f"\nComputing CAA at layer {layer} (capture_site={args.capture_site})...")
+    caa = find_caa_vector(
+        model, tokenizer, train_prompts, layer,
+        capture_site=args.capture_site,
+    )
+
+    metadata = {
+        "category": args.category,
+        "layer": layer,
+        "source_layer": layer,  # alias so eval/generate auto-pick this layer
+        "capture_site": args.capture_site,
+        "num_train": len(train_prompts),
+        "train_seed": args.train_seed,
+        "test_seed": args.test_seed if args.exclude_test else None,
+        "num_test_excluded": args.num_test if args.exclude_test else 0,
+        "position": "letter_token_minus_2",
+    }
+    path = save_vectors(caa, args.output_dir, method="caa", model_name=args.model, metadata=metadata)
+    print(f"\nSaved CAA vector to {path}")
     print(f"Total time: {format_time(time.time() - t_start)}")
 
 
@@ -107,8 +196,9 @@ def cmd_eval(args):
         args.model, torch_dtype=torch.bfloat16, device_map="auto",
     )
 
-    src, _ = get_layer_config(args.model)
-    source_layer = args.source_layer or src
+    source_layer = _resolve_injection_layer(args, "source_layer", args.model, args.vectors)
+    capture_site = _resolve_capture_site(args, args.vectors)
+    print(f"Injection layer: {source_layer}, capture_site: {capture_site}")
 
     scales = [float(s) for s in args.scales.split(",")]
 
@@ -123,14 +213,14 @@ def cmd_eval(args):
     if args.dataset_filter:
         all_datasets = {args.dataset_filter: all_datasets[args.dataset_filter]}
 
-    evaluator = SteeringEvaluator(model, tokenizer, source_layer)
+    evaluator = SteeringEvaluator(model, tokenizer, source_layer, capture_site=capture_site)
     all_results = []
     try:
         for ds_name, ds in all_datasets.items():
             print(f"\nEvaluating: {ds_name}")
             results = evaluator.evaluate_dataset(
                 ds, ds_name, vectors, scales, args.max_questions,
-                batch_size=args.batch_size,
+                batch_size=args.batch_size, sample_seed=args.sample_seed,
             )
             all_results.extend(results)
             print_summary(results, ds_name)
@@ -154,8 +244,9 @@ def cmd_generate(args):
         args.model, torch_dtype=torch.bfloat16, device_map="auto",
     )
 
-    src, _ = get_layer_config(args.model)
-    source_layer = args.source_layer or src
+    source_layer = _resolve_injection_layer(args, "source_layer", args.model, args.vectors)
+    capture_site = _resolve_capture_site(args, args.vectors)
+    print(f"Injection layer: {source_layer}, capture_site: {capture_site}")
     scales = [float(s) for s in args.scales.split(",")]
 
     # Load vector
@@ -170,16 +261,22 @@ def cmd_generate(args):
     for ds_name in ["survival-instinct", "corrigible-neutral-HHH"]:
         if ds_name not in data:
             continue
-        sampled = sample_balanced(data[ds_name], args.num_prompts)
+        sampled = sample_balanced(data[ds_name], args.num_prompts, seed=args.sample_seed)
         for i, q in enumerate(sampled):
             prompts.append({
                 "dataset": ds_name, "prompt_idx": i, "prompt": q["question"],
-                "corrigible_letter": q["corrigible_letter"],
-                "survival_letter": q["survival_letter"],
+                "matching_letter": q["matching_letter"],
+                "not_matching_letter": q["not_matching_letter"],
+                "behavior_name": q.get("behavior_name", ds_name),
             })
 
-    generator = SteeredGenerator(model, tokenizer, source_layer)
+    generator = SteeredGenerator(model, tokenizer, source_layer, capture_site=capture_site)
     results = []
+
+    # Seed once at the start of the sweep so the whole run is reproducible
+    # but each (scale, prompt) call advances the RNG (gets a unique sample).
+    from power_steering.generate import _seed_torch
+    _seed_torch(args.seed)
 
     for scale in scales:
         generator.set_steering(vec, scale)
@@ -252,11 +349,34 @@ def main():
     p.add_argument("--num-steps", type=int, default=300, help="MELBO steps")
     p.add_argument("--normalization", type=float, default=1.0, help="MELBO sphere radius")
     p.add_argument("--power", type=float, default=2.0, help="MELBO Lp power")
-    p.add_argument("--data-path", default="data/corrigibility_eval.json")
+    p.add_argument("--data-path", default="data/anthropic_evals.json")
     p.add_argument("--category", default="corrigible-neutral-HHH")
     p.add_argument("--prompt", default=None)
     p.add_argument("--output-dir", default="vectors")
+    p.add_argument("--seed", type=int, default=0,
+                   help="RNG seed for the random init (PI: starting basis; MELBO: per-vector init)")
     p.set_defaults(func=cmd_find_vectors)
+
+    # ── find-caa ──
+    p = sub.add_parser("find-caa", help="Compute a CAA steering vector")
+    p.add_argument("--model", default="Qwen/Qwen3-14B")
+    p.add_argument("--layer", type=int, default=None,
+                   help="Capture/inject layer (default: round(0.6 * num_layers))")
+    p.add_argument("--data-path", default="data/anthropic_evals.json")
+    p.add_argument("--category", default="corrigible-neutral-HHH",
+                   help="Dataset category to train CAA on")
+    p.add_argument("--num-train", type=int, default=150)
+    p.add_argument("--train-seed", type=int, default=123)
+    p.add_argument("--exclude-test", action="store_true",
+                   help="Exclude --num-test prompts (sampled with --test-seed) from the training pool")
+    p.add_argument("--num-test", type=int, default=60,
+                   help="Number of test prompts to hold out (only used with --exclude-test)")
+    p.add_argument("--test-seed", type=int, default=42,
+                   help="Seed used to identify test prompts to exclude (should match your eval --sample-seed)")
+    p.add_argument("--capture-site", choices=["layer_output", "down_proj"], default="layer_output",
+                   help="Where to capture the activation contrast (default: layer_output, the standard CAA recipe)")
+    p.add_argument("--output-dir", default="vectors")
+    p.set_defaults(func=cmd_find_caa)
 
     # ── eval ──
     p = sub.add_parser("eval", help="Evaluate vectors via logit diff")
@@ -266,9 +386,13 @@ def main():
     p.add_argument("--scales", default="-50,-25,-10,-5,0,5,10,25,50")
     p.add_argument("--max-questions", type=int, default=100)
     p.add_argument("--batch-size", type=int, default=16, help="Questions per forward pass")
-    p.add_argument("--data-path", default="data/corrigibility_eval.json")
+    p.add_argument("--data-path", default="data/anthropic_evals.json")
     p.add_argument("--dataset-filter", default=None)
     p.add_argument("--output-dir", default="results")
+    p.add_argument("--sample-seed", type=int, default=42,
+                   help="RNG seed for the balanced question sample")
+    p.add_argument("--capture-site", choices=["layer_output", "down_proj"], default=None,
+                   help="Override the capture/inject site (default: read from vector metadata)")
     p.set_defaults(func=cmd_eval)
 
     # ── generate ──
@@ -281,8 +405,14 @@ def main():
     p.add_argument("--num-prompts", type=int, default=20)
     p.add_argument("--max-tokens", type=int, default=200)
     p.add_argument("--temperature", type=float, default=0.7)
-    p.add_argument("--data-path", default="data/corrigibility_eval.json")
+    p.add_argument("--data-path", default="data/anthropic_evals.json")
     p.add_argument("--output-dir", default="results/generations")
+    p.add_argument("--seed", type=int, default=0,
+                   help="RNG seed reset once before sampling starts")
+    p.add_argument("--sample-seed", type=int, default=42,
+                   help="RNG seed for the balanced question sample")
+    p.add_argument("--capture-site", choices=["layer_output", "down_proj"], default=None,
+                   help="Override the capture/inject site (default: read from vector metadata)")
     p.set_defaults(func=cmd_generate)
 
     # ── plot ──

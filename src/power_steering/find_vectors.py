@@ -12,7 +12,10 @@ import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
 
-from power_steering.utils import format_chat, format_time, orthogonalize
+from power_steering.utils import (
+    format_chat, format_time, orthogonalize,
+    get_steering_module, take_hidden_state,
+)
 
 
 # ============================================================================
@@ -29,6 +32,7 @@ def find_pi_vectors(
     num_vectors: int = 12,
     num_iters: int = 15,
     num_tokens: int = 2,
+    seed: int = 0,
 ) -> tuple[torch.Tensor, list[float]]:
     """Find top-k right singular vectors of the Jacobian via block power iteration.
 
@@ -48,6 +52,7 @@ def find_pi_vectors(
         num_vectors: How many singular vectors to find.
         num_iters: Power iteration steps.
         num_tokens: Number of final tokens to aggregate over.
+        seed: RNG seed for the random orthonormal starting basis.
 
     Returns:
         (vectors, sigmas) — vectors is [num_vectors, hidden_dim], unit-normed.
@@ -116,8 +121,11 @@ def find_pi_vectors(
             steering_vec = None
             return torch.stack(new_cols, dim=1)
 
-        # Random orthonormal starting basis
-        V = orthogonalize(torch.randn(hidden_dim, num_vectors, device=device, dtype=dtype))
+        # Random orthonormal starting basis (seeded for reproducibility)
+        gen = torch.Generator(device=device).manual_seed(seed)
+        V = orthogonalize(torch.randn(
+            hidden_dim, num_vectors, device=device, dtype=dtype, generator=gen,
+        ))
 
         t0 = time.time()
         for i in range(num_iters):
@@ -204,6 +212,7 @@ def find_melbo_vectors(
     config: MELBOConfig | None = None,
     num_vectors: int = 12,
     verbose: bool = True,
+    seed: int = 0,
 ) -> torch.Tensor:
     """Discover steering vectors via MELBO optimization.
 
@@ -218,6 +227,7 @@ def find_melbo_vectors(
         config: MELBO hyperparameters. Uses defaults if None.
         num_vectors: Number of orthogonal vectors to discover.
         verbose: Show progress bars and loss.
+        seed: RNG seed for the per-vector random initialisations.
 
     Returns:
         Tensor of shape [num_vectors, hidden_dim].
@@ -264,12 +274,22 @@ def find_melbo_vectors(
         return vec - U @ (U.t() @ vec)
 
     melbo_t0 = time.time()
-    iterator = tqdm(range(num_vectors), desc="MELBO") if verbose else range(num_vectors)
+    gen = torch.Generator(device=model.device).manual_seed(seed)
+    # When stdout is redirected to a file (e.g. pipeline.log), tqdm's \r-based
+    # progress bar produces garbage. Auto-disable in that case — we already
+    # print a clean per-vector summary line below, so progress stays visible.
+    import sys as _sys
+    iterator = (
+        tqdm(range(num_vectors), desc="MELBO", disable=not _sys.stdout.isatty())
+        if verbose else range(num_vectors)
+    )
     for i in iterator:
         vec_start = time.time()
         # Initialize random direction, orthogonal to previous
         with torch.no_grad():
-            init = torch.randn(hidden_dim, device=model.device, dtype=dtype)
+            init = torch.randn(
+                hidden_dim, device=model.device, dtype=dtype, generator=gen,
+            )
             if config.orthogonal:
                 init = project_orthogonal(init)
             bias.data = nn.functional.normalize(init, dim=0) * config.normalization
@@ -332,3 +352,98 @@ def find_melbo_vectors(
     down_proj.bias = None
 
     return learned
+
+
+# ============================================================================
+# CAA: Contrastive Activation Addition
+# ============================================================================
+
+
+def find_caa_vector(
+    model,
+    tokenizer,
+    train_prompts: list[dict],
+    layer: int,
+    capture_site: str = "layer_output",
+    log_every: int = 25,
+) -> torch.Tensor:
+    """Compute a CAA steering vector at the given layer.
+
+    For each training prompt, captures the residual stream at the answer
+    letter token (position -2 of `[..., (A, )]`) under the matching answer
+    suffix and under the not-matching answer suffix. Returns:
+
+        mean(matching_act - not_matching_act)
+
+    Adding this with positive scale nudges the model toward the matching
+    (HHH-aligned) answer, parallel to the `matching_logit_diff` convention
+    used elsewhere.
+
+    The default capture site is the layer's residual-stream output
+    (`capture_site="layer_output"`), the standard CAA recipe — the
+    captured difference encodes everything that diverged between the two
+    answer-conditioned trajectories up to layer L. The alternative
+    `"down_proj"` captures only the layer-L MLP's incremental contribution
+    and produces a much weaker steering direction; kept available mainly
+    for cross-method comparison with PI/MELBO at their injection site.
+
+    Args:
+        model: HuggingFace causal LM.
+        tokenizer: Matching tokenizer.
+        train_prompts: List of dicts with `question`,
+            `matching_answer_full` and `not_matching_answer_full` fields.
+        layer: Transformer layer to capture from (and to inject at later).
+        capture_site: "layer_output" (default, standard CAA) or "down_proj".
+        log_every: Print progress every N prompts.
+
+    Returns:
+        Tensor of shape [1, hidden_dim] — unsqueezed so downstream code
+        that expects [num_vectors, hidden_dim] works unchanged.
+    """
+    device = next(model.parameters()).device
+    target_module = get_steering_module(model, layer, capture_site)
+
+    captured: dict = {}
+
+    def hook(m, i, o):
+        captured["act"] = take_hidden_state(o)
+
+    handle = target_module.register_forward_hook(hook)
+    differences: list[torch.Tensor] = []
+
+    try:
+        for i, q in enumerate(train_prompts):
+            question = q["question"]
+            match_answer = q["matching_answer_full"]
+            not_match_answer = q["not_matching_answer_full"]
+
+            # Matching activation at letter token (position -2 of "[..., (A, )]")
+            match_text = format_chat(tokenizer, question, assistant_start=match_answer)
+            inputs = tokenizer(match_text, return_tensors="pt").to(device)
+            with torch.no_grad():
+                model(inputs["input_ids"])
+            match_act = captured["act"][:, -2, :].clone()
+
+            # Not-matching activation
+            not_match_text = format_chat(tokenizer, question, assistant_start=not_match_answer)
+            inputs = tokenizer(not_match_text, return_tensors="pt").to(device)
+            with torch.no_grad():
+                model(inputs["input_ids"])
+            not_match_act = captured["act"][:, -2, :].clone()
+
+            differences.append((match_act - not_match_act).squeeze(0))
+
+            if (i + 1) % log_every == 0:
+                print(f"  CAA: {i+1}/{len(train_prompts)} prompts processed")
+    finally:
+        handle.remove()
+
+    diffs = torch.stack(differences)
+    caa_vector = diffs.mean(dim=0)
+    norms = diffs.norm(dim=-1)
+    print(f"  CAA capture_site={capture_site}, layer={layer}")
+    print(f"  CAA vector norm: {caa_vector.norm():.2f}")
+    print(f"  Per-prompt diff norms: mean={norms.mean():.2f}, std={norms.std():.2f}")
+    print(f"  Coherence ratio (mean_norm / per_prompt_mean): {caa_vector.norm() / norms.mean():.3f}")
+
+    return caa_vector.unsqueeze(0)

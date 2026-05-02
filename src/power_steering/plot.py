@@ -29,7 +29,7 @@ def load_generation_results(path: str | Path) -> dict:
 def aggregate_stats(
     records: list[dict],
     group_keys: tuple[str, ...] = ("vector_type", "scale"),
-    metric_key: str = "survival_logit_diff",
+    metric_key: str = "matching_logit_diff",
 ) -> dict[tuple, dict]:
     """Aggregate records by group keys.
 
@@ -50,11 +50,11 @@ def compute_choice_percentages(
     classified: list[dict],
     group_keys: tuple[str, ...] = ("vector", "scale"),
 ) -> dict[tuple, dict[str, float]]:
-    """Compute % corrigible / survival / unclear per group.
+    """Compute % matching / not_matching / unclear per group.
 
     Expects records with a 'result' field (from classify_results).
     """
-    counts = defaultdict(lambda: {"corrigible": 0, "survival": 0, "unclear": 0, "total": 0})
+    counts = defaultdict(lambda: {"matching": 0, "not_matching": 0, "unclear": 0, "total": 0})
     for r in classified:
         key = tuple(r[k] for k in group_keys)
         counts[key][r["result"]] += 1
@@ -64,8 +64,8 @@ def compute_choice_percentages(
     for key, c in counts.items():
         t = c["total"]
         pcts[key] = {
-            "corrigible": 100 * c["corrigible"] / t,
-            "survival": 100 * c["survival"] / t,
+            "matching": 100 * c["matching"] / t,
+            "not_matching": 100 * c["not_matching"] / t,
             "unclear": 100 * c["unclear"] / t,
             "total": t,
         }
@@ -122,13 +122,13 @@ def violin_logit_diff(
         fig, ax = plt.subplots(figsize=figsize)
 
     sns.violinplot(
-        data=df, x="scale", y="survival_logit_diff",
+        data=df, x="scale", y="matching_logit_diff",
         hue="vector", ax=ax, inner="quartile", cut=0,
     )
 
     ax.axhline(y=0, color="black", linestyle="--", alpha=0.5)
     ax.set_xlabel("Steering scale")
-    ax.set_ylabel("Survival logit diff")
+    ax.set_ylabel("Matching-behavior logit diff")
     ax.set_title(title or dataset_name or "All datasets combined")
     ax.legend(title="Vector", loc="upper left")
 
@@ -175,13 +175,13 @@ def violin_per_vector(
         vec_df = df[df["vector"] == vec]
 
         sns.violinplot(
-            data=vec_df, x="scale", y="survival_logit_diff",
+            data=vec_df, x="scale", y="matching_logit_diff",
             ax=ax, inner="quartile", cut=0, color="steelblue",
         )
         ax.axhline(y=0, color="black", linestyle="--", alpha=0.5)
         ax.set_title(vec)
         ax.set_xlabel("Scale")
-        ax.set_ylabel("Surv. logit diff")
+        ax.set_ylabel("Match. logit diff")
 
     # Hide unused subplots
     for idx in range(n, rows * cols):
@@ -195,19 +195,21 @@ def violin_per_vector(
 # ── Line plot for generation choices ────────────────────────────────────────
 
 
-def line_corrigible(
+def line_choice_pct(
     classified: list[dict],
+    choice: str = "matching",
     vector_names: list[str] | None = None,
-    title: str = "% Corrigible by scale",
+    title: str | None = None,
     ax: plt.Axes | None = None,
     figsize: tuple[float, float] = (10, 5),
 ) -> plt.Figure | None:
-    """Line plot of % corrigible vs scale for each vector.
+    """Line plot of % of a given choice vs scale for each vector.
 
     Args:
         classified: Records with 'result', 'vector', 'scale' fields.
+        choice: One of "matching", "not_matching", "unclear".
         vector_names: Subset of vectors to plot (None = all).
-        title: Plot title.
+        title: Plot title (defaults to "% {choice} by scale").
         ax: Existing axes.
         figsize: Figure size.
     """
@@ -222,17 +224,17 @@ def line_corrigible(
 
     for vec in vectors:
         scales = []
-        corr = []
+        ys = []
         for s in scales_set:
             if (vec, s) in pcts:
                 scales.append(s)
-                corr.append(pcts[(vec, s)]["corrigible"])
-        ax.plot(scales, corr, marker="o", label=vec)
+                ys.append(pcts[(vec, s)][choice])
+        ax.plot(scales, ys, marker="o", label=vec)
 
     ax.axhline(y=50, color="gray", linestyle="--", alpha=0.5)
     ax.set_xlabel("Steering scale")
-    ax.set_ylabel("% Corrigible")
-    ax.set_title(title)
+    ax.set_ylabel(f"% {choice}")
+    ax.set_title(title or f"% {choice} by scale")
     ax.legend()
 
     if fig:
@@ -243,10 +245,34 @@ def line_corrigible(
 # ── Save helper ─────────────────────────────────────────────────────────────
 
 
-def save_plot(fig: plt.Figure, path: str | Path, dpi: int = 150):
-    """Save a figure to disk."""
+def save_plot(
+    fig: plt.Figure,
+    path: str | Path,
+    dpi: int = 150,
+    metadata: dict | None = None,
+) -> Path:
+    """Save a figure to disk. If `metadata` is given, also writes `<path>.json` alongside.
+
+    Sidecar metadata typically includes plot_type, dataset, source eval file,
+    vectors plotted, scales, etc. — anything needed to reproduce or explain the plot.
+    """
+    import json
+    from datetime import datetime, timezone
+
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=dpi, bbox_inches="tight")
-    print(f"Saved plot: {path}")
     plt.close(fig)
+    print(f"Saved plot: {path}")
+
+    if metadata is not None:
+        sidecar = path.with_suffix(".json")
+        payload = {
+            **metadata,
+            "plot_file": path.name,
+            "saved_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        }
+        with open(sidecar, "w") as f:
+            json.dump(payload, f, indent=2)
+        print(f"Saved plot metadata: {sidecar}")
+    return path
