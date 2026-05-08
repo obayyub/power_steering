@@ -28,13 +28,25 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# Manual classifications from spot-check inspection (top-3 vectors only).
-# Counts of (refuse, hedge, genuine_compliance, reframe) out of 10.
-SPOT_CHECK = {
-    "(19,28)_v5+": {"refuse": 0, "hedge": 2, "comply": 0, "reframe": 8},
-    "(20,28)_v9+": {"refuse": 3, "hedge": 4, "comply": 3, "reframe": 0},
-    "(20,26)_v7-": {"refuse": 8, "hedge": 0, "comply": 1, "reframe": 1},
-}
+def load_judged_counts(judged_path: Path) -> dict:
+    """Load LLM-judge category counts per top-3 vector from results_judged.json.
+
+    Returns {vector_label: {refuse, hedge, redirect, comply, total}} where
+    total = number of samples (3 per spot-check prompt).
+    """
+    with open(judged_path) as f:
+        d = json.load(f)
+    counts = {}
+    for vec_label, prompt_entries in d["spot_check_results"].items():
+        c = {"refuse": 0, "hedge": 0, "redirect": 0, "comply": 0, "total": 0}
+        for entry in prompt_entries:
+            for s in entry["samples"]:
+                cat = s.get("llm_category", "unclear")
+                if cat in c:
+                    c[cat] += 1
+                c["total"] += 1
+        counts[vec_label] = c
+    return counts
 
 
 def main() -> int:
@@ -48,6 +60,10 @@ def main() -> int:
         d = json.load(f)
 
     out_prefix = args.out_prefix or args.results.parent / "logit_screen"
+
+    # Load LLM-judge counts (preferred) or fall back gracefully if missing.
+    judged_path = args.results.parent / "results_judged.json"
+    judged_counts = load_judged_counts(judged_path) if judged_path.exists() else {}
 
     vec_labels = list(d["score_matrix"].keys())
     baseline = np.array(d["baseline_scores"])
@@ -82,25 +98,28 @@ def main() -> int:
                      f"{val:+.1f}", ha="center", va="bottom",
                      fontsize=9, color="#1d4ed8")
 
-    # Right axis — genuine compliance count from spot check
+    # Right axis — comply rate from LLM-judge classification (Claude Haiku 4.5)
+    judge_total = next((c["total"] for c in judged_counts.values()), 0) if judged_counts else 10
     ax_right = ax_left.twinx()
-    ax_right.set_ylabel("Genuine compliance count (out of 10 AdvBench prompts in spot check)\n"
-                        "from manual classification of full generations",
-                        color="#dc2626", fontsize=10)
+    ax_right.set_ylabel(
+        f"Genuine compliance rate (out of {judge_total} samples)\n"
+        f"from Claude Haiku 4.5 classification of full generations",
+        color="#dc2626", fontsize=10)
     ax_right.tick_params(axis="y", labelcolor="#dc2626")
-    ax_right.set_ylim(0, 10)
+    ax_right.set_ylim(0, judge_total)
 
     spot_x, spot_y = [], []
     for i, k in enumerate(ranked):
-        if k in SPOT_CHECK:
+        if k in judged_counts:
             spot_x.append(i)
-            spot_y.append(SPOT_CHECK[k]["comply"])
+            spot_y.append(judged_counts[k]["comply"])
 
     ax_right.scatter(spot_x, spot_y, s=180, marker="D", color="#dc2626",
                      edgecolor="#7f1d1d", linewidth=1.0,
-                     zorder=5, label="Genuine compliance count (spot check, top-3 only)")
+                     zorder=5,
+                     label="Genuine compliance count (LLM-judge, top-3 only)")
     for xi, yi in zip(spot_x, spot_y):
-        ax_right.annotate(f"{yi}/10", (xi, yi), xytext=(8, 0),
+        ax_right.annotate(f"{yi}/{judge_total}", (xi, yi), xytext=(8, 0),
                           textcoords="offset points",
                           fontsize=10, color="#7f1d1d", va="center", weight="bold")
 
@@ -110,11 +129,23 @@ def main() -> int:
         f"on {len(d['advbench_prompts'])} AdvBench prompts (Qwen3-14B, 0.35×source-norm scale)",
         fontsize=11, pad=10,
     )
+    # Build a data-derived caption so re-running with new data updates it.
+    caption_bits = []
+    if judged_counts:
+        for k in ranked[:3]:
+            if k in judged_counts:
+                c = judged_counts[k]
+                caption_bits.append(
+                    f"{k}: {c['comply']}/{c['total']} comply, "
+                    f"{c['redirect']} redirect, {c['hedge']} hedge, "
+                    f"{c['refuse']} refuse"
+                )
+    caption = (
+        "Logit-Δ rank does NOT match genuine compliance rank: "
+        + " · ".join(caption_bits)
+    ) if caption_bits else "Logit-Δ rank does not match genuine compliance rank."
     fig.text(
-        0.5, 0.02,
-        "Logit metric ranks v5+ as #1 — but spot-check shows 0/10 compliance "
-        "(model reframes to safe alternatives).  v9+ ranks #2 by logit but "
-        "actually breaks safety on 3/10 prompts (fake-review category).",
+        0.5, 0.02, caption,
         ha="center", fontsize=9, style="italic", color="#374151", wrap=True,
     )
 
