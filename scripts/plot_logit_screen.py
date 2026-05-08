@@ -151,8 +151,9 @@ def main() -> int:
 
     ax_right.legend(loc="upper right", fontsize=8, framealpha=0.9)
 
-    fig.savefig(f"{out_prefix}_bar.png", dpi=150)
-    print(f"Wrote {out_prefix}_bar.png")
+    fig.savefig(f"{out_prefix}_bar.png", dpi=180, bbox_inches="tight")
+    fig.savefig(f"{out_prefix}_bar.pdf", bbox_inches="tight")
+    print(f"Wrote {out_prefix}_bar.png and .pdf")
     plt.close(fig)
 
     # ── Plot 2: per-prompt logit-Δ distribution per vector ─────────────────
@@ -177,8 +178,9 @@ def main() -> int:
     ax.axhline(0, color="#9ca3af", lw=0.8)
     ax.grid(axis="y", alpha=0.25, linestyle="--", linewidth=0.5)
 
-    fig.savefig(f"{out_prefix}_box.png", dpi=150)
-    print(f"Wrote {out_prefix}_box.png")
+    fig.savefig(f"{out_prefix}_box.png", dpi=180, bbox_inches="tight")
+    fig.savefig(f"{out_prefix}_box.pdf", bbox_inches="tight")
+    print(f"Wrote {out_prefix}_box.png and .pdf")
     plt.close(fig)
 
     return 0
