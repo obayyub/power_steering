@@ -90,11 +90,14 @@ def render():
 
     vmax = max(abs(np.min(all_vals)), abs(np.max(all_vals))) if all_vals else 1.0
 
+    # Sized for NeurIPS column width (~6.75 in). Three short panels with
+    # only 2 train-row × 7 test-col cells each, so we can afford big text.
     fig, axes = plt.subplots(
         1, len(METHODS),
-        figsize=(4.2 * len(METHODS) + 0.6, 2.8),
+        figsize=(7.0, 2.6),
         sharey=True,
-        gridspec_kw={"wspace": 0.10},
+        gridspec_kw={"wspace": 0.08, "left": 0.10, "right": 0.90,
+                     "top": 0.78, "bottom": 0.30},
     )
     train_labels = [EVAL_LABEL[t] for t, _ in TRAIN_ROWS]
     test_labels = [EVAL_LABEL[e] for e in EVAL_ORDER]
@@ -104,16 +107,11 @@ def render():
         im = ax.imshow(mat, cmap="RdBu_r", vmin=-vmax, vmax=vmax, aspect="auto")
         ax.set_xticks(range(n_cols))
         ax.set_yticks(range(n_rows))
-        ax.set_xticklabels(test_labels, rotation=45, ha="right", fontsize=8)
-        ax.set_xlabel("Test eval", fontsize=9)
+        ax.set_xticklabels(test_labels, rotation=40, ha="right", fontsize=8)
         if idx == 0:
             ax.set_yticklabels(train_labels, fontsize=8)
-            ax.set_ylabel("Train eval", fontsize=9)
-        else:
-            ax.set_ylabel("")
+        ax.tick_params(axis="both", which="both", length=0)
 
-        # Off-diagonal mean (skip cells where train_eval == test_eval)
-        train_set = {t for t, _ in TRAIN_ROWS}
         off_vals = []
         for i, (train_eval, _) in enumerate(TRAIN_ROWS):
             for j, test_eval in enumerate(EVAL_ORDER):
@@ -124,8 +122,8 @@ def render():
                     off_vals.append(v)
         mean_off = float(np.mean(off_vals)) if off_vals else 0.0
         ax.set_title(
-            f"{METHOD_LABEL[m]}  (off-diag mean Δ = {mean_off:+.1f})",
-            fontsize=10,
+            f"{METHOD_LABEL[m]}   off-diag Δ = {mean_off:+.1f}",
+            fontsize=9, pad=4,
         )
 
         for i in range(n_rows):
@@ -135,20 +133,23 @@ def render():
                     continue
                 color = "white" if abs(v) > vmax * 0.55 else "black"
                 ax.text(j, i, f"{v:+.0f}", ha="center", va="center",
-                        color=color, fontsize=7)
-                # Outline diagonal cells (train_eval == test_eval)
+                        color=color, fontsize=8.5, weight="bold")
                 if TRAIN_ROWS[i][0] == EVAL_ORDER[j]:
                     ax.add_patch(plt.Rectangle(
                         (j - 0.5, i - 0.5), 1, 1,
                         fill=False, edgecolor="black", linewidth=1.0,
                     ))
 
-    cbar = fig.colorbar(im, ax=list(axes), fraction=0.025, pad=0.03,
-                        label="Δ aligned-% (LLM-judged)")
-    fig.suptitle(
-        "LLM-judged transfer — specialist vectors (|scale|=25) under sampled generation",
-        fontsize=11, y=1.02,
-    )
+    # Shared colorbar to right of figure
+    cbar_ax = fig.add_axes([0.91, 0.30, 0.012, 0.48])
+    cbar = fig.colorbar(im, cax=cbar_ax)
+    cbar.set_label("Δ aligned-%", fontsize=8)
+    cbar.ax.tick_params(labelsize=7)
+
+    # Common x/y axis labels
+    fig.text(0.49, 0.02, "Test eval", ha="center", va="center", fontsize=9)
+    fig.text(0.02, 0.54, "Train eval", rotation=90,
+             ha="center", va="center", fontsize=9)
 
     out_dir = REPO / "paper_artifacts"
     out_dir.mkdir(exist_ok=True)
