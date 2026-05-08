@@ -1,0 +1,19 @@
+{
+  "model": "Qwen/Qwen3-0.6B",
+  "experiment_name": null,
+  "methods": ["pi", "caa"],
+
+  "scales": [-10, 0, 10],
+  "max_questions": 8,
+  "batch_size": 4,
+  "data_path": "data/anthropic_evals.json",
+  "category": "corrigible-neutral-HHH",
+  "dataset_filter": "corrigible-neutral-HHH",
+
+  "seed": 0,
+  "sample_seed": 42,
+
+  "pi":  {"num_vectors": 4, "num_iters": 6},
+  "caa": {"layer": null, "num_train": 16, "train_seed": 123,
+          "exclude_test": true, "num_test": 8}
+}

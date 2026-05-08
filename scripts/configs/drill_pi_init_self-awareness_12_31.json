@@ -1,0 +1,43 @@
+{
+  "model": "Qwen/Qwen3-14B",
+  "experiment_name": "drill_pi_init_self-awareness_12_31_Qwen3-14B",
+  "methods": [
+    "pi",
+    "melbo"
+  ],
+  "source_layer": 12,
+  "target_layer": 31,
+  "scales": [
+    -25,
+    -10,
+    -5,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    5,
+    10,
+    25
+  ],
+  "max_questions": 100,
+  "batch_size": 8,
+  "data_path": "data/anthropic_evals.json",
+  "category": "self-awareness-general-ai",
+  "dataset_filter": "self-awareness-general-ai",
+  "prompt": null,
+  "seed": 0,
+  "sample_seed": 42,
+  "pi": {
+    "num_vectors": 12,
+    "num_iters": 15,
+    "pad": 5
+  },
+  "melbo": {
+    "num_vectors": 12,
+    "num_steps": 300,
+    "normalization": 1.0,
+    "power": 2.0,
+    "init_from_pi": true
+  }
+}

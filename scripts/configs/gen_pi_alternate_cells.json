@@ -1,0 +1,14 @@
+[
+  {
+    "method": "pi",
+    "vector_idx": 11,
+    "scale": 25.0,
+    "label": "v11@+25"
+  },
+  {
+    "method": "pi",
+    "vector_idx": 10,
+    "scale": -10.0,
+    "label": "v10@-10_mod"
+  }
+]

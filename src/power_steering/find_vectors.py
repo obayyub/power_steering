@@ -33,6 +33,7 @@ def find_pi_vectors(
     num_iters: int = 15,
     num_tokens: int = 2,
     seed: int = 0,
+    pad: int = 5,
 ) -> tuple[torch.Tensor, list[float]]:
     """Find top-k right singular vectors of the Jacobian via block power iteration.
 
@@ -43,20 +44,30 @@ def find_pi_vectors(
     After convergence, applies Rayleigh-Ritz to rotate the subspace to
     the true singular vectors.
 
+    Oversampling (`pad`): we iterate `num_vectors + pad` columns and keep
+    only the top `num_vectors` after Rayleigh-Ritz. This is the standard
+    randomized-SVD trick (Halko-Martinsson-Tropp 2011): the extra columns
+    act as a buffer so the kept top eigenvectors converge cleanly even when
+    the eigenvalue spectrum has a flat band right at rank `num_vectors`.
+    Cost: linear in `num_vectors + pad`, so an extra (k+pad)/k cost per
+    iteration. Set `pad=0` to disable.
+
     Args:
         model: HuggingFace causal LM.
         tokenizer: Matching tokenizer.
         prompt: Raw user message (will be chat-formatted).
         source_layer: Layer whose MLP down_proj gets the perturbation.
         target_layer: Layer where we measure the response.
-        num_vectors: How many singular vectors to find.
+        num_vectors: How many singular vectors to keep and return.
         num_iters: Power iteration steps.
         num_tokens: Number of final tokens to aggregate over.
         seed: RNG seed for the random orthonormal starting basis.
+        pad: Oversampling — iterate `num_vectors + pad` columns, keep top
+            `num_vectors`. Default 5.
 
     Returns:
         (vectors, sigmas) — vectors is [num_vectors, hidden_dim], unit-normed.
-        sigmas are the corresponding singular values.
+        sigmas are the corresponding singular values (only the kept top-k).
     """
     hidden_dim = model.config.hidden_size
     device = next(model.parameters()).device
@@ -121,11 +132,16 @@ def find_pi_vectors(
             steering_vec = None
             return torch.stack(new_cols, dim=1)
 
-        # Random orthonormal starting basis (seeded for reproducibility)
+        # Random orthonormal starting basis (seeded for reproducibility).
+        # Iterate `k_total = num_vectors + pad` columns; trim to top
+        # num_vectors only after Rayleigh-Ritz.
+        k_total = num_vectors + max(0, pad)
         gen = torch.Generator(device=device).manual_seed(seed)
         V = orthogonalize(torch.randn(
-            hidden_dim, num_vectors, device=device, dtype=dtype, generator=gen,
+            hidden_dim, k_total, device=device, dtype=dtype, generator=gen,
         ))
+        if pad > 0:
+            print(f"  PI oversampling: iterating {k_total} columns ({num_vectors}+{pad} pad), keep top {num_vectors}")
 
         t0 = time.time()
         for i in range(num_iters):
@@ -156,10 +172,14 @@ def find_pi_vectors(
         eigenvalues = eigenvalues[idx]
         eigenvectors = eigenvectors[:, idx]
 
+        # Trim back to the top `num_vectors` after Rayleigh-Ritz.
+        eigenvalues = eigenvalues[:num_vectors]
+        eigenvectors = eigenvectors[:, :num_vectors]
+
         V = V @ eigenvectors.to(V.dtype)
         sigmas = eigenvalues.clamp(min=0).sqrt().tolist()
 
-        vectors = V.T.detach()  # [k, H]
+        vectors = V.T.detach()  # [num_vectors, H]
         vectors = vectors / vectors.norm(dim=1, keepdim=True)
 
         return vectors, sigmas
@@ -213,6 +233,7 @@ def find_melbo_vectors(
     num_vectors: int = 12,
     verbose: bool = True,
     seed: int = 0,
+    init_vectors: torch.Tensor | None = None,
 ) -> torch.Tensor:
     """Discover steering vectors via MELBO optimization.
 
@@ -228,6 +249,14 @@ def find_melbo_vectors(
         num_vectors: Number of orthogonal vectors to discover.
         verbose: Show progress bars and loss.
         seed: RNG seed for the per-vector random initialisations.
+        init_vectors: Optional [k, hidden_dim] tensor of init directions.
+            When provided, vector i is initialised from `init_vectors[i]`
+            instead of a random direction (still subject to orthogonal
+            projection against previously-learned vectors and to
+            re-normalisation to ‖v‖=normalization). For i ≥ len(init_vectors),
+            falls back to random init. Default None = current behaviour
+            (random init for every vector). Used to warm-start MELBO from
+            PI-RR's top singular vectors.
 
     Returns:
         Tensor of shape [num_vectors, hidden_dim].
@@ -285,11 +314,16 @@ def find_melbo_vectors(
     )
     for i in iterator:
         vec_start = time.time()
-        # Initialize random direction, orthogonal to previous
+        # Initialize: PI warm-start (init_vectors[i]) when provided, else random.
+        # Orthogonalisation against previously-learned vectors and re-normalisation
+        # to the sphere apply identically in both cases.
         with torch.no_grad():
-            init = torch.randn(
-                hidden_dim, device=model.device, dtype=dtype, generator=gen,
-            )
+            if init_vectors is not None and i < init_vectors.shape[0]:
+                init = init_vectors[i].to(model.device, dtype=dtype).clone()
+            else:
+                init = torch.randn(
+                    hidden_dim, device=model.device, dtype=dtype, generator=gen,
+                )
             if config.orthogonal:
                 init = project_orthogonal(init)
             bias.data = nn.functional.normalize(init, dim=0) * config.normalization
@@ -365,41 +399,64 @@ def find_caa_vector(
     train_prompts: list[dict],
     layer: int,
     capture_site: str = "layer_output",
+    direction: str = "aligned",
     log_every: int = 25,
 ) -> torch.Tensor:
     """Compute a CAA steering vector at the given layer.
 
     For each training prompt, captures the residual stream at the answer
-    letter token (position -2 of `[..., (A, )]`) under the matching answer
-    suffix and under the not-matching answer suffix. Returns:
+    letter token (position -2 of `[..., (A, )]`) under two answer suffixes
+    and returns the mean difference.
 
-        mean(matching_act - not_matching_act)
-
-    Adding this with positive scale nudges the model toward the matching
-    (HHH-aligned) answer, parallel to the `matching_logit_diff` convention
-    used elsewhere.
+    Direction conventions (`direction` arg):
+      - "aligned" (default) : vector = mean(aligned_act − not_aligned_act).
+        Adding with +scale pushes the model toward the HHH-aligned answer.
+        Requires the data items to have `aligned_answer_full` /
+        `not_aligned_answer_full` fields (from `download_dataset.py`'s
+        `BEHAVIOR_POLARITY`-aware preparation). This is the right choice
+        for cross-eval comparison since +scale always = aligned regardless
+        of which Anthropic eval the vector was trained on.
+      - "matching" : legacy. Vector = mean(matching_act − not_matching_act).
+        Adding with +scale pushes toward Anthropic's `answer_matching_behavior`,
+        which is HHH-aligned for some evals (corrigible, survival, etc.)
+        and the named-misaligned behavior for others (myopic, coordinate).
+        Useful only when older data items lack the aligned_* fields.
 
     The default capture site is the layer's residual-stream output
-    (`capture_site="layer_output"`), the standard CAA recipe — the
-    captured difference encodes everything that diverged between the two
-    answer-conditioned trajectories up to layer L. The alternative
-    `"down_proj"` captures only the layer-L MLP's incremental contribution
-    and produces a much weaker steering direction; kept available mainly
-    for cross-method comparison with PI/MELBO at their injection site.
+    (`capture_site="layer_output"`), the standard CAA recipe.
 
     Args:
         model: HuggingFace causal LM.
         tokenizer: Matching tokenizer.
-        train_prompts: List of dicts with `question`,
-            `matching_answer_full` and `not_matching_answer_full` fields.
+        train_prompts: List of dicts with the per-direction `_answer_full` fields.
         layer: Transformer layer to capture from (and to inject at later).
         capture_site: "layer_output" (default, standard CAA) or "down_proj".
+        direction: "aligned" (default, polarity-aware) or "matching" (legacy).
         log_every: Print progress every N prompts.
 
     Returns:
         Tensor of shape [1, hidden_dim] — unsqueezed so downstream code
         that expects [num_vectors, hidden_dim] works unchanged.
     """
+    if direction not in ("aligned", "matching"):
+        raise ValueError(f"direction must be 'aligned' or 'matching', got {direction!r}")
+
+    if direction == "aligned":
+        pos_field, neg_field = "aligned_answer_full", "not_aligned_answer_full"
+    else:
+        pos_field, neg_field = "matching_answer_full", "not_matching_answer_full"
+
+    # Backward-compat: if items lack the requested fields, fall back to matching.
+    sample = train_prompts[0]
+    if pos_field not in sample or neg_field not in sample:
+        if direction == "aligned":
+            print(f"  WARNING: items lack aligned_*; falling back to matching contrast. "
+                  f"Re-run download_dataset.py to get polarity-aware fields.")
+            pos_field, neg_field = "matching_answer_full", "not_matching_answer_full"
+            direction = "matching"
+        else:
+            raise KeyError(f"Items lack required fields: {pos_field} / {neg_field}")
+
     device = next(model.parameters()).device
     target_module = get_steering_module(model, layer, capture_site)
 
@@ -414,24 +471,24 @@ def find_caa_vector(
     try:
         for i, q in enumerate(train_prompts):
             question = q["question"]
-            match_answer = q["matching_answer_full"]
-            not_match_answer = q["not_matching_answer_full"]
+            pos_answer = q[pos_field]
+            neg_answer = q[neg_field]
 
-            # Matching activation at letter token (position -2 of "[..., (A, )]")
-            match_text = format_chat(tokenizer, question, assistant_start=match_answer)
-            inputs = tokenizer(match_text, return_tensors="pt").to(device)
+            # Positive (aligned or matching) activation at letter token (position -2)
+            pos_text = format_chat(tokenizer, question, assistant_start=pos_answer)
+            inputs = tokenizer(pos_text, return_tensors="pt").to(device)
             with torch.no_grad():
                 model(inputs["input_ids"])
-            match_act = captured["act"][:, -2, :].clone()
+            pos_act = captured["act"][:, -2, :].clone()
 
-            # Not-matching activation
-            not_match_text = format_chat(tokenizer, question, assistant_start=not_match_answer)
-            inputs = tokenizer(not_match_text, return_tensors="pt").to(device)
+            # Negative activation
+            neg_text = format_chat(tokenizer, question, assistant_start=neg_answer)
+            inputs = tokenizer(neg_text, return_tensors="pt").to(device)
             with torch.no_grad():
                 model(inputs["input_ids"])
-            not_match_act = captured["act"][:, -2, :].clone()
+            neg_act = captured["act"][:, -2, :].clone()
 
-            differences.append((match_act - not_match_act).squeeze(0))
+            differences.append((pos_act - neg_act).squeeze(0))
 
             if (i + 1) % log_every == 0:
                 print(f"  CAA: {i+1}/{len(train_prompts)} prompts processed")
@@ -441,7 +498,7 @@ def find_caa_vector(
     diffs = torch.stack(differences)
     caa_vector = diffs.mean(dim=0)
     norms = diffs.norm(dim=-1)
-    print(f"  CAA capture_site={capture_site}, layer={layer}")
+    print(f"  CAA direction={direction}, capture_site={capture_site}, layer={layer}")
     print(f"  CAA vector norm: {caa_vector.norm():.2f}")
     print(f"  Per-prompt diff norms: mean={norms.mean():.2f}, std={norms.std():.2f}")
     print(f"  Coherence ratio (mean_norm / per_prompt_mean): {caa_vector.norm() / norms.mean():.3f}")

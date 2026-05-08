@@ -75,7 +75,7 @@ DEFAULTS = {
     "dataset_filter": None,
     "seed": 0,
     "sample_seed": 42,
-    "pi": {"num_vectors": 12, "num_iters": 15},
+    "pi": {"num_vectors": 12, "num_iters": 15, "pad": 5},
     "melbo": {
         "num_vectors": 12, "num_steps": 300,
         "normalization": 1.0, "power": 2.0,
@@ -83,6 +83,11 @@ DEFAULTS = {
     "caa": {
         "layer": None, "num_train": 150, "train_seed": 123,
         "exclude_test": True, "num_test": 60,
+        "direction": "aligned",  # "aligned" (polarity-aware) or "matching" (legacy)
+    },
+    "dct": {
+        "num_features": 12, "num_iters": 10,
+        "lambda_cal": 0.5, "n_cal": 30,
     },
 }
 
@@ -100,6 +105,26 @@ def _merge(defaults: dict, override: dict) -> dict:
 
 def _hr(label: str) -> None:
     print(f"\n{'='*64}\n  {label}\n{'='*64}")
+
+
+def _free_gpu(model=None) -> None:
+    """Drop autograd state and ask CUDA to release cached blocks.
+
+    Called between PI / MELBO / CAA / eval phases so a tight model (e.g. 27B
+    on an 80GB H100) has the maximum free memory entering the next phase.
+    Doesn't shrink resident weights — those stay in place.
+    """
+    import gc
+    if model is not None:
+        try:
+            model.zero_grad(set_to_none=True)
+        except Exception:
+            pass
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        free, total = torch.cuda.mem_get_info()
+        print(f"  [cuda] free {free / 1e9:.1f} GB / {total / 1e9:.1f} GB")
 
 
 def run_pipeline(config_path: str) -> Path:
@@ -128,7 +153,7 @@ def run_pipeline(config_path: str) -> Path:
     tokenizer.padding_side = "left"
 
     methods = cfg["methods"]
-    needs_eager = "pi" in methods
+    needs_eager = "pi" in methods or "dct" in methods
     model = AutoModelForCausalLM.from_pretrained(
         cfg["model"], dtype=torch.bfloat16, device_map="auto",
         attn_implementation="eager" if needs_eager else None,
@@ -192,12 +217,14 @@ def run_pipeline(config_path: str) -> Path:
             num_vectors=cfg["pi"]["num_vectors"],
             num_iters=cfg["pi"]["num_iters"],
             seed=cfg["seed"],
+            pad=cfg["pi"].get("pad", 5),
         )
         meta = {
             "method": "pi", "prompt": train_prompt, "category": cfg["category"],
             "source_layer": source_layer, "target_layer": target_layer,
             "capture_site": "down_proj",
             "seed": cfg["seed"], "sigmas": sigmas,
+            "pad": cfg["pi"].get("pad", 5),
         }
         path = save_vectors(pi_vecs, exp.vectors_dir,
                             method="pi", model_name=cfg["model"], metadata=meta)
@@ -206,6 +233,7 @@ def run_pipeline(config_path: str) -> Path:
             pi_vecs / pi_vecs.norm(dim=1, keepdim=True)
         )
         print(f"PI done in {format_time(time.time() - t0)}")
+        _free_gpu(model)
 
     # ── MELBO ─────────────────────────────────────────────────────────────
     if "melbo" in methods:
@@ -218,9 +246,16 @@ def run_pipeline(config_path: str) -> Path:
             normalization=cfg["melbo"]["normalization"],
             power=cfg["melbo"]["power"],
         )
+        # PI warm-start: only when explicitly enabled AND PI ran first this run.
+        # Default unchanged (random init) — keeps existing configs reproducible.
+        melbo_init = None
+        if cfg["melbo"].get("init_from_pi") and "pi" in methods:
+            melbo_init = pi_vecs
+            print(f"  MELBO warm-start: using {pi_vecs.shape[0]} PI vectors as init")
         melbo_vecs = find_melbo_vectors(
             model, tokenizer, train_prompt, melbo_cfg,
             cfg["melbo"]["num_vectors"], seed=cfg["seed"],
+            init_vectors=melbo_init,
         )
         meta = {
             "method": "melbo", "prompt": train_prompt, "category": cfg["category"],
@@ -228,6 +263,7 @@ def run_pipeline(config_path: str) -> Path:
             "capture_site": "down_proj",
             "seed": cfg["seed"], "normalization": cfg["melbo"]["normalization"],
             "power": cfg["melbo"]["power"], "num_steps": cfg["melbo"]["num_steps"],
+            "init_from_pi": bool(melbo_init is not None),
         }
         path = save_vectors(melbo_vecs, exp.vectors_dir,
                             method="melbo", model_name=cfg["model"], metadata=meta)
@@ -236,6 +272,43 @@ def run_pipeline(config_path: str) -> Path:
             melbo_vecs / melbo_vecs.norm(dim=1, keepdim=True)
         )
         print(f"MELBO done in {format_time(time.time() - t0)}")
+        _free_gpu(model)
+
+    # ── DCT (exponential, OGI) ───────────────────────────────────────────
+    if "dct" in methods:
+        _hr("Find vectors — DCT (exponential, OGI)")
+        from power_steering.find_dct import find_dct_vectors, DCTConfig
+        t0 = time.time()
+        dct_cfg = DCTConfig(
+            source_layer=source_layer, target_layer=target_layer,
+            num_features=cfg["dct"]["num_features"],
+            num_iters=cfg["dct"]["num_iters"],
+            lambda_cal=cfg["dct"]["lambda_cal"],
+            n_cal=cfg["dct"]["n_cal"],
+        )
+        dct_vecs, dct_info = find_dct_vectors(
+            model, tokenizer, train_prompt, dct_cfg,
+            num_features=cfg["dct"]["num_features"], seed=cfg["seed"],
+        )
+        meta = {
+            "method": "dct", "prompt": train_prompt, "category": cfg["category"],
+            "source_layer": source_layer, "target_layer": target_layer,
+            "capture_site": "down_proj",
+            "seed": cfg["seed"],
+            "lambda_cal": cfg["dct"]["lambda_cal"],
+            "n_cal": cfg["dct"]["n_cal"],
+            "num_iters": cfg["dct"]["num_iters"],
+            "R_cal": dct_info.get("R_cal"),
+            "final_loss": dct_info.get("final_loss"),
+        }
+        path = save_vectors(dct_vecs, exp.vectors_dir,
+                            method="dct", model_name=cfg["model"], metadata=meta)
+        exp.add_output("vectors", path, label="dct", metadata=meta)
+        vectors_by_site.setdefault((source_layer, "down_proj"), {})["dct"] = (
+            dct_vecs / dct_vecs.norm(dim=1, keepdim=True)
+        )
+        print(f"DCT done in {format_time(time.time() - t0)}")
+        _free_gpu(model)
 
     # ── CAA ───────────────────────────────────────────────────────────────
     if "caa" in methods:
@@ -255,11 +328,13 @@ def run_pipeline(config_path: str) -> Path:
         caa_vec = find_caa_vector(
             model, tokenizer, train_prompts, caa_layer,
             capture_site="layer_output",
+            direction=caa_cfg.get("direction", "aligned"),
         )
         meta = {
             "method": "caa", "category": cfg["category"],
             "layer": caa_layer, "source_layer": caa_layer,
             "capture_site": "layer_output",
+            "direction": caa_cfg.get("direction", "aligned"),
             "num_train": len(train_prompts),
             "train_seed": caa_cfg["train_seed"],
             "test_seed": cfg["sample_seed"] if caa_cfg["exclude_test"] else None,
@@ -273,10 +348,14 @@ def run_pipeline(config_path: str) -> Path:
             caa_vec / caa_vec.norm(dim=1, keepdim=True)
         )
         print(f"CAA done in {format_time(time.time() - t0)}")
+        _free_gpu(model)
 
     # ── Eval (one pass per injection layer) ──────────────────────────────
     _hr("Evaluate")
     from power_steering.eval import SteeringEvaluator, print_summary, save_results
+
+    model.eval()
+    _free_gpu(model)
 
     scales = [float(s) for s in cfg["scales"]]
     datasets = data

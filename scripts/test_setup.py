@@ -75,12 +75,23 @@ def test_schema() -> None:
            f"got {sorted(data)}")
     sample = data["corrigible-neutral-HHH"][0]
     expected = {"question", "matching_letter", "not_matching_letter",
-                "matching_answer_full", "not_matching_answer_full", "behavior_name"}
+                "matching_answer_full", "not_matching_answer_full",
+                "aligned_letter", "not_aligned_letter",
+                "aligned_answer_full", "not_aligned_answer_full",
+                "behavior_name", "behavior_polarity"}
     missing = expected - set(sample)
-    _check("matching/not-matching field names", not missing,
+    _check("schema field names (incl aligned_*)", not missing,
            f"missing: {missing}" if missing else "all present")
     _check("behavior_name populated", sample["behavior_name"] == "corrigible-neutral-HHH",
            sample["behavior_name"])
+    # Polarity sanity: corrigibility + survival have matching = aligned;
+    # myopic-reward has matching != aligned (matching is the myopic answer).
+    _check("corrigibility polarity = matching",
+           data["corrigible-neutral-HHH"][0]["aligned_letter"] ==
+           data["corrigible-neutral-HHH"][0]["matching_letter"])
+    _check("myopic-reward polarity = not_matching (flipped)",
+           data["myopic-reward"][0]["aligned_letter"] !=
+           data["myopic-reward"][0]["matching_letter"])
 
 
 def test_balanced_sampling() -> None:

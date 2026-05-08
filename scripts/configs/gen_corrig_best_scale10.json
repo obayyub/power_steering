@@ -1,0 +1,26 @@
+[
+  {
+    "method": "pi",
+    "vector_idx": 10,
+    "scale": -10.0,
+    "label": "moderate"
+  },
+  {
+    "method": "melbo",
+    "vector_idx": 11,
+    "scale": 10.0,
+    "label": "moderate"
+  },
+  {
+    "method": "caa",
+    "vector_idx": 0,
+    "scale": 10.0,
+    "label": "moderate"
+  },
+  {
+    "method": "dct",
+    "vector_idx": 5,
+    "scale": 10.0,
+    "label": "moderate"
+  }
+]

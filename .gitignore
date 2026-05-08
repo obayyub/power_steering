@@ -219,3 +219,9 @@ dashboard/tgtvar_pairs/
 dashboard/tgtinv_pairs/
 results/diverse_map_tgtvar/*/pairs/
 results/diverse_map_tgtinv/*/pairs/
+
+# Claude Code local config
+.claude/
+
+# Bulky training/eval artifacts (8.7 GB; sync separately if needed)
+experiments/

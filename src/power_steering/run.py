@@ -97,8 +97,10 @@ def cmd_find_vectors(args):
             num_vectors=args.num_vectors,
             num_iters=args.num_iters,
             seed=args.seed,
+            pad=args.pad,
         )
-        metadata = {"sigmas": sigmas, "source_layer": source_layer, "target_layer": target_layer}
+        metadata = {"sigmas": sigmas, "source_layer": source_layer, "target_layer": target_layer,
+                    "pad": args.pad}
     else:
         from power_steering.find_vectors import find_melbo_vectors, MELBOConfig
         config = MELBOConfig(
@@ -160,10 +162,11 @@ def cmd_find_caa(args):
     train_prompts = sample_balanced(pool, args.num_train, seed=args.train_seed)
     print(f"CAA training set: {len(train_prompts)} prompts (balanced A/B, seed={args.train_seed})")
 
-    print(f"\nComputing CAA at layer {layer} (capture_site={args.capture_site})...")
+    print(f"\nComputing CAA at layer {layer} (capture_site={args.capture_site}, direction={args.direction})...")
     caa = find_caa_vector(
         model, tokenizer, train_prompts, layer,
         capture_site=args.capture_site,
+        direction=args.direction,
     )
 
     metadata = {
@@ -171,6 +174,7 @@ def cmd_find_caa(args):
         "layer": layer,
         "source_layer": layer,  # alias so eval/generate auto-pick this layer
         "capture_site": args.capture_site,
+        "direction": args.direction,
         "num_train": len(train_prompts),
         "train_seed": args.train_seed,
         "test_seed": args.test_seed if args.exclude_test else None,
@@ -346,6 +350,8 @@ def main():
     p.add_argument("--target-layer", type=int, default=None)
     p.add_argument("--num-vectors", type=int, default=12)
     p.add_argument("--num-iters", type=int, default=15, help="PI iterations")
+    p.add_argument("--pad", type=int, default=5,
+                   help="PI oversampling: iterate num_vectors+pad columns, keep top num_vectors")
     p.add_argument("--num-steps", type=int, default=300, help="MELBO steps")
     p.add_argument("--normalization", type=float, default=1.0, help="MELBO sphere radius")
     p.add_argument("--power", type=float, default=2.0, help="MELBO Lp power")
@@ -375,6 +381,10 @@ def main():
                    help="Seed used to identify test prompts to exclude (should match your eval --sample-seed)")
     p.add_argument("--capture-site", choices=["layer_output", "down_proj"], default="layer_output",
                    help="Where to capture the activation contrast (default: layer_output, the standard CAA recipe)")
+    p.add_argument("--direction", choices=["aligned", "matching"], default="aligned",
+                   help="aligned: vector = mean(aligned - not_aligned), +scale → HHH-aligned. "
+                        "matching (legacy): mean(matching - not_matching), +scale → Anthropic's matching answer. "
+                        "Default 'aligned' is polarity-aware and recommended for cross-eval comparison.")
     p.add_argument("--output-dir", default="vectors")
     p.set_defaults(func=cmd_find_caa)
 

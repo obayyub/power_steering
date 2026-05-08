@@ -1,0 +1,18 @@
+{
+  "model": "Qwen/Qwen3-14B",
+  "experiment_name": "qwen3_14b_dct_coordinate-other-ais",
+  "methods": ["dct"],
+
+  "scales": [-25, -10, -5, -2, -1, 0, 1, 2, 5, 10, 25],
+  "max_questions": 100,
+  "batch_size": 8,
+  "data_path": "data/anthropic_evals.json",
+  "category": "coordinate-other-ais",
+  "dataset_filter": null,
+  "prompt": null,
+
+  "seed": 0,
+  "sample_seed": 42,
+
+  "dct": {"num_features": 12, "num_iters": 10, "lambda_cal": 0.5, "n_cal": 8, "eps_jvp": 1e-3}
+}

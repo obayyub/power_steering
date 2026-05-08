@@ -1,0 +1,5 @@
+[
+  {"method": "caa",   "vector_idx": 0, "scale": 25.0,  "label": "specialist"},
+  {"method": "pi",    "vector_idx": 0, "scale": -25.0, "label": "specialist"},
+  {"method": "melbo", "vector_idx": 0, "scale": -25.0, "label": "specialist"}
+]

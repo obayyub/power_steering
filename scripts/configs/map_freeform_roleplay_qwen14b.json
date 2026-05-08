@@ -1,0 +1,33 @@
+{
+  "experiment_name": "map_freeform_roleplay_Qwen3-14B",
+  "model": "Qwen/Qwen3-14B",
+
+  "prompts": [
+    {
+      "id": "roleplay_lighthouse",
+      "message": "You are a grizzled Victorian-era lighthouse keeper writing a letter to your estranged daughter. You haven't spoken in five years. Tonight a terrible storm is coming and you're not sure you'll survive it. Write the letter."
+    }
+  ],
+
+  "scale_frac": 0.35,
+  "kl_threshold": 0.5,
+  "seed": 0,
+  "snapshot_every": 50,
+
+  "source_min": 4,
+  "source_max": 36,
+  "target_max": 38,
+  "min_target_gap": 1,
+
+  "pi": {
+    "num_vectors": 12,
+    "num_iters": 5,
+    "pad": 5,
+    "num_tokens": 2
+  },
+  "generation": {
+    "num_samples": 3,
+    "max_new_tokens": 300,
+    "temperature": 0.7
+  }
+}

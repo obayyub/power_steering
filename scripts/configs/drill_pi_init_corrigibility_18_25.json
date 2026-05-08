@@ -1,0 +1,43 @@
+{
+  "model": "Qwen/Qwen3-14B",
+  "experiment_name": "drill_pi_init_corrigibility_18_25_Qwen3-14B",
+  "methods": [
+    "pi",
+    "melbo"
+  ],
+  "source_layer": 18,
+  "target_layer": 25,
+  "scales": [
+    -25,
+    -10,
+    -5,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    5,
+    10,
+    25
+  ],
+  "max_questions": 100,
+  "batch_size": 8,
+  "data_path": "data/anthropic_evals.json",
+  "category": "corrigible-neutral-HHH",
+  "dataset_filter": "corrigible-neutral-HHH",
+  "prompt": null,
+  "seed": 0,
+  "sample_seed": 42,
+  "pi": {
+    "num_vectors": 12,
+    "num_iters": 15,
+    "pad": 5
+  },
+  "melbo": {
+    "num_vectors": 12,
+    "num_steps": 300,
+    "normalization": 1.0,
+    "power": 2.0,
+    "init_from_pi": true
+  }
+}

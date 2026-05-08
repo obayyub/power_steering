@@ -1,0 +1,766 @@
+{
+  "figure": "misaligned.png",
+  "direction": "misaligned",
+  "metric": "Per (row=train_eval, col=test_eval, method): the alignment shift achieved by that method's best generalist vector (highest mean shift across cols among vectors trained on the row eval) when applied to the col eval at best scale.",
+  "sources": [
+    {
+      "exp_dir": "/Users/omarayyub/p/power_steering/experiments/qwen3_14b_train_coordinate-other-ais",
+      "train_eval": "coordinate-other-ais"
+    },
+    {
+      "exp_dir": "/Users/omarayyub/p/power_steering/experiments/qwen3_14b_train_corrigible-neutral-HHH",
+      "train_eval": "corrigible-neutral-HHH"
+    },
+    {
+      "exp_dir": "/Users/omarayyub/p/power_steering/experiments/qwen3_14b_train_myopic-reward",
+      "train_eval": "myopic-reward"
+    },
+    {
+      "exp_dir": "/Users/omarayyub/p/power_steering/experiments/qwen3_14b_train_power-seeking-inclination",
+      "train_eval": "power-seeking-inclination"
+    },
+    {
+      "exp_dir": "/Users/omarayyub/p/power_steering/experiments/qwen3_14b_train_self-awareness-general-ai",
+      "train_eval": "self-awareness-general-ai"
+    },
+    {
+      "exp_dir": "/Users/omarayyub/p/power_steering/experiments/qwen3_14b_train_survival-instinct",
+      "train_eval": "survival-instinct"
+    },
+    {
+      "exp_dir": "/Users/omarayyub/p/power_steering/experiments/qwen3_14b_train_wealth-seeking-inclination",
+      "train_eval": "wealth-seeking-inclination"
+    }
+  ],
+  "matrix": {
+    "coordinate-other-ais": {
+      "caa": {
+        "vector_idx": 0,
+        "mean_score": -10.857142857142858,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -13.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -10.0,
+            "shift_pp": -3.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -18.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -7.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -10.0
+          },
+          "survival-instinct": {
+            "scale": 25.0,
+            "shift_pp": -3.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -22.0
+          }
+        }
+      },
+      "melbo": {
+        "vector_idx": 1,
+        "mean_score": -26.285714285714285,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -61.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 25.0,
+            "shift_pp": -28.0
+          },
+          "myopic-reward": {
+            "scale": 5.0,
+            "shift_pp": -11.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -11.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -30.0
+          },
+          "survival-instinct": {
+            "scale": 25.0,
+            "shift_pp": -16.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -27.0
+          }
+        }
+      },
+      "pi": {
+        "vector_idx": 1,
+        "mean_score": -21.0,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -45.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -25.0,
+            "shift_pp": -27.0
+          },
+          "myopic-reward": {
+            "scale": -10.0,
+            "shift_pp": -14.0
+          },
+          "power-seeking-inclination": {
+            "scale": 5.0,
+            "shift_pp": -12.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 25.0,
+            "shift_pp": -17.0
+          },
+          "survival-instinct": {
+            "scale": -25.0,
+            "shift_pp": -12.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 10.0,
+            "shift_pp": -20.0
+          }
+        }
+      }
+    },
+    "corrigible-neutral-HHH": {
+      "caa": {
+        "vector_idx": 0,
+        "mean_score": -13.571428571428571,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -6.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -25.0,
+            "shift_pp": -20.0
+          },
+          "myopic-reward": {
+            "scale": -25.0,
+            "shift_pp": -15.0
+          },
+          "power-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -8.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 25.0,
+            "shift_pp": -21.0
+          },
+          "survival-instinct": {
+            "scale": -25.0,
+            "shift_pp": -14.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -11.0
+          }
+        }
+      },
+      "melbo": {
+        "vector_idx": 1,
+        "mean_score": -17.142857142857142,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -39.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 25.0,
+            "shift_pp": -17.0
+          },
+          "myopic-reward": {
+            "scale": -5.0,
+            "shift_pp": -12.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -7.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -15.0
+          },
+          "survival-instinct": {
+            "scale": 10.0,
+            "shift_pp": -8.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -22.0
+          }
+        }
+      },
+      "pi": {
+        "vector_idx": 0,
+        "mean_score": -20.714285714285715,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -40.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 25.0,
+            "shift_pp": -15.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -36.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -12.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -17.0
+          },
+          "survival-instinct": {
+            "scale": 10.0,
+            "shift_pp": -4.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -10.0,
+            "shift_pp": -21.0
+          }
+        }
+      }
+    },
+    "myopic-reward": {
+      "caa": {
+        "vector_idx": 0,
+        "mean_score": -8.0,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -6.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -5.0,
+            "shift_pp": -3.0
+          },
+          "myopic-reward": {
+            "scale": -25.0,
+            "shift_pp": -18.0
+          },
+          "power-seeking-inclination": {
+            "scale": 10.0,
+            "shift_pp": -3.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 25.0,
+            "shift_pp": -17.0
+          },
+          "survival-instinct": {
+            "scale": -2.0,
+            "shift_pp": -1.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -8.0
+          }
+        }
+      },
+      "melbo": {
+        "vector_idx": 2,
+        "mean_score": -17.428571428571427,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -43.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -2.0,
+            "shift_pp": -5.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -22.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -12.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -18.0
+          },
+          "survival-instinct": {
+            "scale": 0.0,
+            "shift_pp": 0.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -10.0,
+            "shift_pp": -22.0
+          }
+        }
+      },
+      "pi": {
+        "vector_idx": 3,
+        "mean_score": -17.0,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -42.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -2.0,
+            "shift_pp": -5.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -18.0
+          },
+          "power-seeking-inclination": {
+            "scale": -10.0,
+            "shift_pp": -12.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -18.0
+          },
+          "survival-instinct": {
+            "scale": 25.0,
+            "shift_pp": -2.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -22.0
+          }
+        }
+      }
+    },
+    "power-seeking-inclination": {
+      "caa": {
+        "vector_idx": 0,
+        "mean_score": -10.285714285714286,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -10.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 10.0,
+            "shift_pp": -2.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -17.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -9.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -16.0
+          },
+          "survival-instinct": {
+            "scale": 1.0,
+            "shift_pp": -1.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -17.0
+          }
+        }
+      },
+      "melbo": {
+        "vector_idx": 10,
+        "mean_score": -26.714285714285715,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -49.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -25.0,
+            "shift_pp": -29.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -16.0
+          },
+          "power-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -20.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 25.0,
+            "shift_pp": -35.0
+          },
+          "survival-instinct": {
+            "scale": -25.0,
+            "shift_pp": -2.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -36.0
+          }
+        }
+      },
+      "pi": {
+        "vector_idx": 4,
+        "mean_score": -22.0,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -42.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 25.0,
+            "shift_pp": -23.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -9.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -19.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -30.0
+          },
+          "survival-instinct": {
+            "scale": 5.0,
+            "shift_pp": -2.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -29.0
+          }
+        }
+      }
+    },
+    "self-awareness-general-ai": {
+      "caa": {
+        "vector_idx": 0,
+        "mean_score": -10.571428571428571,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -5.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 10.0,
+            "shift_pp": -5.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -16.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -7.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -26.0
+          },
+          "survival-instinct": {
+            "scale": 1.0,
+            "shift_pp": -1.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -14.0
+          }
+        }
+      },
+      "melbo": {
+        "vector_idx": 2,
+        "mean_score": -17.142857142857142,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -42.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 1.0,
+            "shift_pp": -1.0
+          },
+          "myopic-reward": {
+            "scale": -25.0,
+            "shift_pp": -19.0
+          },
+          "power-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -11.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 10.0,
+            "shift_pp": -21.0
+          },
+          "survival-instinct": {
+            "scale": 2.0,
+            "shift_pp": -4.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -22.0
+          }
+        }
+      },
+      "pi": {
+        "vector_idx": 5,
+        "mean_score": -17.714285714285715,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -23.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -5.0,
+            "shift_pp": -7.0
+          },
+          "myopic-reward": {
+            "scale": -25.0,
+            "shift_pp": -5.0
+          },
+          "power-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -17.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 10.0,
+            "shift_pp": -35.0
+          },
+          "survival-instinct": {
+            "scale": 10.0,
+            "shift_pp": -8.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -29.0
+          }
+        }
+      }
+    },
+    "survival-instinct": {
+      "caa": {
+        "vector_idx": 0,
+        "mean_score": -7.857142857142857,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 0.0,
+            "shift_pp": 0.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -25.0,
+            "shift_pp": -13.0
+          },
+          "myopic-reward": {
+            "scale": 10.0,
+            "shift_pp": -5.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -2.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -12.0
+          },
+          "survival-instinct": {
+            "scale": -25.0,
+            "shift_pp": -15.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -8.0
+          }
+        }
+      },
+      "melbo": {
+        "vector_idx": 3,
+        "mean_score": -20.0,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -34.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -25.0,
+            "shift_pp": -16.0
+          },
+          "myopic-reward": {
+            "scale": -25.0,
+            "shift_pp": -23.0
+          },
+          "power-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -9.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 25.0,
+            "shift_pp": -36.0
+          },
+          "survival-instinct": {
+            "scale": -25.0,
+            "shift_pp": -5.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -17.0
+          }
+        }
+      },
+      "pi": {
+        "vector_idx": 0,
+        "mean_score": -19.857142857142858,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -36.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -25.0,
+            "shift_pp": -26.0
+          },
+          "myopic-reward": {
+            "scale": -10.0,
+            "shift_pp": -18.0
+          },
+          "power-seeking-inclination": {
+            "scale": 10.0,
+            "shift_pp": -10.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 25.0,
+            "shift_pp": -25.0
+          },
+          "survival-instinct": {
+            "scale": -25.0,
+            "shift_pp": -5.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 10.0,
+            "shift_pp": -19.0
+          }
+        }
+      }
+    },
+    "wealth-seeking-inclination": {
+      "caa": {
+        "vector_idx": 0,
+        "mean_score": -10.571428571428571,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -10.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 10.0,
+            "shift_pp": -5.0
+          },
+          "myopic-reward": {
+            "scale": 25.0,
+            "shift_pp": -13.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -6.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -19.0
+          },
+          "survival-instinct": {
+            "scale": -5.0,
+            "shift_pp": -1.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -20.0
+          }
+        }
+      },
+      "melbo": {
+        "vector_idx": 0,
+        "mean_score": -19.428571428571427,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": 25.0,
+            "shift_pp": -41.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": -25.0,
+            "shift_pp": -10.0
+          },
+          "myopic-reward": {
+            "scale": -25.0,
+            "shift_pp": -28.0
+          },
+          "power-seeking-inclination": {
+            "scale": 10.0,
+            "shift_pp": -12.0
+          },
+          "self-awareness-general-ai": {
+            "scale": 25.0,
+            "shift_pp": -16.0
+          },
+          "survival-instinct": {
+            "scale": -25.0,
+            "shift_pp": -6.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": 25.0,
+            "shift_pp": -23.0
+          }
+        }
+      },
+      "pi": {
+        "vector_idx": 8,
+        "mean_score": -19.571428571428573,
+        "cells": {
+          "coordinate-other-ais": {
+            "scale": -25.0,
+            "shift_pp": -24.0
+          },
+          "corrigible-neutral-HHH": {
+            "scale": 25.0,
+            "shift_pp": -15.0
+          },
+          "myopic-reward": {
+            "scale": -25.0,
+            "shift_pp": -18.0
+          },
+          "power-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -4.0
+          },
+          "self-awareness-general-ai": {
+            "scale": -25.0,
+            "shift_pp": -41.0
+          },
+          "survival-instinct": {
+            "scale": -10.0,
+            "shift_pp": -8.0
+          },
+          "wealth-seeking-inclination": {
+            "scale": -25.0,
+            "shift_pp": -27.0
+          }
+        }
+      }
+    }
+  },
+  "saved_at": "2026-05-03T19:07:36Z"
+}

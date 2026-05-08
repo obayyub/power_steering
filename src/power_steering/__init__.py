@@ -10,6 +10,7 @@ Supports three methods:
 from power_steering.find_vectors import (
     find_pi_vectors, find_melbo_vectors, find_caa_vector,
 )
+from power_steering.find_dct import find_dct_vectors, DCTConfig
 from power_steering.eval import SteeringEvaluator
 from power_steering.generate import SteeredGenerator
 from power_steering.utils import (
@@ -20,6 +21,8 @@ __all__ = [
     "find_pi_vectors",
     "find_melbo_vectors",
     "find_caa_vector",
+    "find_dct_vectors",
+    "DCTConfig",
     "SteeringEvaluator",
     "SteeredGenerator",
     "load_vectors",

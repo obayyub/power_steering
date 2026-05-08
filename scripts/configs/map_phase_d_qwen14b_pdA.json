@@ -1,0 +1,22 @@
+{
+    "experiment_name": "phase_d_pdA_Qwen3-14B",
+    "model": "Qwen/Qwen3-14B",
+    "data_path": "data/anthropic_evals.json",
+    "categories": [
+        "self-awareness-general-ai",
+        "survival-instinct",
+        "power-seeking-inclination"
+    ],
+    "scale_frac": 0.35,
+    "max_questions": 16,
+    "batch_size": 16,
+    "sample_seed": 42,
+    "seed": 0,
+    "snapshot_every": 50,
+    "pi": {
+        "num_vectors": 12,
+        "num_iters": 5,
+        "pad": 5,
+        "num_tokens": 2
+    }
+}
