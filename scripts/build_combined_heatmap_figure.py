@@ -84,14 +84,7 @@ def render():
             if c == 0:
                 ax.set_yticklabels(train_labels, fontsize=7)
 
-            off_mask = ~np.eye(n, dtype=bool)
-            off_finite = mat[off_mask][~np.isnan(mat[off_mask])]
-            mean_off = float(np.mean(off_finite)) if off_finite.size else 0.0
-
-            ax.set_title(
-                f"{METHOD_LABEL[m]}   off-diag Δ = {mean_off:+.1f}",
-                fontsize=8.5, pad=4,
-            )
+            ax.set_title(METHOD_LABEL[m], fontsize=9.5, pad=4)
 
             for i in range(n):
                 for j in range(n):

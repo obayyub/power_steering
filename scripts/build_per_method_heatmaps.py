@@ -76,18 +76,7 @@ def render(protocol: str, direction: str, methods: tuple[str, ...] = METHODS,
             ax.set_ylabel("Train eval", fontsize=9)
         else:
             ax.set_ylabel("")
-        # Compute per-method mean Δ summary
-        finite = mat[~np.isnan(mat)]
-        mean_all = float(np.mean(finite)) if finite.size else 0.0
-        # Off-diagonal mean
-        off_diag_mask = ~np.eye(n, dtype=bool)
-        off_vals = mat[off_diag_mask]
-        off_finite = off_vals[~np.isnan(off_vals)]
-        mean_off = float(np.mean(off_finite)) if off_finite.size else 0.0
-        ax.set_title(
-            f"{METHOD_LABEL[m]}  (off-diag mean Δ = {mean_off:+.1f})",
-            fontsize=10,
-        )
+        ax.set_title(METHOD_LABEL[m], fontsize=10)
         # Annotate cells
         for i in range(n):
             for j in range(n):

@@ -56,7 +56,7 @@ ALIGNED_SIGN = {
 }
 
 METHODS = ("caa", "pi", "melbo", "dct")
-METHOD_LABEL = {"caa": "CAA", "pi": "PI", "melbo": "MELBO", "dct": "DCT"}
+METHOD_LABEL = {"caa": "CAA", "pi": "PS", "melbo": "MELBO", "dct": "DCT"}
 
 
 # ── Data loading (mirrors build_paper_tables.py) ─────────────────────────────

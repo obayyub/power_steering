@@ -112,19 +112,7 @@ def render():
             ax.set_yticklabels(train_labels, fontsize=8)
         ax.tick_params(axis="both", which="both", length=0)
 
-        off_vals = []
-        for i, (train_eval, _) in enumerate(TRAIN_ROWS):
-            for j, test_eval in enumerate(EVAL_ORDER):
-                if train_eval == test_eval:
-                    continue
-                v = mat[i, j]
-                if not np.isnan(v):
-                    off_vals.append(v)
-        mean_off = float(np.mean(off_vals)) if off_vals else 0.0
-        ax.set_title(
-            f"{METHOD_LABEL[m]}   off-diag Δ = {mean_off:+.1f}",
-            fontsize=9, pad=4,
-        )
+        ax.set_title(METHOD_LABEL[m], fontsize=10, pad=4)
 
         for i in range(n_rows):
             for j in range(n_cols):
